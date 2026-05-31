@@ -7,9 +7,9 @@ export default function Newsletter() {
   const [done, setDone] = useState(false);
 
   return (
-    <section id="newsletter" className="py-20 md:py-28 bg-cream">
+    <section id="newsletter" className="py-20 md:py-28 bg-sand">
       <div className="container-x">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-2xl text-center reveal">
           <span className="text-xs uppercase tracking-[0.22em] text-stone">
             First in line
           </span>

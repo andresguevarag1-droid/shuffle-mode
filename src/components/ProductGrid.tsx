@@ -6,7 +6,7 @@ export default function ProductGrid() {
   return (
     <section id="drop" className="py-20 md:py-28">
       <div className="container-x">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+        <div className="reveal flex flex-wrap items-end justify-between gap-4 mb-10">
           <div>
             <span className="text-xs uppercase tracking-[0.22em] text-stone">
               {DROP.title}
@@ -16,7 +16,7 @@ export default function ProductGrid() {
             </h2>
           </div>
           <p className="text-sm text-stone">
-            Only <span className="text-ember font-medium">{DROP.piecesLeft} pieces</span>{" "}
+            Only <span className="text-ember-ink font-medium">{DROP.piecesLeft} pieces</span>{" "}
             left · restocks are rare
           </p>
         </div>

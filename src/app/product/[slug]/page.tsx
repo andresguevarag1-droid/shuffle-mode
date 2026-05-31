@@ -115,7 +115,7 @@ export default async function ProductPage({ params }: Params) {
         </div>
 
         {/* Related */}
-        <section className="mt-20 md:mt-28">
+        <section className="reveal mt-20 md:mt-28">
           <div className="flex items-end justify-between gap-4 mb-8">
             <h2 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">
               More from this drop

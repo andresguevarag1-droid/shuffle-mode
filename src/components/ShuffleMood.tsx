@@ -28,9 +28,9 @@ export default function ShuffleMood() {
   };
 
   return (
-    <section id="shuffle" className="py-20 md:py-28 bg-cream">
+    <section id="shuffle" className="py-20 md:py-28 bg-sand">
       <div className="container-x grid lg:grid-cols-2 gap-12 items-center">
-        <div>
+        <div className="reveal">
           <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-stone">
             <span className="h-px w-8 bg-ember" /> Shuffle Mode
           </span>

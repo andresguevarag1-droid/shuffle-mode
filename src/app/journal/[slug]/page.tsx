@@ -94,7 +94,7 @@ export default async function JournalPostPage({ params }: Params) {
         </div>
 
         {/* Keep reading */}
-        <section className="mt-20 md:mt-28">
+        <section className="reveal mt-20 md:mt-28">
           <h2 className="font-display text-3xl md:text-4xl font-semibold tracking-tight mb-8">
             Keep reading
           </h2>

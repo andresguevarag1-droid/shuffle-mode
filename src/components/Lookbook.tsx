@@ -5,7 +5,7 @@ export default function Lookbook() {
   return (
     <section id="lookbook" className="py-20 md:py-28">
       <div className="container-x">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+        <div className="reveal flex flex-wrap items-end justify-between gap-4 mb-10">
           <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-tight">
             The Lookbook
           </h2>

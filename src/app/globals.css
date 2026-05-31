@@ -20,9 +20,12 @@
   --color-bone: #f6f2ea;
   --color-cream: #fbf9f4;
   --color-paper: #efe9dd;
+  --color-sand: #eadfcd; /* alt section surface — warmer, for vertical rhythm */
   --color-ember: #c2502e; /* mood accent — warm clay */
+  --color-ember-ink: #a23c1d; /* darker accent for small text on light (AA) */
   --color-ember-soft: #e98e6f;
   --color-stone: #6f675d;
+  --color-line: rgba(22, 19, 15, 0.1); /* hairline borders */
 
   /* Typography */
   --font-display: var(--font-fraunces);
@@ -43,6 +46,29 @@
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Editorial type rhythm: balanced headlines, comfortable paragraphs. */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Anchored sections clear the sticky header when jumped to. */
+  section[id] {
+    scroll-margin-top: 6rem;
+  }
+
+  /* Consistent, on-brand keyboard focus across every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 
   ::selection {
@@ -94,6 +120,25 @@
     mix-blend-mode: multiply;
     pointer-events: none;
   }
+
+  /* Accessibility: keyboard skip link, visible only when focused. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    transform: translateY(-150%);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: 0.6rem 1.1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    transition: transform 0.2s var(--ease-out-expo);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
 }
 
 @keyframes marquee {
@@ -120,9 +165,36 @@
   animation: fade-up 0.7s var(--ease-out-expo) both;
 }
 
+/*
+  Scroll-reveal — native scroll-driven animation. Progressive enhancement:
+  browsers without `animation-timeline` simply show content with no animation,
+  so nothing is ever hidden behind an unsupported feature.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee,
-  .animate-fade-up {
+  .animate-fade-up,
+  .reveal {
     animation: none;
   }
   html {

@@ -2,11 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/content";
+
+// Route links (not homepage hash anchors) get an active state on their page.
+function isActive(href: string, pathname: string) {
+  const route = href.split("#")[0];
+  if (!route || route === "/") return false;
+  return pathname === route || pathname.startsWith(route + "/");
+}
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -32,16 +41,24 @@ export default function Header() {
         </Link>
 
         <ul className="hidden md:flex items-center gap-8 text-sm tracking-wide">
-          {NAV.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className="relative py-1 text-ink/80 hover:text-ink transition-colors after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-ember after:transition-all hover:after:w-full"
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {NAV.map((item) => {
+            const active = isActive(item.href, pathname);
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`relative py-1 transition-colors after:absolute after:left-0 after:-bottom-0.5 after:h-px after:bg-ember after:transition-all hover:after:w-full ${
+                    active
+                      ? "text-ink after:w-full"
+                      : "text-ink/80 hover:text-ink after:w-0"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex items-center gap-4">

@@ -12,7 +12,7 @@ export default function ShopPage() {
   return (
     <section className="py-16 md:py-24">
       <div className="container-x">
-        <header className="max-w-2xl">
+        <header className="reveal max-w-2xl">
           <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-stone">
             <span className="h-px w-8 bg-ember" /> {DROP.title} · Live now
           </span>
@@ -26,7 +26,7 @@ export default function ShopPage() {
           </p>
           <p className="mt-4 text-sm text-stone">
             Only{" "}
-            <span className="text-ember font-medium">
+            <span className="text-ember-ink font-medium">
               {DROP.piecesLeft} pieces
             </span>{" "}
             left in this drop
