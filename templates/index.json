@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -8,8 +17,10 @@
         "heading_accent": "You dress for the mood.",
         "subheading": "Minimal pieces that elevate your wardrobe instantly. New drop every Sunday.",
         "cta_label": "Shop the drop",
+        "cta_url": "",
         "cta2_label": "Find your mood",
         "cta2_url": "#shuffle",
+        "image1": "shopify://shop_images/ChatGPT_Image_Feb_27_2026_at_02_08_51_AM_7d897ff2-c344-4d45-b4bf-4108fd8213bf.png",
         "collage_caption": "Drop 01"
       }
     },
@@ -19,42 +30,157 @@
         "eyebrow": "Drop 01",
         "heading": "This week's drop",
         "note": "Restocks are rare",
+        "collection": "maxi-silhouettes",
         "products_to_show": 6,
-        "link_label": "View full drop"
+        "link_label": "View full drop",
+        "link_url": ""
       }
     },
     "shuffle": {
       "type": "shuffle",
       "blocks": {
-        "bold": { "type": "mood", "settings": { "label": "Bold", "line": "Walk in like you own the room — because today, you do.", "color1": "#c2502e", "color2": "#7a2618" } },
-        "soft": { "type": "mood", "settings": { "label": "Soft", "line": "Unhurried, unbothered, undeniably put-together.", "color1": "#e3c9b5", "color2": "#b98c6d" } },
-        "sharp": { "type": "mood", "settings": { "label": "Sharp", "line": "Clean lines, clear head. Nothing left to prove.", "color1": "#2c2a28", "color2": "#55504a" } },
-        "free": { "type": "mood", "settings": { "label": "Free", "line": "Loose, light, and going wherever the day takes you.", "color1": "#9aa67f", "color2": "#5f6b48" } }
+        "bold": {
+          "type": "mood",
+          "settings": {
+            "label": "Bold",
+            "line": "Walk in like you own the room — because today, you do.",
+            "color1": "#c2502e",
+            "color2": "#7a2618"
+          }
+        },
+        "soft": {
+          "type": "mood",
+          "settings": {
+            "label": "Soft",
+            "line": "Unhurried, unbothered, undeniably put-together.",
+            "color1": "#e3c9b5",
+            "color2": "#b98c6d"
+          }
+        },
+        "sharp": {
+          "type": "mood",
+          "settings": {
+            "label": "Sharp",
+            "line": "Clean lines, clear head. Nothing left to prove.",
+            "color1": "#2c2a28",
+            "color2": "#55504a"
+          }
+        },
+        "free": {
+          "type": "mood",
+          "settings": {
+            "label": "Free",
+            "line": "Loose, light, and going wherever the day takes you.",
+            "color1": "#9aa67f",
+            "color2": "#5f6b48"
+          }
+        }
       },
-      "block_order": ["bold", "soft", "sharp", "free"]
+      "block_order": [
+        "bold",
+        "soft",
+        "sharp",
+        "free"
+      ],
+      "settings": {
+        "heading": "Not sure what today is? Let it shuffle.",
+        "subheading": "Pick the mood you're in — or hit shuffle and let us read the room.",
+        "button_label": "Shuffle my mood",
+        "shop_url": "shopify://collections"
+      }
     },
     "philosophy": {
       "type": "philosophy",
       "blocks": {
-        "s1": { "type": "stat", "settings": { "value": "Sun", "label": "New drop, every week" } },
-        "s2": { "type": "stat", "settings": { "value": "200", "label": "Pieces per drop, never more" } },
-        "s3": { "type": "stat", "settings": { "value": "0", "label": "Restocks. When it's gone, it's gone" } }
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "Sun",
+            "label": "New drop, every week"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "200",
+            "label": "Pieces per drop, never more"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "0",
+            "label": "Restocks. When it's gone, it's gone"
+          }
+        }
       },
-      "block_order": ["s1", "s2", "s3"]
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "eyebrow": "The philosophy",
+        "heading": "Fewer pieces.",
+        "heading_accent": "More you.",
+        "body": "We don't chase seasons or trends. Each week we design a small, considered set of pieces — then we let them go. No overstock, no markdowns, no noise."
+      }
     },
     "lookbook": {
       "type": "lookbook",
       "blocks": {
-        "l1": { "type": "shot", "settings": { "caption": "01 — Morning, unbothered" } },
-        "l2": { "type": "shot", "settings": { "caption": "02 — The 6pm pivot" } },
-        "l3": { "type": "shot", "settings": { "caption": "03 — Weekend, off the clock" } },
-        "l4": { "type": "shot", "settings": { "caption": "04 — After hours" } }
+        "l1": {
+          "type": "shot",
+          "settings": {
+            "caption": "01 — Morning, unbothered"
+          }
+        },
+        "l2": {
+          "type": "shot",
+          "settings": {
+            "caption": "02 — The 6pm pivot"
+          }
+        },
+        "l3": {
+          "type": "shot",
+          "settings": {
+            "caption": "03 — Weekend, off the clock"
+          }
+        },
+        "l4": {
+          "type": "shot",
+          "settings": {
+            "caption": "04 — After hours"
+          }
+        }
       },
-      "block_order": ["l1", "l2", "l3", "l4"]
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4"
+      ],
+      "settings": {
+        "heading": "The Lookbook",
+        "link_label": "Read the journal",
+        "link_url": ""
+      }
     },
     "newsletter": {
-      "type": "newsletter"
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "First in line",
+        "heading": "Get the drop before it's gone",
+        "subheading": "Drops sell out fast. Join the list for early access, mood guides, and the occasional note — never spam."
+      }
     }
   },
-  "order": ["hero", "drop", "shuffle", "philosophy", "lookbook", "newsletter"]
+  "order": [
+    "hero",
+    "drop",
+    "shuffle",
+    "philosophy",
+    "lookbook",
+    "newsletter"
+  ]
 }
