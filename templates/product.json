@@ -1,6 +1,7 @@
 {
   "sections": {
-    "main": { "type": "main-product" }
+    "main": { "type": "main-product" },
+    "complementary": { "type": "complete-the-look" }
   },
-  "order": ["main"]
+  "order": ["main", "complementary"]
 }

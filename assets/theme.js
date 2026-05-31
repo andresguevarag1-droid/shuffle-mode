@@ -162,6 +162,7 @@
       if (stickyAdd) stickyAdd.disabled = !match.available;
       if (addText) addText.textContent = match.available ? "Add to bag" : "Sold out";
       if (stockEl) { if (match.tracked && match.inventory > 0 && match.inventory <= 10) { stockEl.textContent = "Only " + match.inventory + " left"; stockEl.hidden = false; } else { stockEl.hidden = true; } }
+      document.dispatchEvent(new CustomEvent("variant:change"));
     }
     $$("[data-option-value]", root).forEach(function (pill) {
       pill.addEventListener("click", function () { $$(".pill", pill.closest(".option__values")).forEach(function (p) { p.classList.remove("is-active"); }); pill.classList.add("is-active"); updateVariant(); });
@@ -217,6 +218,55 @@
     sz.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation();
       var vid = sz.getAttribute("data-vid"); if (vid) Cart.add({ id: vid, quantity: 1 }, false);
+    });
+  });
+
+  /* ============ Bundles (Complete the look / Shop the set) ============ */
+  function bundleCurrency() { var p = $("[data-cart-drawer] .cart-drawer__panel"); return p ? (p.getAttribute("data-currency") || "USD") : "USD"; }
+  $$("[data-bundle]").forEach(function (section) {
+    var includeMain = section.hasAttribute("data-include-main");
+    var totalEl = $("[data-bundle-total]", section), addBtn = $("[data-bundle-add]", section);
+    var items = $$("[data-bundle-item]", section), currency = bundleCurrency();
+
+    var mainVariants = null, mainIdInput = null;
+    if (includeMain) {
+      mainIdInput = $("[data-variant-id]");
+      var de = $("[data-variants]");
+      if (de) { try { mainVariants = JSON.parse(de.textContent); } catch (e) {} }
+    }
+    function mainInfo() {
+      if (!includeMain) return null;
+      var id = mainIdInput ? mainIdInput.value : null;
+      if (mainVariants && id) { var m = mainVariants.find(function (v) { return String(v.id) === String(id); }); if (m) return { id: m.id, price: m.price_cents, available: m.available }; }
+      var fb = totalEl ? parseInt(totalEl.getAttribute("data-main-price"), 10) : 0;
+      return { id: id, price: fb || 0, available: true };
+    }
+    function itemVal(item) {
+      var el = $("[data-bundle-variant]", item); if (!el) return null;
+      if (el.tagName === "SELECT") { var o = el.options[el.selectedIndex]; return { id: o.value, price: parseInt(o.getAttribute("data-price"), 10) || 0 }; }
+      return { id: el.value, price: parseInt(el.getAttribute("data-price"), 10) || 0 };
+    }
+    function selected() {
+      var list = [], mi = mainInfo();
+      if (mi && mi.id && mi.available) list.push(mi);
+      items.forEach(function (item) { var c = $("[data-bundle-check]", item); if (c && c.checked) { var v = itemVal(item); if (v && v.id) list.push(v); } });
+      return list;
+    }
+    function recalc() {
+      var sel = selected(), t = sel.reduce(function (s, x) { return s + (x.price || 0); }, 0);
+      if (totalEl) totalEl.textContent = money(t, currency);
+      if (addBtn) addBtn.disabled = sel.length === 0;
+    }
+    section.addEventListener("change", recalc);
+    document.addEventListener("variant:change", recalc);
+    recalc();
+
+    if (addBtn) addBtn.addEventListener("click", function () {
+      var sel = selected(); if (!sel.length) return;
+      var prev = addBtn.textContent; addBtn.disabled = true; addBtn.textContent = "Adding…";
+      Cart.add({ items: sel.map(function (x) { return { id: x.id, quantity: 1 }; }) }, false)
+        .then(function () { addBtn.textContent = prev; addBtn.disabled = false; })
+        .catch(function () { addBtn.textContent = "Couldn't add"; setTimeout(function () { addBtn.textContent = prev; addBtn.disabled = false; }, 2000); });
     });
   });
 

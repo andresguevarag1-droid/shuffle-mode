@@ -391,3 +391,22 @@ s { color: var(--color-stone); margin-right: 0.4rem; font-weight: 400; }
 .sticky-atc__price { font-family: var(--font-display); }
 .sticky-atc .btn { white-space: nowrap; }
 @media (min-width: 768px) { .sticky-atc { display: none !important; } }
+
+/* ============ Bundles: Complete the look / Shop the set ============ */
+.ctl__items { display: flex; align-items: stretch; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: thin; }
+.ctl__item { position: relative; flex: 0 0 auto; width: clamp(150px, 40vw, 190px); display: flex; flex-direction: column; gap: 0.4rem; background: var(--color-bone); border: 1px solid var(--color-line); border-radius: 1rem; padding: 0.75rem; }
+.section--ink .ctl__item, .section--sand .ctl__item { background: var(--color-cream); }
+.ctl__item--main { border-color: var(--color-ink); }
+.ctl__media { display: block; aspect-ratio: 4/5; border-radius: 0.6rem; overflow: hidden; background: #efe6d6; }
+.ctl__media img { width: 100%; height: 100%; object-fit: cover; }
+.ctl__check { position: absolute; top: 0.55rem; right: 0.55rem; z-index: 2; background: var(--color-cream); border-radius: 9999px; width: 1.6rem; height: 1.6rem; display: grid; place-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+.ctl__check input { width: 1rem; height: 1rem; accent-color: var(--color-ember); cursor: pointer; }
+.ctl__tag { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--color-ember); }
+.ctl__name { font-size: 0.85rem; font-weight: 500; line-height: 1.25; }
+.ctl__price { font-family: var(--font-display); font-size: 0.9rem; }
+.ctl__variant { width: 100%; }
+.ctl__plus { align-self: center; flex: 0 0 auto; font-family: var(--font-display); font-size: 1.4rem; color: var(--color-stone); }
+.ctl__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--color-line); }
+.ctl__total { display: flex; flex-direction: column; gap: 0.2rem; }
+.ctl__total-value { font-family: var(--font-display); font-size: 1.6rem; }
+.section--ink .ctl__foot { border-color: rgba(251,249,244,0.15); }

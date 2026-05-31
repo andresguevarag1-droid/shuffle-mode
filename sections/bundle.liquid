@@ -1,0 +1,70 @@
+{%- comment -%} Curated bundle / "Shop the set" — pick products, add all in one tap. {%- endcomment -%}
+{%- liquid
+  assign valid = 0
+  for block in section.blocks
+    if block.settings.product != blank and block.settings.product.available
+      assign valid = valid | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if valid > 0 -%}
+  <section class="ctl section{% if section.settings.dark %} section--ink{% else %} section--sand{% endif %}" data-bundle aria-label="{{ section.settings.heading }}">
+    <div class="container">
+      <div class="section__head reveal" style="margin-bottom:1.75rem;">
+        <div>
+          <span class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</span>
+          <h2 class="section__title">{{ section.settings.heading }}</h2>
+        </div>
+        {%- if section.settings.subheading != blank -%}<span class="card__cat">{{ section.settings.subheading }}</span>{%- endif -%}
+      </div>
+
+      <div class="ctl__items">
+        {%- assign n = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.product != blank and block.settings.product.available -%}
+            {%- if n > 0 -%}<span class="ctl__plus" aria-hidden="true">+</span>{%- endif -%}
+            {% render 'bundle-item', item: block.settings.product %}
+            {%- assign n = n | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="ctl__foot">
+        <div class="ctl__total">
+          <span class="eyebrow">Total for the set</span>
+          <span class="ctl__total-value" data-bundle-total></span>
+        </div>
+        <button type="button" class="btn btn--primary btn--lg" data-bundle-add>{{ section.settings.button_label }}</button>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Bundle / Shop the set",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop the set" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The whole look, one tap" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Three pieces designed to shuffle together" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add the set to bag" },
+    { "type": "checkbox", "id": "dark", "label": "Dark background", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "piece",
+      "name": "Piece",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle / Shop the set",
+      "blocks": [{ "type": "piece" }, { "type": "piece" }, { "type": "piece" }]
+    }
+  ]
+}
+{% endschema %}

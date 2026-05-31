@@ -1,0 +1,20 @@
+{%- comment -%} A selectable bundle line. Expects: item (a product) {%- endcomment -%}
+<div class="ctl__item" data-bundle-item>
+  <label class="ctl__check">
+    <input type="checkbox" data-bundle-check checked aria-label="Include {{ item.title | escape }}">
+  </label>
+  <a class="ctl__media editorial-frame" href="{{ item.url }}">
+    {%- if item.featured_image -%}<img src="{{ item.featured_image | image_url: width: 300 }}" alt="{{ item.title | escape }}" loading="lazy">{%- endif -%}
+  </a>
+  <a class="ctl__name" href="{{ item.url }}">{{ item.title }}</a>
+  {%- if item.has_only_default_variant -%}
+    <input type="hidden" data-bundle-variant value="{{ item.selected_or_first_available_variant.id }}" data-price="{{ item.price }}">
+    <span class="ctl__price">{{ item.price | money }}</span>
+  {%- else -%}
+    <select class="ctl__variant input input--sm" data-bundle-variant aria-label="Choose option for {{ item.title | escape }}">
+      {%- for v in item.variants -%}
+        <option value="{{ v.id }}" data-price="{{ v.price }}" {% unless v.available %}disabled{% endunless %}>{{ v.title }} · {{ v.price | money }}</option>
+      {%- endfor -%}
+    </select>
+  {%- endif -%}
+</div>

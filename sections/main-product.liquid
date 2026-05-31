@@ -94,7 +94,7 @@
         [
           {%- for v in product.variants -%}
             {%- if v.featured_image -%}{%- assign vimg = v.featured_image | image_url: width: 1100 -%}{%- elsif product.featured_image -%}{%- assign vimg = product.featured_image | image_url: width: 1100 -%}{%- else -%}{%- assign vimg = '' -%}{%- endif -%}
-            { "id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available }}, "price": {{ v.price | money | json }}, "image": {{ vimg | json }}, "tracked": {{ v.inventory_management == 'shopify' }}, "inventory": {{ v.inventory_quantity | default: 0 }} }{%- unless forloop.last -%},{%- endunless -%}
+            { "id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available }}, "price": {{ v.price | money | json }}, "price_cents": {{ v.price }}, "image": {{ vimg | json }}, "tracked": {{ v.inventory_management == 'shopify' }}, "inventory": {{ v.inventory_quantity | default: 0 }} }{%- unless forloop.last -%},{%- endunless -%}
           {%- endfor -%}
         ]
       </script>
