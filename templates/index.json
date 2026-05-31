@@ -479,6 +479,103 @@
         "heading": "Get 10% off your first drop",
         "subheading": "Join the list for early access and 10% off your first order. Drops sell out fast — never spam."
       }
+    },
+    "icon_features": {
+      "type": "icon-features",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "glyph": "✦",
+            "title": "Made in small batches",
+            "text": "Limited runs only. Once it's gone, it's gone — and that's the point."
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "glyph": "◎",
+            "title": "New drop every Sunday",
+            "text": "Something fresh each week. Show up, stay curious, add to cart."
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "glyph": "◈",
+            "title": "Designed for your mood",
+            "text": "Editorial pieces that move with you — wherever the week takes you."
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "heading": "Crafted with intention"
+      }
+    },
+    "shop_category": {
+      "type": "featured-collections",
+      "blocks": {
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "label": "The Minimalist"
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "label": "After Dark"
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "label": "Golden Hour"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "settings": {
+        "eyebrow": "Curated for you",
+        "heading": "Shop by mood",
+        "layout": "editorial",
+        "columns": "3"
+      }
+    },
+    "editorial": {
+      "type": "editorial-split",
+      "settings": {
+        "image_position": "left",
+        "dark": false,
+        "eyebrow": "The Shuffle Mode ethos",
+        "heading": "Dressed for the spaces between moments",
+        "body_text": "<p>We design in small weekly drops — considered pieces that shuffle into each other and move with your mood, not the calendar. No overstock, no markdowns, no noise.</p>",
+        "cta_label": "Read our story",
+        "cta_url": ""
+      }
+    },
+    "promo": {
+      "type": "promo-banner",
+      "settings": {
+        "eyebrow": "Dropping Sunday",
+        "headline": "<p>The next drop<br>is almost here</p>",
+        "subtext": "Limited pieces, curated for the week ahead. One drop. No restocks.",
+        "cta_label": "Join the drop list",
+        "cta_url": "#newsletter",
+        "countdown_enabled": true,
+        "drop_date": "2026-06-07 13:00",
+        "text_align": "center",
+        "min_height": 80
+      }
     }
   },
   "order": [
@@ -486,11 +583,15 @@
     "marquee",
     "trust",
     "drop",
+    "icon_features",
     "manifesto",
     "shuffle",
+    "shop_category",
+    "editorial",
     "press",
     "lookbook",
     "ugc",
+    "promo",
     "testimonials",
     "faq",
     "newsletter"

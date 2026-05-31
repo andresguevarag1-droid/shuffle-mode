@@ -93,22 +93,25 @@
     return { add: add, open: open, refresh: refresh };
   })();
 
-  /* ============ Mobile menu ============ */
-  $$("[data-menu-toggle]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var menu = $("[data-menu]"); if (!menu) return;
-      var willOpen = menu.hasAttribute("hidden"); menu.toggleAttribute("hidden"); btn.setAttribute("aria-expanded", String(willOpen));
+  /* ============ Mobile menu + search ============
+     Owned by the header section's own scoped JS (it implements the drawer,
+     mega-menu, focus trap, and search panel). Fallback only binds here if the
+     header section's JS is absent, to avoid double-firing the toggles. */
+  if (!document.querySelector("[data-smh-header]")) {
+    $$("[data-menu-toggle]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var menu = $("[data-menu]"); if (!menu) return;
+        var willOpen = menu.hasAttribute("hidden"); menu.toggleAttribute("hidden"); btn.setAttribute("aria-expanded", String(willOpen));
+      });
     });
-  });
-
-  /* ============ Search toggle ============ */
-  $$("[data-search-toggle]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var p = $("[data-search-panel]"); if (!p) return;
-      var willOpen = p.hasAttribute("hidden"); p.toggleAttribute("hidden"); btn.setAttribute("aria-expanded", String(willOpen));
-      if (willOpen) { var i = $("[data-search-input]", p); if (i) i.focus(); }
+    $$("[data-search-toggle]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var p = $("[data-search-panel]"); if (!p) return;
+        var willOpen = p.hasAttribute("hidden"); p.toggleAttribute("hidden"); btn.setAttribute("aria-expanded", String(willOpen));
+        if (willOpen) { var i = $("[data-search-input]", p); if (i) i.focus(); }
+      });
     });
-  });
+  }
 
   /* ============ Countdown ============ */
   $$("[data-countdown]").forEach(function (el) {
