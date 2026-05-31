@@ -1,10 +1,323 @@
-<section class="container section">
-  <div class="prose">
-    <h1 class="section__title" style="text-align:center;">{{ page.title }}</h1>
-    <div class="rte" style="margin-top:2rem;">{{ page.content }}</div>
+{% assign layout = section.settings.layout %}
+{% assign eyebrow = section.settings.eyebrow %}
+{% assign intro = section.settings.intro %}
+
+<section
+  class="smp-page"
+  style="
+    --smp-align: {% if layout == 'centered' %}center{% else %}left{% endif %};
+    --smp-mx: {% if layout == 'centered' %}auto{% else %}0{% endif %};
+  "
+>
+  <div class="container">
+
+    <header class="smp-page__header">
+      {% if eyebrow != blank %}
+        <p class="smp-page__eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+
+      <h1 class="smp-page__title">{{ page.title }}</h1>
+
+      {% if intro != blank %}
+        <p class="smp-page__intro">{{ intro }}</p>
+      {% endif %}
+    </header>
+
+    <div class="smp-page__body smp-rte">
+      {{ page.content }}
+    </div>
+
   </div>
 </section>
 
+{% stylesheet %}
+
+/* ── Layout shell ─────────────────────────────────────────── */
+.smp-page {
+  padding: clamp(4rem, 10vw, 8rem) 0 clamp(5rem, 12vw, 10rem);
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.smp-page__header {
+  max-width: 72ch;
+  margin-inline: var(--smp-mx);
+  text-align: var(--smp-align);
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.smp-page__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  margin: 0 0 1.25rem;
+}
+
+.smp-page__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.smp-page__intro {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--color-stone);
+  margin: 1.5rem 0 0;
+  max-width: 58ch;
+  margin-inline: var(--smp-mx);
+}
+
+/* ── Body / measure ──────────────────────────────────────── */
+.smp-page__body {
+  max-width: 68ch;
+  margin-inline: var(--smp-mx);
+  text-align: var(--smp-align);
+}
+
+/* ── RTE typography ──────────────────────────────────────── */
+.smp-rte {
+  font-family: var(--font-body);
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--color-ink);
+}
+
+.smp-rte > * + * {
+  margin-top: 1.4em;
+}
+
+/* headings */
+.smp-rte h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+  margin-top: 3em;
+  margin-bottom: 0.6em;
+}
+
+.smp-rte h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  margin-top: 2.5em;
+  margin-bottom: 0.5em;
+}
+
+.smp-rte h4 {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+
+/* paragraph */
+.smp-rte p {
+  margin: 0;
+}
+
+/* links */
+.smp-rte a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--color-ember);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.smp-rte a:hover {
+  color: var(--color-ember);
+  text-decoration-color: var(--color-ember);
+}
+
+/* lists */
+.smp-rte ul,
+.smp-rte ol {
+  padding-left: 1.5em;
+  margin: 0;
+}
+
+.smp-rte ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.smp-rte ul li {
+  position: relative;
+  padding-left: 1.25em;
+}
+
+.smp-rte ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 0.4em;
+  height: 1px;
+  background: var(--color-ember);
+}
+
+.smp-rte ol {
+  list-style: none;
+  counter-reset: smp-ol;
+  padding-left: 0;
+}
+
+.smp-rte ol li {
+  position: relative;
+  padding-left: 2em;
+  counter-increment: smp-ol;
+}
+
+.smp-rte ol li::before {
+  content: counter(smp-ol, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-ember);
+  line-height: 2;
+}
+
+.smp-rte li + li {
+  margin-top: 0.5em;
+}
+
+/* blockquote */
+.smp-rte blockquote {
+  margin: 2.5em 0;
+  padding: 1.75rem 2rem;
+  background: var(--color-cream);
+  border-left: 2px solid var(--color-ember);
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
+.smp-rte blockquote p {
+  margin: 0;
+}
+
+/* horizontal rule */
+.smp-rte hr {
+  border: none;
+  border-top: 1px solid var(--color-line);
+  margin: 3em 0;
+}
+
+/* strong / em */
+.smp-rte strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.smp-rte em {
+  font-style: italic;
+  color: var(--color-stone);
+}
+
+/* tables */
+.smp-rte table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875em;
+  margin: 2em 0;
+}
+
+.smp-rte th {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  text-align: left;
+  padding: 0.75em 1em;
+  border-bottom: 1px solid var(--color-sand);
+}
+
+.smp-rte td {
+  padding: 0.85em 1em;
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+}
+
+.smp-rte tr:last-child td {
+  border-bottom: none;
+}
+
+/* images */
+.smp-rte img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2.5em auto;
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .smp-rte a {
+    transition: none;
+  }
+}
+
+{% endstylesheet %}
+
 {% schema %}
-{ "name": "Page", "settings": [] }
+{
+  "name": "Page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout alignment",
+      "options": [
+        { "value": "left",     "label": "Left" },
+        { "value": "centered", "label": "Centered" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "placeholder": "e.g. Our Story",
+      "info": "Small uppercase label above the title"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro paragraph",
+      "placeholder": "A brief, elegant introduction to this page…",
+      "info": "Optional lead sentence displayed beneath the title"
+    }
+  ]
+}
 {% endschema %}

@@ -1,0 +1,475 @@
+{% stylesheet %}
+.smfc-root {
+  --smfc-cols: {{ section.settings.columns }};
+  --smfc-gap: 2px;
+  padding: clamp(3rem, 6vw, 6rem) 0;
+  background: var(--color-cream);
+}
+
+.smfc-header {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  padding: 0 var(--smfc-outer-pad, 1.5rem);
+}
+
+.smfc-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: .6875rem;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: .75rem;
+}
+
+.smfc-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.1;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* ── GRID LAYOUT ── */
+.smfc-grid {
+  display: grid;
+  gap: var(--smfc-gap);
+  grid-template-columns: repeat(var(--smfc-cols), 1fr);
+}
+
+/* ── EDITORIAL-ASYMMETRIC LAYOUT ── */
+.smfc-editorial {
+  display: grid;
+  gap: var(--smfc-gap);
+  grid-template-columns: 1.55fr 1fr 1fr;
+  grid-template-rows: auto auto;
+}
+
+.smfc-editorial .smfc-tile:first-child {
+  grid-row: 1 / 3;
+  grid-column: 1 / 2;
+}
+
+.smfc-editorial.smfc-editorial--4 {
+  grid-template-columns: 1.55fr 1fr 1fr;
+  grid-template-rows: auto auto;
+}
+
+.smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(2) { grid-column: 2; grid-row: 1; }
+.smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(3) { grid-column: 3; grid-row: 1; }
+.smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(4) { grid-column: 2 / 4; grid-row: 2; }
+
+.smfc-editorial.smfc-editorial--3 {
+  grid-template-columns: 1.55fr 1fr;
+}
+
+.smfc-editorial.smfc-editorial--3 .smfc-tile:first-child {
+  grid-row: 1 / 3;
+}
+
+.smfc-editorial.smfc-editorial--2 {
+  grid-template-columns: 1.2fr 1fr;
+}
+
+.smfc-editorial.smfc-editorial--2 .smfc-tile:first-child {
+  grid-row: 1 / 1;
+}
+
+/* ── TILE ── */
+.smfc-tile {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  background: var(--color-sand);
+  aspect-ratio: var(--smfc-tile-ratio, 3/4);
+}
+
+.smfc-editorial .smfc-tile:first-child {
+  aspect-ratio: auto;
+  min-height: clamp(36rem, 55vw, 64rem);
+}
+
+.smfc-tile__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform .9s cubic-bezier(.25,.46,.45,.94);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smfc-tile__media {
+    transition: none;
+  }
+}
+
+.smfc-tile:hover .smfc-tile__media,
+.smfc-tile:focus-visible .smfc-tile__media {
+  transform: scale(1.055);
+}
+
+/* fallback when no image */
+.smfc-tile__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(155deg, var(--color-sand) 0%, var(--color-stone) 100%);
+}
+
+.smfc-tile__fallback-letter {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 12vw, 10rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(251,249,244,.18);
+  line-height: 1;
+  user-select: none;
+}
+
+/* overlay gradient */
+.smfc-tile__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(22,19,15,.72) 0%,
+    rgba(22,19,15,.28) 40%,
+    rgba(22,19,15,.0) 70%
+  );
+  transition: opacity .4s ease;
+}
+
+.smfc-tile:hover .smfc-tile__overlay,
+.smfc-tile:focus-visible .smfc-tile__overlay {
+  opacity: .9;
+}
+
+/* content */
+.smfc-tile__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  pointer-events: none;
+}
+
+.smfc-tile__label {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-cream);
+  line-height: 1.1;
+  margin: 0 0 .6rem;
+  letter-spacing: -.01em;
+}
+
+.smfc-editorial .smfc-tile:first-child .smfc-tile__label {
+  font-size: clamp(2rem, 3.8vw, 3.5rem);
+}
+
+.smfc-tile__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  font-family: var(--font-body);
+  font-size: .6875rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--color-bone);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smfc-tile__cta {
+    transition: none;
+  }
+}
+
+.smfc-tile__cta-arrow {
+  display: inline-block;
+  transition: transform .3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smfc-tile__cta-arrow {
+    transition: none;
+  }
+}
+
+.smfc-tile:hover .smfc-tile__cta,
+.smfc-tile:focus-visible .smfc-tile__cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.smfc-tile:hover .smfc-tile__cta-arrow,
+.smfc-tile:focus-visible .smfc-tile__cta-arrow {
+  transform: translateX(4px);
+}
+
+/* focus ring */
+.smfc-tile:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+  z-index: 2;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .smfc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .smfc-editorial,
+  .smfc-editorial.smfc-editorial--4,
+  .smfc-editorial.smfc-editorial--3 {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .smfc-editorial .smfc-tile:first-child,
+  .smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(2),
+  .smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(3),
+  .smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(4) {
+    grid-row: auto;
+    grid-column: auto;
+    min-height: 0;
+    aspect-ratio: 3/4;
+  }
+
+  .smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(4) {
+    grid-column: span 2;
+    aspect-ratio: 16/9;
+  }
+}
+
+@media (max-width: 540px) {
+  .smfc-grid,
+  .smfc-editorial,
+  .smfc-editorial.smfc-editorial--4,
+  .smfc-editorial.smfc-editorial--3,
+  .smfc-editorial.smfc-editorial--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .smfc-editorial.smfc-editorial--4 .smfc-tile:nth-child(4) {
+    grid-column: 1;
+    aspect-ratio: 3/4;
+  }
+
+  .smfc-tile {
+    aspect-ratio: 4/5;
+  }
+}
+{% endstylesheet %}
+
+{%- liquid
+  assign layout     = section.settings.layout
+  assign col_count  = section.settings.columns | times: 1
+  assign grid_class = 'smfc-grid'
+  if layout == 'editorial'
+    assign grid_class = 'smfc-editorial smfc-editorial--' | append: col_count
+  endif
+-%}
+
+<section
+  class="smfc-root"
+  id="smfc-{{ section.id }}"
+  aria-labelledby="smfc-heading-{{ section.id }}"
+  style="--smfc-cols:{{ col_count }};--smfc-outer-pad:max(1.5rem,(100vw - var(--container-max,1400px)) / 2);"
+>
+  <div class="container">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <header class="smfc-header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="smfc-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="smfc-heading" id="smfc-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+  </div>
+
+  <div class="{{ grid_class }}" role="list">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign col     = block.settings.collection
+        assign img_src = block.settings.image
+        assign label   = block.settings.label
+        assign url     = '#'
+        assign fallback_letter = ''
+
+        if col != blank
+          assign url = col.url
+          if label == blank
+            assign label = col.title
+          endif
+          if img_src == blank and col.image != blank
+            assign img_src = col.image
+          elsif img_src == blank and col.products.first != blank
+            assign img_src = col.products.first.featured_image
+          endif
+        endif
+
+        if label != blank
+          assign fallback_letter = label | slice: 0
+        endif
+      -%}
+
+      <a
+        class="smfc-tile"
+        href="{{ url }}"
+        role="listitem"
+        aria-label="{{ label | default: 'Collection' | escape }}"
+        {{ block.shopify_attributes }}
+      >
+        {%- if img_src != blank -%}
+          {{
+            img_src
+            | image_url: width: 1600
+            | image_tag:
+              class: 'smfc-tile__media',
+              loading: 'lazy',
+              sizes: '(max-width:540px) 100vw, (max-width:900px) 50vw, calc(100vw / {{ col_count }})',
+              widths: '400,600,800,1000,1200,1600',
+              alt: label | default: '' | escape
+          }}
+        {%- else -%}
+          <div class="smfc-tile__fallback" aria-hidden="true">
+            {%- if fallback_letter != blank -%}
+              <span class="smfc-tile__fallback-letter">{{ fallback_letter }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="smfc-tile__overlay" aria-hidden="true"></div>
+
+        <div class="smfc-tile__content">
+          {%- if label != blank -%}
+            <p class="smfc-tile__label">{{ label }}</p>
+          {%- endif -%}
+          <span class="smfc-tile__cta" aria-hidden="true">
+            Shop
+            <span class="smfc-tile__cta-arrow">&#8594;</span>
+          </span>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collections",
+  "tag": "section",
+  "class": "smfc-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Curated for you"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by mood"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grid — uniform" },
+        { "value": "editorial", "label": "Editorial — asymmetric" }
+      ],
+      "default": "editorial",
+      "info": "Editorial places the first tile as a large hero; remaining tiles fill alongside it."
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Collection tile",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override",
+          "info": "Overrides the collection image."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label override",
+          "info": "Overrides the collection title."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collections",
+      "settings": {
+        "eyebrow": "Curated for you",
+        "heading": "Shop by mood",
+        "layout": "editorial",
+        "columns": "3"
+      },
+      "blocks": [
+        {
+          "type": "tile",
+          "settings": {
+            "label": "The Minimalist"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "label": "After Dark"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "label": "Golden Hour"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

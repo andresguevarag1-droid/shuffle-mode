@@ -1,0 +1,399 @@
+{% stylesheet %}
+.smsg-wrap {
+  background: var(--color-cream);
+  padding: 80px 0 100px;
+}
+.smsg-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.smsg-header {
+  margin-bottom: 48px;
+}
+.smsg-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin: 0 0 14px;
+}
+.smsg-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  margin: 0 0 10px;
+  line-height: 1.1;
+}
+.smsg-subtitle {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-stone);
+  margin: 0;
+  letter-spacing: .02em;
+}
+.smsg-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+.smsg-toggle {
+  display: inline-flex;
+  background: var(--color-sand);
+  border-radius: 100px;
+  padding: 3px;
+  gap: 2px;
+  border: none;
+  cursor: pointer;
+}
+.smsg-toggle-btn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  background: transparent;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  line-height: 1;
+}
+.smsg-toggle-btn[aria-pressed="true"] {
+  background: var(--color-ink);
+  color: var(--color-cream);
+}
+@media (prefers-reduced-motion: reduce) {
+  .smsg-toggle-btn { transition: none; }
+}
+.smsg-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid var(--color-line);
+}
+.smsg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+}
+.smsg-table thead tr {
+  border-bottom: 1px solid var(--color-ink);
+}
+.smsg-table th {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  padding: 14px 16px 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+.smsg-table th:first-child {
+  padding-left: 0;
+}
+.smsg-table td {
+  font-size: 13px;
+  color: var(--color-ink);
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--color-line);
+  white-space: nowrap;
+  letter-spacing: .01em;
+}
+.smsg-table td:first-child {
+  padding-left: 0;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.smsg-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.smsg-table tbody tr:hover td {
+  background: var(--color-sand);
+  transition: background .15s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .smsg-table tbody tr:hover td { transition: none; }
+}
+.smsg-val { display: inline; }
+.smsg-unit-label {
+  font-size: 10px;
+  color: var(--color-stone);
+  margin-left: 2px;
+  letter-spacing: .04em;
+}
+.smsg-lower {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 1px solid var(--color-line);
+}
+@media (max-width: 600px) {
+  .smsg-lower { grid-template-columns: 1fr; gap: 32px; }
+}
+.smsg-block-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin: 0 0 12px;
+}
+.smsg-fit-notes {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--color-ink);
+}
+.smsg-fit-notes p { margin: 0 0 10px; }
+.smsg-fit-notes p:last-child { margin-bottom: 0; }
+.smsg-model-note {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--color-stone);
+}
+.smsg-model-note strong {
+  display: block;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  var wrap = document.querySelector('[data-smsg]');
+  if (!wrap) return;
+  var btnIn  = wrap.querySelector('[data-smsg-unit="in"]');
+  var btnCm  = wrap.querySelector('[data-smsg-unit="cm"]');
+  var labels = wrap.querySelectorAll('.smsg-unit-label');
+  var cells  = wrap.querySelectorAll('[data-in][data-cm]');
+  var current = 'in';
+
+  function setUnit(unit) {
+    current = unit;
+    cells.forEach(function (el) {
+      el.textContent = el.getAttribute('data-' + unit);
+    });
+    labels.forEach(function (el) {
+      el.textContent = unit;
+    });
+    btnIn.setAttribute('aria-pressed', unit === 'in' ? 'true' : 'false');
+    btnCm.setAttribute('aria-pressed', unit === 'cm' ? 'true' : 'false');
+  }
+
+  btnIn.addEventListener('click', function () { setUnit('in'); });
+  btnCm.addEventListener('click', function () { setUnit('cm'); });
+})();
+{% endjavascript %}
+
+<section class="smsg-wrap" data-smsg>
+  <div class="smsg-inner">
+
+    <header class="smsg-header">
+      <p class="smsg-eyebrow">{{ section.settings.eyebrow | default: 'Fit & Sizing' }}</p>
+      <h2 class="smsg-title">{{ section.settings.heading | default: 'Size Guide' }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <p class="smsg-subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </header>
+
+    <div class="smsg-controls" role="group" aria-label="Unit toggle">
+      <div class="smsg-toggle" role="none">
+        <button class="smsg-toggle-btn" data-smsg-unit="in" aria-pressed="true">in</button>
+        <button class="smsg-toggle-btn" data-smsg-unit="cm" aria-pressed="false">cm</button>
+      </div>
+    </div>
+
+    <div class="smsg-table-wrap">
+      <table class="smsg-table" aria-label="Size chart">
+        <thead>
+          <tr>
+            <th scope="col">Size</th>
+            <th scope="col">Bust <span class="smsg-unit-label">in</span></th>
+            <th scope="col">Waist <span class="smsg-unit-label">in</span></th>
+            <th scope="col">Hips <span class="smsg-unit-label">in</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'row' -%}
+              {%- assign bust_cm   = block.settings.bust -%}
+              {%- assign waist_cm  = block.settings.waist -%}
+              {%- assign hips_cm   = block.settings.hips -%}
+              {%- assign bust_in   = bust_cm  | divided_by: 2.54 | round: 1 -%}
+              {%- assign waist_in  = waist_cm | divided_by: 2.54 | round: 1 -%}
+              {%- assign hips_in   = hips_cm  | divided_by: 2.54 | round: 1 -%}
+              <tr {{ block.shopify_attributes }}>
+                <td>{{ block.settings.size }}</td>
+                <td><span class="smsg-val" data-in="{{ bust_in }}" data-cm="{{ bust_cm }}">{{ bust_in }}</span></td>
+                <td><span class="smsg-val" data-in="{{ waist_in }}" data-cm="{{ waist_cm }}">{{ waist_in }}</span></td>
+                <td><span class="smsg-val" data-in="{{ hips_in }}" data-cm="{{ hips_cm }}">{{ hips_in }}</span></td>
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="smsg-lower">
+      {%- if section.settings.fit_notes != blank -%}
+        <div>
+          <p class="smsg-block-label">Fit Notes</p>
+          <div class="smsg-fit-notes">{{ section.settings.fit_notes }}</div>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.model_note != blank -%}
+        <div>
+          <p class="smsg-block-label">Model Measurements</p>
+          <p class="smsg-model-note">{{ section.settings.model_note }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Size Guide",
+  "tag": "section",
+  "class": "smsg-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Fit & Sizing"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Size Guide"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "All measurements are body measurements, not garment measurements. When in doubt, size up."
+    },
+    {
+      "type": "richtext",
+      "id": "fit_notes",
+      "label": "Fit Notes",
+      "default": "<p>Our pieces are designed with a relaxed, elongated silhouette. If you prefer a closer fit, we recommend sizing down one size.</p><p>Stretch fabrics such as our jersey and rib knits have approximately 10–15% ease built in.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "model_note",
+      "label": "Model Measurements Note",
+      "default": "Our model is 5'10\" / 178 cm with a 34\" bust, 25\" waist, and 36\" hips. She is wearing size XS."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Size Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size Label",
+          "default": "XS"
+        },
+        {
+          "type": "number",
+          "id": "bust",
+          "label": "Bust (cm)",
+          "default": 81
+        },
+        {
+          "type": "number",
+          "id": "waist",
+          "label": "Waist (cm)",
+          "default": 62
+        },
+        {
+          "type": "number",
+          "id": "hips",
+          "label": "Hips (cm)",
+          "default": 88
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size Guide",
+      "settings": {
+        "eyebrow": "Fit & Sizing",
+        "heading": "Size Guide",
+        "subtitle": "All measurements are body measurements, not garment measurements. When in doubt, size up.",
+        "fit_notes": "<p>Our pieces are designed with a relaxed, elongated silhouette. If you prefer a closer fit, we recommend sizing down one size.</p><p>Stretch fabrics such as our jersey and rib knits have approximately 10–15% ease built in.</p>",
+        "model_note": "Our model is 5'10\" / 178 cm with a 34\" bust, 25\" waist, and 36\" hips. She is wearing size XS."
+      },
+      "blocks": [
+        {
+          "type": "row",
+          "settings": {
+            "size": "XS",
+            "bust": 81,
+            "waist": 62,
+            "hips": 88
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "size": "S",
+            "bust": 86,
+            "waist": 67,
+            "hips": 93
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "size": "M",
+            "bust": 91,
+            "waist": 72,
+            "hips": 98
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "size": "L",
+            "bust": 97,
+            "waist": 78,
+            "hips": 104
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "size": "XL",
+            "bust": 104,
+            "waist": 85,
+            "hips": 111
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

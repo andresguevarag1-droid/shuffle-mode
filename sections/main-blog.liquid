@@ -1,30 +1,543 @@
-<section class="container section">
-  <header class="reveal" style="max-width:40rem;">
-    <span class="eyebrow">The Journal</span>
-    <h1 class="section__title" style="margin-top:1rem;">{{ blog.title }}</h1>
+{% stylesheet %}
+/* ── Journal: base layout ── */
+.smb-journal {
+  padding: var(--smb-section-pad, 5rem 0 6rem);
+}
+
+.smb-journal__header {
+  max-width: 36rem;
+  margin-bottom: 4rem;
+}
+
+.smb-journal__eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: 0.75rem;
+}
+
+.smb-journal__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* ── Featured lead ── */
+.smb-lead {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--color-line);
+  margin-bottom: 5rem;
+}
+
+@media (max-width: 768px) {
+  .smb-lead { grid-template-columns: 1fr; }
+}
+
+.smb-lead__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--color-sand);
+}
+
+.smb-lead__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .smb-lead:hover .smb-lead__media img {
+    transform: scale(1.04);
+  }
+}
+
+.smb-lead__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 3rem 3.5rem 3.5rem;
+  background: var(--color-cream);
+}
+
+@media (max-width: 1024px) {
+  .smb-lead__body { padding: 2.5rem 2rem 2.5rem; }
+}
+
+.smb-lead__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.smb-lead__tag {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+}
+
+.smb-lead__sep {
+  width: 1.5rem;
+  height: 1px;
+  background: var(--color-line);
+  flex-shrink: 0;
+}
+
+.smb-lead__date {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smb-lead__heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 3.5vw, 3rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.15;
+  margin: 0 0 1.25rem;
+}
+
+.smb-lead__excerpt {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-stone);
+  margin: 0 0 2rem;
+  max-width: 34ch;
+}
+
+.smb-lead__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-ink);
+  padding-bottom: 0.125rem;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  align-self: flex-start;
+}
+
+.smb-lead__link:hover {
+  color: var(--color-ember);
+  border-color: var(--color-ember);
+}
+
+.smb-lead__link-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.smb-lead__link:hover .smb-lead__link-arrow {
+  transform: translateX(3px);
+}
+
+/* ── Grid of remaining articles ── */
+.smb-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.smb-divider__line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-line);
+}
+
+.smb-divider__label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  white-space: nowrap;
+}
+
+.smb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem 2rem;
+}
+
+@media (max-width: 1024px) {
+  .smb-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 580px) {
+  .smb-grid { grid-template-columns: 1fr; gap: 3rem 0; }
+}
+
+.smb-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.smb-card__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: var(--color-sand);
+  margin-bottom: 1.25rem;
+}
+
+.smb-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .smb-card:hover .smb-card__media img {
+    transform: scale(1.06);
+  }
+}
+
+.smb-card__media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-sand);
+}
+
+.smb-card__placeholder-mark {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+}
+
+.smb-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.smb-card__date {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smb-card__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-stone);
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.smb-card__tag {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+}
+
+.smb-card__heading {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.2;
+  margin: 0 0 0.625rem;
+  transition: color 0.2s ease;
+}
+
+.smb-card:hover .smb-card__heading {
+  color: var(--color-ember);
+}
+
+.smb-card__excerpt {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--color-stone);
+  margin: 0;
+  flex: 1;
+}
+
+/* ── Empty state ── */
+.smb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 6rem 2rem;
+  border: 1px solid var(--color-line);
+}
+
+.smb-empty__rule {
+  width: 3rem;
+  height: 1px;
+  background: var(--color-sand);
+  margin-bottom: 2rem;
+}
+
+.smb-empty__heading {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  margin: 0 0 0.75rem;
+}
+
+.smb-empty__text {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-stone);
+  max-width: 28ch;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Pagination ── */
+.smb-pagination {
+  margin-top: 4.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  justify-content: center;
+}
+
+.smb-pagination .pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.smb-pagination .pagination a,
+.smb-pagination .pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-stone);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.smb-pagination .pagination a:hover {
+  color: var(--color-ink);
+  border-color: var(--color-line);
+}
+
+.smb-pagination .pagination .current {
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+{% endstylesheet %}
+
+<section class="smb-journal container">
+
+  <header class="smb-journal__header">
+    <span class="smb-journal__eyebrow">The Journal</span>
+    <h1 class="smb-journal__title">{{ blog.title }}</h1>
   </header>
 
   {%- paginate blog.articles by 12 -%}
-    <div class="product-grid" style="margin-top:3rem;">
-      {%- for article in blog.articles -%}
-        <a href="{{ article.url }}" class="card">
-          <div class="card__media editorial-frame">
-            {%- if article.image -%}
-              <img src="{{ article.image | image_url: width: 600 }}" alt="{{ article.image.alt | escape | default: article.title }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+
+    {%- if blog.articles.size > 0 -%}
+
+      {%- assign featured = blog.articles[0] -%}
+      {%- assign featured_tag = featured.tags | first -%}
+
+      {%- comment -%} ── Featured lead article ── {%- endcomment -%}
+      <article class="smb-lead">
+        <div class="smb-lead__media">
+          {%- if featured.image -%}
+            <img
+              src="{{ featured.image | image_url: width: 1200 }}"
+              alt="{{ featured.image.alt | escape | default: featured.title | escape }}"
+              loading="eager"
+              width="{{ featured.image.width }}"
+              height="{{ featured.image.height }}"
+            >
+          {%- endif -%}
+        </div>
+
+        <div class="smb-lead__body">
+          <div class="smb-lead__meta">
+            {%- if featured_tag != blank -%}
+              <span class="smb-lead__tag">{{ featured_tag }}</span>
+              <span class="smb-lead__sep" aria-hidden="true"></span>
             {%- endif -%}
+            <time class="smb-lead__date" datetime="{{ featured.published_at | date: '%Y-%m-%d' }}">
+              {{ featured.published_at | date: '%B %-d, %Y' }}
+            </time>
           </div>
-          <div style="margin-top:1rem;">
-            <span class="eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</span>
-            <h2 class="font-display" style="font-size:1.5rem;margin-top:0.5rem;">{{ article.title }}</h2>
-            {%- if article.excerpt != blank -%}<p class="card__cat" style="margin-top:0.5rem;">{{ article.excerpt | strip_html | truncate: 120 }}</p>{%- endif -%}
-          </div>
-        </a>
-      {%- endfor -%}
-    </div>
-    {%- if paginate.pages > 1 -%}<div class="center mt-12">{{ paginate | default_pagination }}</div>{%- endif -%}
+
+          <h2 class="smb-lead__heading">{{ featured.title }}</h2>
+
+          {%- if featured.excerpt != blank -%}
+            <p class="smb-lead__excerpt">{{ featured.excerpt | strip_html | truncate: 180 }}</p>
+          {%- endif -%}
+
+          <a href="{{ featured.url }}" class="smb-lead__link" aria-label="Read {{ featured.title | escape }}">
+            Read the story
+            <span class="smb-lead__link-arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        </div>
+      </article>
+
+      {%- comment -%} ── Rest of the articles grid ── {%- endcomment -%}
+      {%- assign rest = blog.articles | slice: 1, 100 -%}
+      {%- if rest.size > 0 -%}
+
+        <div class="smb-divider" aria-hidden="true">
+          <span class="smb-divider__line"></span>
+          <span class="smb-divider__label">More from the Journal</span>
+          <span class="smb-divider__line"></span>
+        </div>
+
+        <div class="smb-grid" role="list">
+          {%- for article in rest -%}
+            {%- assign article_tag = article.tags | first -%}
+            <article class="smb-card" role="listitem">
+              <a href="{{ article.url }}" class="smb-card" aria-label="{{ article.title | escape }}" style="text-decoration:none;">
+                <div class="smb-card__media">
+                  {%- if article.image -%}
+                    <img
+                      src="{{ article.image | image_url: width: 800 }}"
+                      alt="{{ article.image.alt | escape | default: article.title | escape }}"
+                      loading="lazy"
+                      width="{{ article.image.width }}"
+                      height="{{ article.image.height }}"
+                    >
+                  {%- else -%}
+                    <div class="smb-card__media-placeholder" aria-hidden="true">
+                      <span class="smb-card__placeholder-mark"></span>
+                    </div>
+                  {%- endif -%}
+                </div>
+
+                <div class="smb-card__meta">
+                  <time class="smb-card__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                    {{ article.published_at | date: '%b %-d, %Y' }}
+                  </time>
+                  {%- if article_tag != blank -%}
+                    <span class="smb-card__dot" aria-hidden="true"></span>
+                    <span class="smb-card__tag">{{ article_tag }}</span>
+                  {%- endif -%}
+                </div>
+
+                <h2 class="smb-card__heading">{{ article.title }}</h2>
+
+                {%- if article.excerpt != blank -%}
+                  <p class="smb-card__excerpt">{{ article.excerpt | strip_html | truncate: 110 }}</p>
+                {%- endif -%}
+              </a>
+            </article>
+          {%- endfor -%}
+        </div>
+
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="smb-pagination" aria-label="Blog pagination">
+          {{ paginate | default_pagination }}
+        </nav>
+      {%- endif -%}
+
+    {%- else -%}
+
+      <div class="smb-empty" role="status">
+        <span class="smb-empty__rule" aria-hidden="true"></span>
+        <h2 class="smb-empty__heading">Coming soon</h2>
+        <p class="smb-empty__text">Stories are being curated. Check back for editorial features and dispatches.</p>
+      </div>
+
+    {%- endif -%}
+
   {%- endpaginate -%}
+
 </section>
 
 {% schema %}
-{ "name": "Blog", "settings": [] }
+{
+  "name": "Blog",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog"
+    }
+  ]
+}
 {% endschema %}

@@ -1,27 +1,180 @@
-<div class="trust-bar{% if section.settings.dark %} trust-bar--dark{% endif %}">
-  <div class="container trust-bar__row">
+{% stylesheet %}
+.smtr-tb {
+  --smtr-tb-bg: var(--color-cream);
+  --smtr-tb-fg: var(--color-stone);
+  --smtr-tb-line: var(--color-line);
+  --smtr-tb-icon: var(--color-ember);
+  background: var(--smtr-tb-bg);
+  border-top: 1px solid var(--smtr-tb-line);
+  border-bottom: 1px solid var(--smtr-tb-line);
+  overflow: hidden;
+  position: relative;
+}
+.smtr-tb--dark {
+  --smtr-tb-bg: var(--color-ink);
+  --smtr-tb-fg: var(--color-sand);
+  --smtr-tb-line: rgba(246,242,234,.1);
+  --smtr-tb-icon: var(--color-sand);
+}
+.smtr-tb__track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+.smtr-tb__item {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.9rem 2rem;
+  flex: 1 1 auto;
+  justify-content: center;
+  white-space: nowrap;
+  position: relative;
+}
+.smtr-tb__item + .smtr-tb__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1.1em;
+  width: 1px;
+  background: var(--smtr-tb-line);
+}
+.smtr-tb__icon {
+  font-size: 0.9rem;
+  line-height: 1;
+  color: var(--smtr-tb-icon);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+.smtr-tb__label {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--smtr-tb-fg);
+  line-height: 1;
+}
+
+/* Mobile scroll */
+@media (max-width: 767px) {
+  .smtr-tb__track {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  .smtr-tb__item {
+    flex: 0 0 auto;
+    padding: 0.85rem 1.5rem;
+  }
+  .smtr-tb--scrolling .smtr-tb__track {
+    display: flex;
+    width: max-content;
+    animation: smtr-tb-scroll var(--smtr-scroll-dur, 22s) linear infinite;
+  }
+  .smtr-tb--scrolling .smtr-tb__track:hover,
+  .smtr-tb--scrolling .smtr-tb__track:focus-within {
+    animation-play-state: paused;
+  }
+}
+@keyframes smtr-tb-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(var(--smtr-scroll-offset, -50%)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .smtr-tb--scrolling .smtr-tb__track {
+    animation: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .smtr-tb--scrolling .smtr-tb__item {
+    scroll-snap-align: start;
+  }
+}
+{% endstylesheet %}
+
+{%- liquid
+  assign block_count = section.blocks.size
+  assign scroll_dur = block_count | times: 5 | append: 's'
+-%}
+
+<div
+  class="smtr-tb{% if section.settings.dark %} smtr-tb--dark{% endif %} smtr-tb--scrolling"
+  role="region"
+  aria-label="Store guarantees"
+  style="--smtr-scroll-dur: {{ scroll_dur }};"
+>
+  <ul class="smtr-tb__track" id="smtr-tb-track-{{ section.id }}">
     {%- for block in section.blocks -%}
-      <div class="trust-bar__item" {{ block.shopify_attributes }}>
-        <span class="trust-bar__mark" aria-hidden="true">{{ block.settings.icon | default: '✦' }}</span>
-        <span class="trust-bar__text">{{ block.settings.text }}</span>
-      </div>
+      <li class="smtr-tb__item" {{ block.shopify_attributes }}>
+        {%- if block.settings.icon != blank -%}
+          <span class="smtr-tb__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+        {%- endif -%}
+        <span class="smtr-tb__label">{{ block.settings.text }}</span>
+      </li>
     {%- endfor -%}
-  </div>
+    {%- comment -%}Duplicate for seamless loop on mobile{%- endcomment -%}
+    {%- for block in section.blocks -%}
+      <li class="smtr-tb__item" aria-hidden="true">
+        {%- if block.settings.icon != blank -%}
+          <span class="smtr-tb__icon">{{ block.settings.icon }}</span>
+        {%- endif -%}
+        <span class="smtr-tb__label">{{ block.settings.text }}</span>
+      </li>
+    {%- endfor -%}
+  </ul>
 </div>
+
+{% javascript %}
+(function () {
+  var el = document.getElementById('smtr-tb-track-{{ section.id }}');
+  if (!el) return;
+  function measure() {
+    var half = el.scrollWidth / 2;
+    el.parentElement.style.setProperty('--smtr-scroll-offset', '-' + half + 'px');
+  }
+  measure();
+  if (window.ResizeObserver) {
+    new ResizeObserver(measure).observe(el);
+  }
+})();
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Trust bar",
   "settings": [
-    { "type": "checkbox", "id": "dark", "label": "Dark background", "default": false }
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark variant",
+      "default": false,
+      "info": "Switches to an ink background with light text"
+    }
   ],
   "blocks": [
     {
       "type": "item",
       "name": "Item",
       "settings": [
-        { "type": "text", "id": "icon", "label": "Icon (emoji/glyph)", "default": "✦" },
-        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping over $150" }
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (emoji or glyph)",
+          "default": "✦"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Label",
+          "default": "Free shipping over $150"
+        }
       ]
     }
   ],
@@ -31,8 +184,8 @@
       "blocks": [
         { "type": "item", "settings": { "icon": "✦", "text": "Free shipping over $150" } },
         { "type": "item", "settings": { "icon": "↺", "text": "Easy 30-day returns" } },
-        { "type": "item", "settings": { "icon": "✦", "text": "Limited drops — no restocks" } },
-        { "type": "item", "settings": { "icon": "🔒", "text": "Secure checkout" } }
+        { "type": "item", "settings": { "icon": "◈", "text": "Limited drops — no restocks" } },
+        { "type": "item", "settings": { "icon": "⌁", "text": "Secure checkout" } }
       ]
     }
   ]

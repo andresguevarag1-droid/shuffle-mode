@@ -1,38 +1,98 @@
-<div class="cart-drawer" data-cart-drawer hidden>
-  <div class="cart-drawer__overlay" data-cart-close></div>
-  <aside class="cart-drawer__panel" role="dialog" aria-label="{{ 'cart.general.title' | t }}" aria-modal="true"
+<div class="cart-drawer" data-cart-drawer hidden aria-hidden="true">
+
+  {{- '<!-- scrim / backdrop -->' }}
+  <div
+    class="cart-drawer__overlay"
+    data-cart-close
+    role="presentation"
+    aria-hidden="true"></div>
+
+  {{- '<!-- drawer panel -->' }}
+  <aside
+    class="cart-drawer__panel"
+    role="dialog"
+    aria-label="{{ 'cart.general.title' | t }}"
+    aria-modal="true"
     data-currency="{{ shop.currency }}"
     data-free-enabled="{{ settings.free_shipping_bar }}"
     data-free-threshold="{{ settings.free_shipping_threshold | times: 100 }}">
+
+    {{- '<!-- header -->' }}
     <header class="cart-drawer__head">
-      <h2 class="cart-drawer__title">{{ 'cart.general.title' | t }}</h2>
-      <button class="icon-btn" data-cart-close aria-label="Close">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      <h2 class="cart-drawer__title">
+        <span>{{ 'cart.general.title' | t }}</span>
+      </h2>
+      <button
+        class="cart-drawer__close icon-btn"
+        data-cart-close
+        aria-label="{{ 'accessibility.close' | t | default: 'Close cart' }}"
+        type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+          <path d="M2 2l12 12M14 2 2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
       </button>
     </header>
 
+    {{- '<!-- free shipping progress bar -->' }}
     {%- if settings.free_shipping_bar -%}
       <div class="freeship" data-freeship hidden>
         <p class="freeship__text" data-freeship-text></p>
-        <div class="freeship__track"><div class="freeship__fill" data-freeship-fill></div></div>
+        <div class="freeship__track">
+          <div class="freeship__fill" data-freeship-fill></div>
+        </div>
       </div>
     {%- endif -%}
 
-    <div class="cart-drawer__items" data-cart-items></div>
+    {{- '<!-- line items injected by JS -->' }}
+    <div
+      class="cart-drawer__items"
+      data-cart-items
+      role="list"
+      aria-label="{{ 'cart.general.title' | t }}"></div>
 
+    {{- '<!-- empty state -->' }}
     <div class="cart-drawer__empty" data-cart-empty hidden>
+      <div class="cart-drawer__empty-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
       <p>{{ 'cart.general.empty' | t }}</p>
-      <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">{{ 'general.404.link' | t }}</a>
+      <a
+        href="{{ routes.all_products_collection_url }}"
+        class="btn btn--primary">
+        {{ 'general.404.link' | t | default: 'Shop Now' }}
+      </a>
     </div>
 
+    {{- '<!-- footer: subtotal + checkout -->' }}
     <footer class="cart-drawer__foot" data-cart-foot hidden>
+
       <div class="cart-drawer__subtotal">
         <span class="eyebrow">{{ 'cart.general.subtotal' | t }}</span>
         <span class="cart-drawer__total" data-cart-subtotal></span>
       </div>
-      <a href="{{ routes.cart_url }}" class="btn btn--outline btn--block">View bag</a>
-      <a href="/checkout" class="btn btn--primary btn--block btn--lg">{{ 'cart.general.checkout' | t }}</a>
-      <p class="cart-drawer__fineprint">Shipping &amp; taxes calculated at checkout.</p>
+
+      <a
+        href="{{ routes.cart_url }}"
+        class="btn btn--outline btn--block">
+        View Bag
+      </a>
+
+      <a
+        href="/checkout"
+        class="btn btn--primary btn--block btn--lg">
+        {{ 'cart.general.checkout' | t }}
+      </a>
+
+      <p class="cart-drawer__fineprint">
+        Shipping &amp; taxes calculated at checkout.
+      </p>
+
     </footer>
+
   </aside>
+
 </div>

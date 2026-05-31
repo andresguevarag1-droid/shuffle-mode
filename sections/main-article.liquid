@@ -1,22 +1,559 @@
-<article class="container section">
-  <header class="prose" style="text-align:center;">
-    <span class="eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}{% if article.tags.size > 0 %} · {{ article.tags.first }}{% endif %}</span>
-    <h1 class="section__title" style="margin-top:1.25rem;">{{ article.title }}</h1>
-  </header>
+{% stylesheet %}
+/* ── sma: layout ── */
+.sma-article {
+  --sma-measure: 65ch;
+  --sma-hero-radius: 4px;
+  padding-block: var(--space-xl, 5rem);
+}
 
-  {%- if article.image -%}
-    <div class="editorial-frame rounded-lg" style="max-width:56rem;margin:2.5rem auto 0;aspect-ratio:16/9;overflow:hidden;">
-      <img src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.image.alt | escape | default: article.title }}" style="width:100%;height:100%;object-fit:cover;">
+/* ── sma: back link ── */
+.sma-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  text-decoration: none;
+  transition: color 0.2s ease, gap 0.2s ease;
+  margin-bottom: 3.5rem;
+}
+.sma-back::before {
+  content: '←';
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.sma-back:hover {
+  color: var(--color-ink);
+  gap: 0.65em;
+}
+.sma-back:hover::before {
+  transform: translateX(-3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sma-back,
+  .sma-back::before {
+    transition: none;
+  }
+}
+
+/* ── sma: header ── */
+.sma-header {
+  text-align: center;
+  max-width: 52rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+.sma-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: 1.75rem;
+}
+.sma-meta-sep {
+  color: var(--color-line);
+  font-size: 1em;
+}
+.sma-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.5vw + 0.5rem, 5.5rem);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin: 0 0 0.6em;
+}
+.sma-dek {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.2vw + 0.5rem, 1.2rem);
+  line-height: 1.65;
+  color: var(--color-stone);
+  max-width: 42ch;
+  margin-inline: auto;
+  margin-top: 0.5rem;
+}
+
+/* ── sma: hero ── */
+.sma-hero {
+  position: relative;
+  margin-block: 3.75rem;
+  overflow: hidden;
+}
+.sma-hero-inner {
+  width: 100%;
+  aspect-ratio: var(--sma-hero-ar, 16 / 7);
+  overflow: hidden;
+  border-radius: var(--sma-hero-radius);
+}
+.sma-hero-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1.04);
+}
+.sma-hero:hover .sma-hero-inner img {
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sma-hero-inner img {
+    transition: none;
+    transform: scale(1);
+  }
+}
+.sma-hero-caption {
+  margin-top: 0.65rem;
+  text-align: right;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--color-stone);
+  font-style: italic;
+  padding-inline: 0.25rem;
+}
+
+/* ── sma: body ── */
+.sma-body {
+  max-width: var(--sma-measure);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+.sma-content {
+  font-family: var(--font-body);
+  font-size: clamp(1.0625rem, 0.5vw + 0.9rem, 1.1875rem);
+  line-height: 1.82;
+  color: var(--color-ink);
+}
+/* drop-cap on first paragraph */
+.sma-content > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 4.5em;
+  line-height: 0.78;
+  margin-right: 0.1em;
+  margin-top: 0.08em;
+  color: var(--color-ember);
+  font-weight: 300;
+}
+.sma-content h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw + 0.5rem, 2rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  margin: 3rem 0 0.75rem;
+  line-height: 1.2;
+}
+.sma-content h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.5vw + 0.4rem, 1.4rem);
+  font-weight: 300;
+  color: var(--color-ink);
+  margin: 2.25rem 0 0.6rem;
+}
+.sma-content p {
+  margin-block: 0 1.45em;
+}
+.sma-content a {
+  color: var(--color-ember);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+.sma-content a:hover {
+  color: var(--color-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sma-content a { transition: none; }
+}
+.sma-content blockquote {
+  margin: 2.75rem 0;
+  padding: 1.5rem 0 1.5rem 2rem;
+  border-left: 2px solid var(--color-ember);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.5vw + 0.5rem, 1.55rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+.sma-content blockquote p {
+  margin: 0;
+}
+.sma-content figure {
+  margin: 2.5rem 0;
+}
+.sma-content figure img {
+  width: 100%;
+  border-radius: var(--sma-hero-radius);
+  display: block;
+}
+.sma-content figcaption {
+  font-size: 0.75rem;
+  letter-spacing: 0.07em;
+  color: var(--color-stone);
+  margin-top: 0.55rem;
+  font-style: italic;
+}
+.sma-content hr {
+  border: none;
+  text-align: center;
+  margin: 3rem 0;
+  color: var(--color-stone);
+  letter-spacing: 0.4em;
+}
+.sma-content hr::before {
+  content: '· · ·';
+}
+
+/* ── sma: footer strip ── */
+.sma-footer {
+  max-width: var(--sma-measure);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.sma-footer-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  text-decoration: none;
+  transition: color 0.2s ease, gap 0.2s ease;
+}
+.sma-footer-back::before {
+  content: '←';
+  transition: transform 0.2s ease;
+}
+.sma-footer-back:hover {
+  color: var(--color-ink);
+  gap: 0.65em;
+}
+.sma-footer-back:hover::before {
+  transform: translateX(-3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sma-footer-back,
+  .sma-footer-back::before { transition: none; }
+}
+.sma-footer-tag {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  background: var(--color-sand);
+  padding: 0.3em 0.85em;
+  border-radius: 2px;
+}
+
+/* ── sma: keep-reading ── */
+.sma-more {
+  margin-top: 6rem;
+  padding-top: 3.5rem;
+  border-top: 1px solid var(--color-line);
+}
+.sma-more-label {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  text-align: center;
+  margin-bottom: 0.65rem;
+}
+.sma-more-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2.25rem);
+  font-weight: 300;
+  text-align: center;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  margin: 0 0 3rem;
+}
+.sma-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 2rem;
+}
+.sma-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  group: card;
+}
+.sma-card-img {
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: var(--sma-hero-radius);
+  background: var(--color-sand);
+  margin-bottom: 1.1rem;
+}
+.sma-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.sma-card:hover .sma-card-img img {
+  transform: scale(1.04);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sma-card-img img { transition: none; }
+}
+.sma-card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--color-sand);
+}
+.sma-card-meta {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: 0.45rem;
+}
+.sma-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.2vw + 0.5rem, 1.3rem);
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  margin: 0 0 0.5rem;
+  transition: color 0.2s;
+}
+.sma-card:hover .sma-card-title {
+  color: var(--color-ember);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sma-card-title { transition: none; }
+}
+.sma-card-excerpt {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--color-stone);
+  margin: 0;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sma-card-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  transition: gap 0.2s ease;
+}
+.sma-card-read::after {
+  content: '→';
+  transition: transform 0.2s ease;
+}
+.sma-card:hover .sma-card-read {
+  gap: 0.6em;
+}
+.sma-card:hover .sma-card-read::after {
+  transform: translateX(3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sma-card-read,
+  .sma-card-read::after { transition: none; }
+}
+{% endstylesheet %}
+
+<article class="sma-article">
+  <div class="container">
+
+    {%- comment -%} Back link — top {%- endcomment -%}
+    <a href="{{ blog.url }}" class="sma-back" aria-label="Back to {{ blog.title }}">
+      Journal
+    </a>
+
+    {%- comment -%} Header {%- endcomment -%}
+    <header class="sma-header">
+      <div class="sma-meta" role="text" aria-label="Article metadata">
+        {%- if article.published_at -%}
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+            {{- article.published_at | date: '%B %-d, %Y' -}}
+          </time>
+        {%- endif -%}
+        {%- if article.author != blank -%}
+          <span class="sma-meta-sep" aria-hidden="true">—</span>
+          <span>{{ article.author }}</span>
+        {%- endif -%}
+        {%- if article.tags.size > 0 -%}
+          <span class="sma-meta-sep" aria-hidden="true">—</span>
+          <span>{{ article.tags.first }}</span>
+        {%- endif -%}
+      </div>
+
+      <h1 class="sma-title">{{ article.title }}</h1>
+
+      {%- if article.excerpt != blank -%}
+        <p class="sma-dek">{{ article.excerpt | strip_html }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- comment -%} Hero image {%- endcomment -%}
+    {%- if article.image -%}
+      <figure class="sma-hero" aria-label="Article hero image">
+        <div class="sma-hero-inner">
+          <img
+            src="{{ article.image | image_url: width: 1600 }}"
+            srcset="
+              {{ article.image | image_url: width: 800 }} 800w,
+              {{ article.image | image_url: width: 1200 }} 1200w,
+              {{ article.image | image_url: width: 1600 }} 1600w"
+            sizes="(max-width: 600px) 100vw, (max-width: 1200px) 100vw, 1600px"
+            alt="{{ article.image.alt | escape | default: article.title | escape }}"
+            loading="eager"
+            decoding="async">
+        </div>
+        {%- if article.image.alt != blank -%}
+          <figcaption class="sma-hero-caption">{{ article.image.alt | escape }}</figcaption>
+        {%- endif -%}
+      </figure>
+    {%- endif -%}
+
+    {%- comment -%} Article body {%- endcomment -%}
+    <div class="sma-body">
+      <div class="sma-content rte">
+        {{ article.content }}
+      </div>
+
+      {%- comment -%} Footer strip {%- endcomment -%}
+      <footer class="sma-footer">
+        <a href="{{ blog.url }}" class="sma-footer-back">
+          All journal entries
+        </a>
+        {%- if article.tags.size > 0 -%}
+          <span class="sma-footer-tag">{{ article.tags.first }}</span>
+        {%- endif -%}
+      </footer>
     </div>
-  {%- endif -%}
 
-  <div class="prose rte" style="margin-top:3rem;">{{ article.content }}</div>
+    {%- comment -%} Keep reading grid — up to 3 other articles {%- endcomment -%}
+    {%- assign other_articles = blog.articles | where_exp: 'a', 'a.id != article.id' -%}
+    {%- if other_articles.size > 0 -%}
+      <section class="sma-more" aria-labelledby="sma-more-heading">
+        <p class="sma-more-label" aria-hidden="true">Continue exploring</p>
+        <h2 class="sma-more-heading" id="sma-more-heading">Keep reading</h2>
 
-  <div class="prose" style="margin-top:3rem;border-top:1px solid var(--color-line);padding-top:1.5rem;">
-    <a href="{{ blog.url }}" class="card__cat link-arrow">← All journal entries</a>
+        <div class="sma-grid">
+          {%- assign shown = 0 -%}
+          {%- for a in other_articles -%}
+            {%- if shown >= 3 -%}{%- break -%}{%- endif -%}
+            <a href="{{ a.url }}" class="sma-card" aria-label="Read {{ a.title | escape }}">
+              <div class="sma-card-img">
+                {%- if a.image -%}
+                  <img
+                    src="{{ a.image | image_url: width: 720 }}"
+                    srcset="
+                      {{ a.image | image_url: width: 480 }} 480w,
+                      {{ a.image | image_url: width: 720 }} 720w"
+                    sizes="(max-width: 600px) 100vw, 360px"
+                    alt="{{ a.image.alt | escape | default: a.title | escape }}"
+                    loading="lazy"
+                    decoding="async">
+                {%- else -%}
+                  <div class="sma-card-placeholder" aria-hidden="true"></div>
+                {%- endif -%}
+              </div>
+
+              <div class="sma-card-meta">
+                {{- a.published_at | date: '%B %-d, %Y' -}}
+                {%- if a.tags.size > 0 -%}
+                  &ensp;·&ensp;{{ a.tags.first }}
+                {%- endif -%}
+              </div>
+
+              <h3 class="sma-card-title">{{ a.title }}</h3>
+
+              {%- if a.excerpt != blank -%}
+                <p class="sma-card-excerpt">{{ a.excerpt | strip_html }}</p>
+              {%- endif -%}
+
+              <span class="sma-card-read" aria-hidden="true">Read</span>
+            </a>
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endfor -%}
+        </div>
+      </section>
+    {%- endif -%}
+
   </div>
 </article>
 
 {% schema %}
-{ "name": "Article", "settings": [] }
+{
+  "name": "Article",
+  "settings": [
+    {
+      "type": "select",
+      "id": "hero_aspect_ratio",
+      "label": "Hero image ratio",
+      "options": [
+        { "value": "21 / 7", "label": "Cinematic (3:1)" },
+        { "value": "16 / 7", "label": "Wide (16:7)" },
+        { "value": "16 / 9", "label": "Standard (16:9)" },
+        { "value": "4 / 3",  "label": "Classic (4:3)" }
+      ],
+      "default": "16 / 7"
+    },
+    {
+      "type": "range",
+      "id": "reading_width",
+      "label": "Body text measure (ch)",
+      "min": 55,
+      "max": 80,
+      "step": 1,
+      "default": 65
+    },
+    {
+      "type": "checkbox",
+      "id": "show_keep_reading",
+      "label": "Show "Keep reading" grid",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Article",
+      "category": "Journal"
+    }
+  ]
+}
 {% endschema %}

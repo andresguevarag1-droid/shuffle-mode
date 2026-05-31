@@ -1,29 +1,216 @@
 {%- if section.blocks.size > 0 -%}
-  <div class="announcement">
-    <div class="announcement__viewport">
-      <div class="marquee" aria-hidden="false">
-        {%- for i in (1..2) -%}
-          {%- for block in section.blocks -%}
-            <span {{ block.shopify_attributes }}>
-              {{ block.settings.text }}
-              <span class="star" aria-hidden="true">✦</span>
-            </span>
-          {%- endfor -%}
-        {%- endfor -%}
-      </div>
+<div
+  class="smann-bar"
+  role="region"
+  aria-label="Announcements"
+  style="
+    --smann-bar-bg: {{ section.settings.background_color }};
+    --smann-bar-fg: {{ section.settings.text_color }};
+    --smann-count: {{ section.blocks.size }};
+    --smann-speed: {{ section.settings.speed }}s;
+  "
+>
+  {%- if section.blocks.size == 1 -%}
+    <div class="smann-bar__single">
+      <span class="smann-bar__ember" aria-hidden="true">&#x2666;</span>
+      <span class="smann-bar__msg">{{ section.blocks.first.settings.text }}</span>
+      <span class="smann-bar__ember" aria-hidden="true">&#x2666;</span>
     </div>
-  </div>
+  {%- else -%}
+    <div class="smann-bar__rotate" aria-live="polite" aria-atomic="true">
+      {%- for block in section.blocks -%}
+        <span
+          class="smann-bar__slide{% if forloop.first %} smann-bar__slide--active{% endif %}"
+          data-index="{{ forloop.index0 }}"
+          {{ block.shopify_attributes }}
+        >
+          <span class="smann-bar__ember" aria-hidden="true">&#x2666;</span>
+          {{ block.settings.text }}
+          <span class="smann-bar__ember" aria-hidden="true">&#x2666;</span>
+        </span>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
 {%- endif -%}
+
+{% stylesheet %}
+.smann-bar {
+  --_bg: var(--smann-bar-bg, var(--color-ink));
+  --_fg: var(--smann-bar-fg, var(--color-bone));
+  background-color: var(--_bg);
+  color: var(--_fg);
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 200;
+}
+
+.smann-bar__single {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.smann-bar__rotate {
+  position: relative;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.smann-bar__slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0 1rem;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.smann-bar__slide--active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.smann-bar__slide--exit {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.smann-bar__ember {
+  color: var(--color-ember);
+  font-size: 0.45em;
+  vertical-align: middle;
+  display: inline-block;
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smann-bar__slide {
+    transition: none;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  var bar = document.currentScript
+    ? document.currentScript.closest('.smann-bar')
+    : null;
+
+  if (!bar) {
+    var bars = document.querySelectorAll('.smann-bar');
+    bar = bars[bars.length - 1];
+  }
+
+  if (!bar) return;
+
+  var rotate = bar.querySelector('.smann-bar__rotate');
+  if (!rotate) return;
+
+  var slides = Array.prototype.slice.call(
+    rotate.querySelectorAll('.smann-bar__slide')
+  );
+  if (slides.length < 2) return;
+
+  var prefersReduced =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReduced) {
+    slides.forEach(function (s, i) {
+      s.classList.remove('smann-bar__slide--active', 'smann-bar__slide--exit');
+      if (i === 0) s.classList.add('smann-bar__slide--active');
+    });
+    return;
+  }
+
+  var speed = parseFloat(getComputedStyle(bar).getPropertyValue('--smann-speed')) || 4;
+  var intervalMs = Math.max(speed * 1000, 2000);
+  var current = 0;
+
+  function advance() {
+    var next = (current + 1) % slides.length;
+
+    slides[current].classList.add('smann-bar__slide--exit');
+    slides[current].classList.remove('smann-bar__slide--active');
+
+    slides[next].classList.add('smann-bar__slide--active');
+    slides[next].classList.remove('smann-bar__slide--exit');
+
+    var leaving = slides[current];
+    setTimeout(function () {
+      leaving.classList.remove('smann-bar__slide--exit');
+    }, 700);
+
+    current = next;
+    rotate.setAttribute('aria-label', slides[current].textContent.trim());
+  }
+
+  setInterval(advance, intervalMs);
+})();
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#16130f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#f6f2ea"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Rotation interval (seconds)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    }
+  ],
   "blocks": [
     {
       "type": "message",
       "name": "Message",
       "settings": [
-        { "type": "text", "id": "text", "label": "Text", "default": "Limited weekly drops · once it's gone, it's gone" }
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New drop every Sunday · 1PM ET"
+        }
       ]
     }
   ],
@@ -31,9 +218,9 @@
     {
       "name": "Announcement bar",
       "blocks": [
-        { "type": "message", "settings": { "text": "Free shipping on orders over $150" } },
-        { "type": "message", "settings": { "text": "New drop every Sunday, 1PM ET" } },
-        { "type": "message", "settings": { "text": "Join the list for early access" } }
+        { "type": "message", "settings": { "text": "Free shipping over $150" } },
+        { "type": "message", "settings": { "text": "New drop every Sunday · 1PM ET" } },
+        { "type": "message", "settings": { "text": "When it’s gone, it’s gone" } }
       ]
     }
   ]

@@ -1,15 +1,23 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="{{ request.locale.iso_code }}" class="no-js">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="{{ settings.color_ink }}">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+    <meta name="color-scheme" content="light">
     <link rel="canonical" href="{{ canonical_url }}">
 
     {%- if settings.heading_font_family contains 'Fraunces' or settings.body_font_family contains 'Inter' -%}
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap">
+      {%- comment -%}
+        font-display=swap injected via &display=swap; trimmed to essential axes/weights only.
+        Variable-font range (opsz,wght) keeps file count at 2 requests.
+      {%- endcomment -%}
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap" media="print" onload="this.media='all'">
+      <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap"></noscript>
     {%- endif -%}
 
     <title>
@@ -87,9 +95,54 @@
     {%- endstyle -%}
 
     {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+    {%- comment -%} View Transitions + page-load fade — CSS-only, fully guarded {%- endcomment -%}
+    <style>
+      /* Activate JS-available class for progressive enhancement */
+      html.no-js .js-only { display: none !important; }
+
+      /* Cross-page View Transitions (Chrome 111+, guarded) */
+      @supports (view-transition-name: none) {
+        @view-transition { navigation: auto; }
+
+        ::view-transition-old(root) {
+          animation: sm-vt-out 220ms cubic-bezier(0.4, 0, 1, 1) both;
+        }
+        ::view-transition-new(root) {
+          animation: sm-vt-in 280ms cubic-bezier(0, 0, 0.2, 1) both;
+        }
+
+        @keyframes sm-vt-out {
+          from { opacity: 1; transform: translateY(0); }
+          to   { opacity: 0; transform: translateY(-6px); }
+        }
+        @keyframes sm-vt-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          ::view-transition-old(root),
+          ::view-transition-new(root) {
+            animation: none;
+          }
+        }
+      }
+
+      /* Initial page-load fade-in (fires once on first paint) */
+      @media (prefers-reduced-motion: no-preference) {
+        body {
+          animation: sm-page-in 400ms cubic-bezier(0, 0, 0.2, 1) both;
+        }
+        @keyframes sm-page-in {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+      }
+    </style>
   </head>
 
-  <body class="template-{{ request.page_type | handle }}">
+  <body class="template-{{ request.page_type | handle }} template-{{ template.name | handle }}{% if template.suffix != blank %} template--{{ template.suffix | handle }}{% endif %}">
     <a href="#main" class="skip-link">Skip to content</a>
 
     {% sections 'header-group' %}
@@ -102,6 +155,7 @@
 
     {% render 'cart-drawer' %}
 
+    <script>document.documentElement.classList.remove('no-js');</script>
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>

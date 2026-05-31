@@ -1,10 +1,305 @@
-<section class="container section" style="text-align:center;">
-  <span class="eyebrow">404</span>
-  <h1 class="section__title" style="margin-top:1.25rem;">{{ 'general.404.title' | t }}</h1>
-  <p class="hero__sub" style="margin-inline:auto;">{{ 'general.404.body' | t }}</p>
-  <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary" style="margin-top:2rem;">{{ 'general.404.link' | t }}</a>
+{% stylesheet %}
+.sm404-wrap {
+  --sm404-gap: clamp(2.5rem, 6vw, 5rem);
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-block: var(--sm404-gap);
+  padding-inline: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.sm404-mark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+  aria-hidden: true;
+}
+
+.sm404-mark-text {
+  font-family: var(--font-display);
+  font-size: clamp(18rem, 40vw, 36rem);
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-line, rgba(22,19,15,.1));
+  letter-spacing: -0.05em;
+  opacity: 0.6;
+  animation: sm404-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes sm404-drift {
+  from { transform: translateY(0) rotate(-1deg) scale(1); }
+  to   { transform: translateY(-2%) rotate(1deg) scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sm404-mark-text {
+    animation: none;
+  }
+}
+
+.sm404-content {
+  position: relative;
+  z-index: 1;
+  max-width: 44rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.sm404-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone, #6f675d);
+}
+
+.sm404-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--color-ink, #16130f);
+  margin: 0;
+}
+
+.sm404-headline em {
+  font-style: italic;
+  color: var(--color-ember, #c2502e);
+}
+
+.sm404-sub {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--color-stone, #6f675d);
+  max-width: 32rem;
+  margin: 0;
+}
+
+.sm404-search {
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--color-ink, #16130f);
+  background: var(--color-cream, #fbf9f4);
+  overflow: hidden;
+}
+
+.sm404-search__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-ink, #16130f);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.sm404-search__input::placeholder {
+  color: var(--color-stone, #6f675d);
+  opacity: 1;
+}
+
+.sm404-search__btn {
+  flex-shrink: 0;
+  padding: 0.75rem 1.125rem;
+  background: var(--color-ink, #16130f);
+  color: var(--color-cream, #fbf9f4);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.sm404-search__btn:hover,
+.sm404-search__btn:focus-visible {
+  background: var(--color-ember, #c2502e);
+}
+
+.sm404-search__btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sm404-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.sm404-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8125rem 1.75rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  line-height: 1;
+}
+
+.sm404-btn--primary {
+  background: var(--color-ember, #c2502e);
+  color: var(--color-cream, #fbf9f4);
+  border: 1px solid var(--color-ember, #c2502e);
+}
+
+.sm404-btn--primary:hover,
+.sm404-btn--primary:focus-visible {
+  background: var(--color-ink, #16130f);
+  border-color: var(--color-ink, #16130f);
+}
+
+.sm404-btn--ghost {
+  background: transparent;
+  color: var(--color-ink, #16130f);
+  border: 1px solid var(--color-ink, #16130f);
+}
+
+.sm404-btn--ghost:hover,
+.sm404-btn--ghost:focus-visible {
+  background: var(--color-ink, #16130f);
+  color: var(--color-cream, #fbf9f4);
+}
+
+.sm404-divider {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-line, rgba(22,19,15,.1));
+  margin: 0 auto;
+}
+{% endstylesheet %}
+
+<section class="sm404-wrap" role="main" aria-labelledby="sm404-heading">
+
+  <div class="sm404-mark" aria-hidden="true">
+    <span class="sm404-mark-text">404</span>
+  </div>
+
+  <div class="sm404-content">
+
+    <span class="sm404-eyebrow">Error 404</span>
+
+    <h1 class="sm404-headline" id="sm404-heading">
+      This one<br><em>shuffled off.</em>
+    </h1>
+
+    <div class="sm404-divider"></div>
+
+    <p class="sm404-sub">
+      The page you were hunting has gone missing — moved, renamed, or maybe it never existed. Either way, the rest of the collection is very much here.
+    </p>
+
+    <form class="sm404-search" action="{{ routes.search_url }}" method="get" role="search" aria-label="Search the store">
+      <input
+        class="sm404-search__input"
+        type="search"
+        name="q"
+        placeholder="Search the drop…"
+        aria-label="Search"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+      >
+      <button class="sm404-search__btn" type="submit" aria-label="Submit search">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
+        Search
+      </button>
+    </form>
+
+    <div class="sm404-ctas">
+      <a href="{{ routes.all_products_collection_url }}" class="sm404-btn sm404-btn--primary">
+        Shop the drop
+      </a>
+      <a href="{{ routes.root_url }}" class="sm404-btn sm404-btn--ghost">
+        Back home
+      </a>
+    </div>
+
+  </div>
+
 </section>
 
 {% schema %}
-{ "name": "404", "settings": [] }
+{
+  "name": "404",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "This one shuffled off."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "The page you were hunting has gone missing — moved, renamed, or maybe it never existed. Either way, the rest of the collection is very much here."
+    },
+    {
+      "type": "text",
+      "id": "cta_shop_label",
+      "label": "Shop CTA label",
+      "default": "Shop the drop"
+    },
+    {
+      "type": "text",
+      "id": "cta_home_label",
+      "label": "Home CTA label",
+      "default": "Back home"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mark",
+      "label": "Show animated 404 mark",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "404"
+    }
+  ]
+}
 {% endschema %}

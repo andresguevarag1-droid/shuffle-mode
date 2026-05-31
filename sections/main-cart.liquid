@@ -1,55 +1,722 @@
-<section class="container section">
-  <h1 class="section__title">{{ 'cart.general.title' | t }}</h1>
+{% stylesheet %}
+/* ── Cart Page ── */
+.smc-cart {
+  padding: var(--smc-cart-pad-y, 4rem) 0 6rem;
+}
+
+.smc-cart__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-line);
+  margin-bottom: 2.5rem;
+}
+
+.smc-cart__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+.smc-cart__count {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+/* ── Free shipping bar ── */
+.smc-freeship {
+  background: var(--color-sand);
+  border-radius: 2px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.smc-freeship__track {
+  position: absolute;
+  inset: 0;
+  background: var(--color-ember);
+  opacity: 0.08;
+  transform-origin: left center;
+  transform: scaleX(var(--smc-fs-progress, 0));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smc-freeship__icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-ember);
+}
+
+.smc-freeship__text {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+  position: relative;
+}
+
+.smc-freeship__text strong {
+  font-weight: 600;
+}
+
+.smc-freeship--unlocked .smc-freeship__icon {
+  color: #3a7d44;
+}
+
+.smc-freeship--unlocked .smc-freeship__track {
+  background: #3a7d44;
+  opacity: 0.1;
+  transform: scaleX(1);
+}
+
+/* ── Layout ── */
+.smc-cart__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .smc-cart__body {
+    grid-template-columns: 1fr 360px;
+    gap: 4rem;
+  }
+}
+
+/* ── Line items ── */
+.smc-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.smc-line {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  gap: 1.25rem 1.5rem;
+  align-items: start;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--color-line);
+  position: relative;
+}
+
+.smc-line:first-child {
+  border-top: 1px solid var(--color-line);
+}
+
+/* image */
+.smc-line__media {
+  display: block;
+  width: 88px;
+  height: 112px;
+  background: var(--color-sand);
+  overflow: hidden;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.smc-line__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smc-line__media:hover img {
+  transform: scale(1.04);
+}
+
+/* info */
+.smc-line__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.125rem;
+}
+
+.smc-line__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.smc-line__name:hover {
+  color: var(--color-ember);
+}
+
+.smc-line__variant {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smc-line__stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 0.75rem;
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  width: fit-content;
+  background: var(--color-cream);
+}
+
+.smc-line__stepper-btn {
+  appearance: none;
+  background: transparent;
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.smc-line__stepper-btn:hover {
+  background: var(--color-sand);
+}
+
+.smc-line__stepper-btn:active {
+  background: var(--color-ember);
+  color: var(--color-cream);
+}
+
+.smc-line__qty {
+  width: 2.5rem;
+  text-align: center;
+  border: none;
+  border-left: 1px solid var(--color-line);
+  border-right: 1px solid var(--color-line);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  padding: 0;
+  height: 2rem;
+  -moz-appearance: textfield;
+}
+
+.smc-line__qty::-webkit-inner-spin-button,
+.smc-line__qty::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.smc-line__remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  text-decoration: none;
+  margin-top: 0.75rem;
+  transition: color 0.15s;
+}
+
+.smc-line__remove:hover {
+  color: var(--color-ember);
+}
+
+/* price */
+.smc-line__price {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  text-align: right;
+  white-space: nowrap;
+  padding-top: 0.125rem;
+}
+
+/* ── Summary panel ── */
+.smc-summary {
+  background: var(--color-bone);
+  padding: 2rem;
+  border-radius: 2px;
+  position: sticky;
+  top: 6rem;
+}
+
+.smc-summary__title {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin: 0 0 1.5rem;
+}
+
+.smc-summary__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.smc-summary__label {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-stone);
+}
+
+.smc-summary__value {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-ink);
+}
+
+.smc-summary__total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.25rem 0 1.5rem;
+}
+
+.smc-summary__total-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.smc-summary__total-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+}
+
+.smc-summary__checkout {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border: none;
+  border-radius: 2px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-bottom: 0.75rem;
+}
+
+.smc-summary__checkout:hover {
+  background: var(--color-ember);
+}
+
+.smc-summary__checkout:active {
+  transform: scale(0.99);
+}
+
+.smc-summary__update {
+  display: block;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  color: var(--color-stone);
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  margin-bottom: 1.5rem;
+}
+
+.smc-summary__update:hover {
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+}
+
+/* trust badges */
+.smc-trust {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.smc-trust__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-stone);
+  letter-spacing: 0.02em;
+}
+
+.smc-trust__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--color-stone);
+}
+
+/* ── Empty state ── */
+.smc-empty {
+  padding: var(--smc-empty-pad, 6rem) 0 8rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.smc-empty__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smc-empty__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0;
+  max-width: 18ch;
+}
+
+.smc-empty__sub {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-stone);
+  line-height: 1.6;
+  max-width: 36ch;
+  margin: 0;
+}
+
+.smc-empty__divider {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-line);
+  border: none;
+  margin: 0;
+}
+
+.smc-empty__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.smc-empty__cta:hover {
+  background: var(--color-ember);
+}
+
+.smc-empty__cta:active {
+  transform: scale(0.98);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .smc-freeship__track,
+  .smc-line__media img,
+  .smc-summary__checkout,
+  .smc-empty__cta {
+    transition: none;
+  }
+}
+{% endstylesheet %}
+
+<section class="smc-cart container" aria-label="{{ 'cart.general.title' | t }}">
 
   {%- if cart.item_count > 0 -%}
-    {%- if settings.free_shipping_bar -%}
-      {%- assign threshold = settings.free_shipping_threshold | times: 100 -%}
-      {%- if cart.total_price >= threshold -%}
-        <p class="cart__freeship">✦ You&rsquo;ve unlocked free shipping.</p>
+
+    {%- comment -%} Free shipping bar {%- endcomment -%}
+    {%- assign threshold_cents = settings.free_shipping_threshold | times: 100 -%}
+    {%- if threshold_cents > 0 -%}
+      {%- assign fs_progress = cart.total_price | times: 1.0 | divided_by: threshold_cents -%}
+      {%- if fs_progress > 1 -%}{%- assign fs_progress = 1 -%}{%- endif -%}
+      {%- assign fs_progress_pct = fs_progress | round: 4 -%}
+      {%- if cart.total_price >= threshold_cents -%}
+        <div class="smc-freeship smc-freeship--unlocked" role="status" aria-live="polite">
+          <div class="smc-freeship__track" aria-hidden="true"></div>
+          <svg class="smc-freeship__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M2.5 10.5l4.5 4.5 10-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="smc-freeship__text">You&rsquo;ve <strong>unlocked free shipping</strong> — a little luxury, on us.</p>
+        </div>
       {%- else -%}
-        {%- assign away = threshold | minus: cart.total_price -%}
-        <p class="cart__freeship">You&rsquo;re {{ away | money }} away from free shipping.</p>
+        {%- assign remaining = threshold_cents | minus: cart.total_price -%}
+        <div class="smc-freeship" role="status" aria-live="polite" style="--smc-fs-progress: {{ fs_progress_pct }};">
+          <div class="smc-freeship__track" aria-hidden="true"></div>
+          <svg class="smc-freeship__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M3 10h14M10 3l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="smc-freeship__text">You&rsquo;re <strong>{{ remaining | money }}</strong> away from complimentary shipping.</p>
+        </div>
       {%- endif -%}
     {%- endif -%}
-    {% form 'cart', cart %}
-      <div style="margin-top:2rem;">
-        {%- for item in cart.items -%}
-          <div class="cart-line">
-            <a href="{{ item.url }}" class="cart-line__media editorial-frame">
-              {%- if item.image -%}
-                <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" style="width:100%;height:100%;object-fit:cover;">
-              {%- endif -%}
-            </a>
-            <div>
-              <a href="{{ item.url }}" class="card__name">{{ item.product.title }}</a>
-              {%- unless item.variant.title contains 'Default' -%}
-                <div class="card__cat">{{ item.variant.title }}</div>
-              {%- endunless -%}
-              <div class="card__cat">
-                <label class="visually-hidden" for="qty-{{ item.index }}">Quantity</label>
-                <input id="qty-{{ item.index }}" type="number" min="0" name="updates[]" value="{{ item.quantity }}" style="width:4rem;" class="input">
-                <a href="{{ item.url_to_remove }}" style="margin-left:1rem;text-decoration:underline;">{{ 'cart.general.remove' | t }}</a>
-              </div>
-            </div>
-            <div class="card__price">{{ item.final_line_price | money }}</div>
-          </div>
-        {%- endfor -%}
-      </div>
 
-      <div class="cart__foot">
-        <p class="product__price">{{ 'cart.general.subtotal' | t }}: {{ cart.total_price | money }}</p>
-        <div style="display:flex;gap:1rem;">
-          <button type="submit" name="update" class="btn btn--outline">Update</button>
-          <button type="submit" name="checkout" class="btn btn--primary">{{ 'cart.general.checkout' | t }}</button>
-        </div>
+    {%- comment -%} Cart header {%- endcomment -%}
+    <div class="smc-cart__header">
+      <h1 class="smc-cart__title">Your cart</h1>
+      <span class="smc-cart__count" aria-live="polite">{{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }}</span>
+    </div>
+
+    {%- comment -%} Cart form {%- endcomment -%}
+    {% form 'cart', cart %}
+      <div class="smc-cart__body">
+
+        {%- comment -%} Line items {%- endcomment -%}
+        <ul class="smc-lines" aria-label="Cart items">
+          {%- for item in cart.items -%}
+            <li class="smc-line">
+              <a href="{{ item.url }}" class="smc-line__media" tabindex="-1" aria-hidden="true">
+                {%- if item.image -%}
+                  <img
+                    src="{{ item.image | image_url: width: 200 }}"
+                    alt="{{ item.image.alt | default: item.title | escape }}"
+                    width="88"
+                    height="112"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+              </a>
+
+              <div class="smc-line__info">
+                <a href="{{ item.url }}" class="smc-line__name">{{ item.product.title }}</a>
+                {%- unless item.variant.title contains 'Default' -%}
+                  <span class="smc-line__variant">{{ item.variant.title }}</span>
+                {%- endunless -%}
+
+                <div class="smc-line__stepper" role="group" aria-label="Quantity for {{ item.product.title | escape }}">
+                  <button
+                    type="button"
+                    class="smc-line__stepper-btn"
+                    data-action="decrement"
+                    data-target="qty-{{ item.index }}"
+                    aria-label="Decrease quantity"
+                  >&#8722;</button>
+                  <label class="visually-hidden" for="qty-{{ item.index }}">Quantity</label>
+                  <input
+                    id="qty-{{ item.index }}"
+                    class="smc-line__qty"
+                    type="number"
+                    name="updates[]"
+                    value="{{ item.quantity }}"
+                    min="0"
+                    aria-label="Quantity"
+                  >
+                  <button
+                    type="button"
+                    class="smc-line__stepper-btn"
+                    data-action="increment"
+                    data-target="qty-{{ item.index }}"
+                    aria-label="Increase quantity"
+                  >&#43;</button>
+                </div>
+
+                <a href="{{ item.url_to_remove }}" class="smc-line__remove" aria-label="Remove {{ item.product.title | escape }} from cart">
+                  <svg class="smc-trust__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 4h10M6 4V3h4v1M5 4l.5 9h5l.5-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Remove
+                </a>
+              </div>
+
+              <div class="smc-line__price" aria-label="Price: {{ item.final_line_price | money }}">
+                {{ item.final_line_price | money }}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- comment -%} Order summary {%- endcomment -%}
+        <aside class="smc-summary" aria-label="Order summary">
+          <p class="smc-summary__title">Order summary</p>
+
+          <div class="smc-summary__row">
+            <span class="smc-summary__label">Subtotal</span>
+            <span class="smc-summary__value">{{ cart.total_price | money }}</span>
+          </div>
+          <div class="smc-summary__row">
+            <span class="smc-summary__label">Shipping</span>
+            <span class="smc-summary__value">Calculated at checkout</span>
+          </div>
+
+          <div class="smc-summary__total-row" aria-label="Total: {{ cart.total_price | money }}">
+            <span class="smc-summary__total-label">Total</span>
+            <span class="smc-summary__total-value">{{ cart.total_price | money }}</span>
+          </div>
+
+          <button type="submit" name="checkout" class="smc-summary__checkout">
+            Proceed to checkout
+          </button>
+          <button type="submit" name="update" class="smc-summary__update">
+            Update cart
+          </button>
+
+          <ul class="smc-trust" aria-label="Trust signals">
+            <li class="smc-trust__item">
+              <svg class="smc-trust__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 1.5l1.5 3 3.5.5-2.5 2.5.5 3.5L8 9.5l-3 1.5.5-3.5L3 5l3.5-.5L8 1.5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+              </svg>
+              Secure, encrypted checkout
+            </li>
+            <li class="smc-trust__item">
+              <svg class="smc-trust__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M2 5h12l-1 7H3L2 5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+                <path d="M5 5V4a3 3 0 016 0v1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+              </svg>
+              Easy 30-day returns
+            </li>
+            <li class="smc-trust__item">
+              <svg class="smc-trust__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.1"/>
+                <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+              </svg>
+              Ships within 1–2 business days
+            </li>
+          </ul>
+        </aside>
+
       </div>
     {% endform %}
+
   {%- else -%}
-    <p style="margin-top:1.5rem;color:var(--color-stone);">{{ 'cart.general.empty' | t }}</p>
-    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary" style="margin-top:1.5rem;">{{ 'cart.general.continue' | t }}</a>
+
+    {%- comment -%} Empty state {%- endcomment -%}
+    <div class="smc-empty" role="status">
+      <p class="smc-empty__eyebrow">Your cart</p>
+      <h1 class="smc-empty__title">Nothing here yet</h1>
+      <hr class="smc-empty__divider" aria-hidden="true">
+      <p class="smc-empty__sub">The finest pieces are waiting. Explore this week&rsquo;s drop and find something worth keeping.</p>
+      <a href="{{ routes.all_products_collection_url }}" class="smc-empty__cta">
+        Shop the collection
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
   {%- endif -%}
+
 </section>
 
+{% javascript %}
+(function () {
+  'use strict';
+
+  function initSteppers() {
+    var btns = document.querySelectorAll('.smc-line__stepper-btn');
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var targetId = btn.getAttribute('data-target');
+        var action   = btn.getAttribute('data-action');
+        var input    = document.getElementById(targetId);
+        if (!input) return;
+        var val = parseInt(input.value, 10) || 0;
+        if (action === 'increment') {
+          input.value = val + 1;
+        } else if (action === 'decrement') {
+          input.value = Math.max(0, val - 1);
+        }
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSteppers);
+  } else {
+    initSteppers();
+  }
+})();
+{% endjavascript %}
+
 {% schema %}
-{ "name": "Cart", "settings": [] }
+{
+  "name": "Cart",
+  "settings": [
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding (rem)",
+      "min": 2,
+      "max": 10,
+      "step": 0.5,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding (rem)",
+      "min": 2,
+      "max": 12,
+      "step": 0.5,
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cart"
+    }
+  ]
+}
 {% endschema %}

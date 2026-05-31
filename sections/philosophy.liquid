@@ -1,53 +1,282 @@
-<section id="about" class="section section--ink">
-  <div class="container philosophy__grid">
-    <div class="reveal">
-      <span class="eyebrow" style="color:#e98e6f;">{{ section.settings.eyebrow }}</span>
-      <h2 class="section__title" style="margin-top:1.25rem;font-size:clamp(2rem,5vw,3.75rem);">
-        {{ section.settings.heading }}
-        {%- if section.settings.heading_accent != blank -%}
-          <span class="accent" style="display:block;font-style:italic;color:#e98e6f;">{{ section.settings.heading_accent }}</span>
-        {%- endif -%}
-      </h2>
-      <p style="margin-top:1.75rem;max-width:36rem;font-size:1.125rem;color:rgba(251,249,244,0.75);">{{ section.settings.body }}</p>
-    </div>
+{% stylesheet %}
+.smph-root {
+  --smph-bg: var(--color-ink);
+  --smph-fg: var(--color-cream);
+  --smph-fg-muted: rgba(251,249,244,0.55);
+  --smph-accent: var(--color-ember);
+  --smph-line: rgba(251,249,244,0.1);
+  background-color: var(--smph-bg);
+  color: var(--smph-fg);
+}
+.smph-root--light {
+  --smph-bg: var(--color-bone);
+  --smph-fg: var(--color-ink);
+  --smph-fg-muted: rgba(22,19,15,0.5);
+  --smph-accent: var(--color-ember);
+  --smph-line: var(--color-line);
+  background-color: var(--smph-bg);
+  color: var(--smph-fg);
+}
+.smph-wrap {
+  padding: clamp(5rem,10vw,9rem) 0;
+}
+.smph-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem,6vw,5rem);
+}
+.smph-eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--smph-accent);
+  margin-bottom: clamp(1.25rem,3vw,1.75rem);
+}
+.smph-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem,6.5vw,5.25rem);
+  font-weight: 400;
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.smph-heading-accent {
+  display: block;
+  font-style: italic;
+  color: var(--smph-accent);
+}
+.smph-body {
+  font-family: var(--font-body);
+  font-size: clamp(1rem,1.5vw,1.1875rem);
+  line-height: 1.7;
+  color: var(--smph-fg-muted);
+  max-width: 38rem;
+  margin: clamp(1.5rem,3vw,2.25rem) 0 0;
+}
+.smph-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--smph-line);
+  border: none;
+  margin: 0;
+}
+.smph-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(10rem,1fr));
+  gap: 0;
+}
+.smph-stat {
+  position: relative;
+  padding: clamp(2rem,4vw,3rem) clamp(1.5rem,3vw,2.5rem) clamp(2rem,4vw,3rem) 0;
+}
+.smph-stat + .smph-stat {
+  border-left: 1px solid var(--smph-line);
+  padding-left: clamp(1.5rem,3vw,2.5rem);
+  padding-right: clamp(1.5rem,3vw,2.5rem);
+}
+.smph-stat:last-child {
+  padding-right: 0;
+}
+.smph-stat__value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem,5.5vw,4.5rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--smph-fg);
+}
+.smph-stat__label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  color: var(--smph-fg-muted);
+  margin-top: 0.625rem;
+  max-width: 14ch;
+}
 
-    <div class="stats">
-      {%- for block in section.blocks -%}
-        <div class="stat" {{ block.shopify_attributes }}>
-          <span class="stat__value">{{ block.settings.value }}</span>
-          <span class="stat__label">{{ block.settings.label }}</span>
+/* reveal animation */
+.smph-reveal {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.smph-reveal.smph-reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+.smph-reveal--d1 { transition-delay: 0.1s; }
+.smph-reveal--d2 { transition-delay: 0.22s; }
+.smph-reveal--d3 { transition-delay: 0.36s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .smph-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+{% endstylesheet %}
+
+<section
+  class="smph-root{% if section.settings.dark == false %} smph-root--light{% endif %}"
+  aria-label="{{ section.settings.eyebrow | escape }}"
+>
+  <div class="smph-wrap">
+    <div class="container">
+      <div class="smph-inner">
+
+        <div>
+          <span class="smph-eyebrow smph-reveal" aria-hidden="true">{{ section.settings.eyebrow }}</span>
+          <h2 class="smph-heading smph-reveal smph-reveal--d1">
+            {{- section.settings.heading -}}
+            {%- if section.settings.heading_accent != blank -%}
+              <span class="smph-heading-accent">{{ section.settings.heading_accent }}</span>
+            {%- endif -%}
+          </h2>
+          {%- if section.settings.body != blank -%}
+            <p class="smph-body smph-reveal smph-reveal--d2">{{ section.settings.body }}</p>
+          {%- endif -%}
         </div>
-      {%- endfor -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <hr class="smph-divider smph-reveal smph-reveal--d2" aria-hidden="true">
+          <div class="smph-stats" role="list">
+            {%- for block in section.blocks -%}
+              <div class="smph-stat smph-reveal smph-reveal--d3" role="listitem" {{ block.shopify_attributes }}>
+                <span class="smph-stat__value">{{ block.settings.value }}</span>
+                <span class="smph-stat__label">{{ block.settings.label }}</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+      </div>
     </div>
   </div>
 </section>
 
+{% javascript %}
+(function () {
+  var section = document.currentScript.closest('.smph-root');
+  if (!section) return;
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) return;
+
+  var els = section.querySelectorAll('.smph-reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('smph-reveal--visible'); });
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('smph-reveal--visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  els.forEach(function (el) { io.observe(el); });
+})();
+{% endjavascript %}
+
 {% schema %}
 {
   "name": "Philosophy",
+  "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The philosophy" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Fewer pieces." },
-    { "type": "text", "id": "heading_accent", "label": "Heading accent", "default": "More you." },
-    { "type": "textarea", "id": "body", "label": "Body", "default": "We don't chase seasons or trends. Each week we design a small, considered set of pieces — then we let them go. No overstock, no markdowns, no noise." }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The philosophy"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Fewer pieces."
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent (italic, ember)",
+      "default": "More you."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body copy",
+      "default": "We don't chase seasons or chase trends. Every week a small, considered edit arrives — then it's gone. No overstock. No markdowns. No noise. Just the work, and you."
+    },
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark background",
+      "default": true
+    }
   ],
   "blocks": [
     {
       "type": "stat",
       "name": "Stat",
       "settings": [
-        { "type": "text", "id": "value", "label": "Value", "default": "Sun" },
-        { "type": "text", "id": "label", "label": "Label", "default": "New drop, every week" }
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "Sun"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "New drop, every week"
+        }
       ]
     }
   ],
   "presets": [
     {
       "name": "Philosophy",
+      "settings": {
+        "eyebrow": "The philosophy",
+        "heading": "Fewer pieces.",
+        "heading_accent": "More you.",
+        "body": "We don't chase seasons or chase trends. Every week a small, considered edit arrives — then it's gone. No overstock. No markdowns. No noise. Just the work, and you.",
+        "dark": true
+      },
       "blocks": [
-        { "type": "stat", "settings": { "value": "Sun", "label": "New drop, every week" } },
-        { "type": "stat", "settings": { "value": "200", "label": "Pieces per drop, never more" } },
-        { "type": "stat", "settings": { "value": "0", "label": "Restocks. When it's gone, it's gone" } }
+        {
+          "type": "stat",
+          "settings": {
+            "value": "Sun",
+            "label": "New drop every week"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "200",
+            "label": "Pieces per drop, never more"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "0",
+            "label": "Restocks. When it's gone, it's gone"
+          }
+        }
       ]
     }
   ]

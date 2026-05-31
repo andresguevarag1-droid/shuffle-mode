@@ -1,65 +1,1228 @@
-<header class="header">
-  <nav class="container header__bar" aria-label="Primary">
-    <a href="{{ routes.root_url }}" class="header__logo">
-      {{ section.settings.logo_text | default: shop.name }}<span class="dot">.</span>
+{% liquid
+  assign is_transparent = section.settings.transparent_hero
+  assign is_sticky      = section.settings.sticky
+%}
+
+<header
+  class="smh-header{% if is_transparent %} smh-header--transparent{% endif %}{% if is_sticky %} smh-header--sticky{% endif %}"
+  role="banner"
+  data-smh-header
+>
+
+  {%- comment -%}── TOP RULE ─────────────────────────────────────{%- endcomment -%}
+  <div class="smh-rule" aria-hidden="true"></div>
+
+  {%- comment -%}── PRIMARY BAR ──────────────────────────────────{%- endcomment -%}
+  <div class="smh-bar container">
+
+    {%- comment -%} LEFT: hamburger (mobile) + desktop nav {%- endcomment -%}
+    <div class="smh-bar__left">
+
+      <button
+        class="smh-icon-btn smh-menu-toggle"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="smh-mobile-menu"
+        aria-label="Open menu"
+      >
+        <span class="smh-hamburger" aria-hidden="true">
+          <span class="smh-hamburger__line smh-hamburger__line--top"></span>
+          <span class="smh-hamburger__line smh-hamburger__line--mid"></span>
+          <span class="smh-hamburger__line smh-hamburger__line--bot"></span>
+        </span>
+      </button>
+
+      {%- if section.settings.menu != blank -%}
+        <nav class="smh-nav" aria-label="Primary navigation">
+          <ul class="smh-nav__list" role="list">
+            {%- for link in section.settings.menu.links -%}
+              {%- assign has_children = false -%}
+              {%- if link.links.size > 0 -%}{%- assign has_children = true -%}{%- endif -%}
+              <li class="smh-nav__item{% if has_children %} smh-nav__item--has-sub{% endif %}">
+                {%- if has_children -%}
+                  <button
+                    class="smh-nav__link smh-nav__link--parent"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                  >
+                    <span>{{ link.title }}</span>
+                    <svg class="smh-nav__chevron" width="8" height="5" viewBox="0 0 8 5" fill="none" aria-hidden="true">
+                      <path d="M.5.5 4 4 7.5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <div class="smh-mega" role="region" aria-label="{{ link.title }} submenu">
+                    <div class="smh-mega__inner container">
+                      <div class="smh-mega__col smh-mega__col--label">
+                        <span class="smh-mega__cat">{{ link.title }}</span>
+                      </div>
+                      <ul class="smh-mega__list" role="list">
+                        {%- for sub in link.links -%}
+                          <li class="smh-mega__item">
+                            <a
+                              href="{{ sub.url }}"
+                              class="smh-mega__link"
+                              {% if sub.active %} aria-current="page"{% endif %}
+                            >
+                              <span class="smh-mega__link-text">{{ sub.title }}</span>
+                              <span class="smh-mega__link-arrow" aria-hidden="true">→</span>
+                            </a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  </div>
+                {%- else -%}
+                  <a
+                    href="{{ link.url }}"
+                    class="smh-nav__link"
+                    {% if link.active %} aria-current="page"{% endif %}
+                  >{{ link.title }}</a>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} CENTRE: logo {%- endcomment -%}
+    <a
+      href="{{ routes.root_url }}"
+      class="smh-logo"
+      aria-label="{{ section.settings.logo_text | default: shop.name }} — home"
+    >
+      <span class="smh-logo__wordmark">{{ section.settings.logo_text | default: shop.name }}</span><span class="smh-logo__dot" aria-hidden="true">.</span>
     </a>
 
-    {%- if section.settings.menu != blank -%}
-      <ul class="header__nav">
-        {%- for link in section.settings.menu.links -%}
-          <li><a href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>{{ link.title }}</a></li>
-        {%- endfor -%}
-      </ul>
-    {%- endif -%}
-
-    <div class="header__actions">
-      <button class="icon-btn" data-search-toggle aria-expanded="false" aria-label="Search">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      </button>
+    {%- comment -%} RIGHT: CTA + search + cart {%- endcomment -%}
+    <div class="smh-actions">
 
       {%- if section.settings.cta_url != blank -%}
-        <a href="{{ section.settings.cta_url }}" class="btn btn--primary header__cta">{{ section.settings.cta_label | default: 'Get on the list' }}</a>
+        <a href="{{ section.settings.cta_url }}" class="smh-cta">
+          {{ section.settings.cta_label | default: 'Get on the list' }}
+        </a>
       {%- endif -%}
 
-      <a href="{{ routes.cart_url }}" class="icon-btn cart-count" data-cart-toggle aria-label="Cart ({{ cart.item_count }} items)">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
-        <span class="cart-count__badge" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      <button
+        class="smh-icon-btn smh-search-toggle"
+        data-search-toggle
+        aria-expanded="false"
+        aria-controls="smh-search-panel"
+        aria-label="Open search"
+      >
+        <svg class="smh-icon smh-icon--search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5"/>
+          <path d="m21 21-5-5"/>
+        </svg>
+      </button>
+
+      <a
+        href="{{ routes.cart_url }}"
+        class="smh-icon-btn smh-cart"
+        data-cart-toggle
+        aria-label="Cart{% if cart.item_count > 0 %}, {{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }}{% endif %}"
+      >
+        <svg class="smh-icon smh-icon--bag" width="18" height="20" viewBox="0 0 18 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M1 5h16l-1.6 12.5a1 1 0 0 1-1 .9H3.6a1 1 0 0 1-1-.9L1 5Z"/>
+          <path d="M6 5a3 3 0 0 1 6 0"/>
+        </svg>
+        <span
+          class="smh-cart__badge"
+          data-cart-count
+          {% if cart.item_count == 0 %}hidden{% endif %}
+          aria-live="polite"
+          aria-atomic="true"
+        >{{ cart.item_count }}</span>
       </a>
 
-      <button class="icon-btn header__menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
     </div>
-  </nav>
-
-  {%- comment -%} Search panel {%- endcomment -%}
-  <div class="header__search" data-search-panel hidden>
-    <form class="container" action="{{ routes.search_url }}" method="get" role="search">
-      <input type="search" name="q" value="{{ search.terms | escape }}" class="input header__search-input"
-        placeholder="{{ 'general.search.placeholder' | t }}" aria-label="Search" data-search-input>
-      <button type="submit" class="btn btn--primary">Search</button>
-    </form>
   </div>
 
-  {%- if section.settings.menu != blank -%}
-    <div class="header__menu" data-menu hidden>
-      <ul class="container">
-        {%- for link in section.settings.menu.links -%}
-          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-        {%- endfor -%}
-      </ul>
+  {%- comment -%}── SEARCH PANEL ─────────────────────────────────{%- endcomment -%}
+  <div
+    id="smh-search-panel"
+    class="smh-search-panel"
+    data-search-panel
+    hidden
+    role="search"
+    aria-label="Site search"
+  >
+    <div class="smh-search-panel__inner container">
+      <form action="{{ routes.search_url }}" method="get" class="smh-search-form">
+        <label for="smh-search-input" class="smh-sr-only">Search</label>
+        <input
+          id="smh-search-input"
+          class="smh-search-input"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="Search pieces, drops, collections…"
+          autocomplete="off"
+          data-search-input
+          aria-label="Search"
+        >
+        <button type="submit" class="smh-search-submit smh-icon-btn" aria-label="Submit search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5"/>
+            <path d="m21 21-5-5"/>
+          </svg>
+        </button>
+      </form>
+      <button class="smh-search-close smh-icon-btn" data-search-close aria-label="Close search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
     </div>
-  {%- endif -%}
+  </div>
+
+  {%- comment -%}── MOBILE DRAWER ────────────────────────────────{%- endcomment -%}
+  <div
+    id="smh-mobile-menu"
+    class="smh-drawer"
+    data-menu
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-label="Mobile navigation"
+  >
+    <div class="smh-drawer__inner">
+
+      <div class="smh-drawer__head">
+        <a href="{{ routes.root_url }}" class="smh-logo smh-logo--sm" tabindex="-1" aria-hidden="true">
+          <span class="smh-logo__wordmark">{{ section.settings.logo_text | default: shop.name }}</span><span class="smh-logo__dot" aria-hidden="true">.</span>
+        </a>
+        <button class="smh-icon-btn smh-drawer__close" data-menu-close aria-label="Close menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      {%- if section.settings.menu != blank -%}
+        <nav aria-label="Mobile navigation" class="smh-drawer__nav">
+          <ul class="smh-drawer__list" role="list">
+            {%- for link in section.settings.menu.links -%}
+              {%- assign has_children = false -%}
+              {%- if link.links.size > 0 -%}{%- assign has_children = true -%}{%- endif -%}
+              <li class="smh-drawer__item{% if has_children %} smh-drawer__item--has-sub{% endif %}">
+                {%- if has_children -%}
+                  <button
+                    class="smh-drawer__link smh-drawer__link--parent"
+                    aria-expanded="false"
+                  >
+                    <span>{{ link.title }}</span>
+                    <svg class="smh-drawer__chevron" width="10" height="7" viewBox="0 0 10 7" fill="none" aria-hidden="true">
+                      <path d="M.5 1 5 5.5 9.5 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <ul class="smh-drawer__sub" role="list" hidden>
+                    {%- for sub in link.links -%}
+                      <li>
+                        <a
+                          href="{{ sub.url }}"
+                          class="smh-drawer__sublink"
+                          {% if sub.active %} aria-current="page"{% endif %}
+                        >{{ sub.title }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- else -%}
+                  <a
+                    href="{{ link.url }}"
+                    class="smh-drawer__link"
+                    {% if link.active %} aria-current="page"{% endif %}
+                  >{{ link.title }}</a>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+
+      <div class="smh-drawer__foot">
+        {%- if section.settings.cta_url != blank -%}
+          <a href="{{ section.settings.cta_url }}" class="smh-cta smh-cta--full">
+            {{ section.settings.cta_label | default: 'Get on the list' }}
+          </a>
+        {%- endif -%}
+        <div class="smh-drawer__utils">
+          <a href="{{ routes.search_url }}" class="smh-drawer__util-link">Search</a>
+          <span class="smh-drawer__util-sep" aria-hidden="true">·</span>
+          <a href="{{ routes.cart_url }}" class="smh-drawer__util-link">
+            Cart{% if cart.item_count > 0 %} ({{ cart.item_count }}){% endif %}
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <div class="smh-drawer__scrim" data-menu-close aria-hidden="true"></div>
+  </div>
+
 </header>
+
+{% stylesheet %}
+
+/* ==========================================================================
+   SHUFFLE MODE · HEADER  ·  smh-*
+   ========================================================================== */
+
+/* ── custom properties ── */
+:root {
+  --smh-h:          72px;
+  --smh-h-sm:       56px;
+  --smh-rule-h:     2px;
+  --smh-ease:       cubic-bezier(.4, 0, .2, 1);
+  --smh-t:          260ms;
+  --smh-t-slow:     380ms;
+  --smh-z:          900;
+  --smh-drawer-w:   min(360px, 92vw);
+}
+
+/* ── utility ── */
+.smh-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── header shell ── */
+.smh-header {
+  position: relative;
+  z-index: var(--smh-z);
+  width: 100%;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  transition:
+    background var(--smh-t) var(--smh-ease),
+    color var(--smh-t) var(--smh-ease),
+    box-shadow var(--smh-t) var(--smh-ease);
+}
+
+.smh-header--sticky {
+  position: sticky;
+  top: 0;
+}
+
+/* top ember rule */
+.smh-rule {
+  width: 100%;
+  height: var(--smh-rule-h);
+  background: var(--color-ink);
+  transition: background var(--smh-t) var(--smh-ease);
+}
+
+.smh-header--transparent .smh-rule {
+  background: rgba(246, 242, 234, 0.28);
+}
+
+.smh-header--scrolled .smh-rule {
+  background: var(--color-ember) !important;
+}
+
+/* transparent mode */
+.smh-header--transparent {
+  background: transparent;
+  color: var(--color-cream);
+}
+
+.smh-header--transparent .smh-nav__link,
+.smh-header--transparent .smh-icon-btn,
+.smh-header--transparent .smh-logo {
+  color: var(--color-cream);
+}
+
+.smh-header--transparent .smh-logo__dot {
+  color: var(--color-ember);
+}
+
+/* scrolled (always opaque) */
+.smh-header--scrolled {
+  background: var(--color-cream) !important;
+  color: var(--color-ink) !important;
+  box-shadow: 0 1px 0 var(--color-line), 0 8px 32px -8px rgba(22,19,15,.1);
+}
+
+.smh-header--scrolled .smh-nav__link,
+.smh-header--scrolled .smh-icon-btn,
+.smh-header--scrolled .smh-logo {
+  color: var(--color-ink) !important;
+}
+
+/* ── primary bar ── */
+.smh-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: var(--smh-h);
+  transition: height var(--smh-t) var(--smh-ease);
+}
+
+.smh-header--scrolled .smh-bar {
+  height: var(--smh-h-sm);
+}
+
+.smh-bar__left {
+  display: flex;
+  align-items: center;
+}
+
+/* ── logo ── */
+.smh-logo {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  text-decoration: none;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity var(--smh-t) var(--smh-ease);
+}
+
+.smh-logo:hover { opacity: .6; }
+
+.smh-logo:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 4px;
+}
+
+.smh-logo__wordmark {
+  font-size: .82em;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-weight: 300;
+}
+
+.smh-logo__dot {
+  color: var(--color-ember);
+  font-size: 1.5em;
+  line-height: 0;
+  position: relative;
+  top: .06em;
+  letter-spacing: 0;
+}
+
+.smh-logo--sm {
+  font-size: 15px;
+}
+
+/* ── desktop nav ── */
+.smh-nav { display: none; }
+
+@media (min-width: 1024px) {
+  .smh-nav {
+    display: flex;
+    margin-left: 8px;
+  }
+  .smh-menu-toggle { display: none !important; }
+}
+
+.smh-nav__list {
+  display: flex;
+  align-items: stretch;
+  list-style: none;
+  margin: 0; padding: 0;
+  gap: 0;
+  height: var(--smh-h);
+  transition: height var(--smh-t) var(--smh-ease);
+}
+
+.smh-header--scrolled .smh-nav__list {
+  height: var(--smh-h-sm);
+}
+
+.smh-nav__item { position: relative; display: flex; align-items: stretch; }
+
+/* nav link */
+.smh-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 15px;
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  transition: color var(--smh-t) var(--smh-ease);
+}
+
+/* underline bar */
+.smh-nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15px; right: 15px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms var(--smh-ease);
+}
+
+.smh-nav__link:hover::after,
+.smh-nav__link[aria-expanded="true"]::after { transform: scaleX(1); }
+
+.smh-nav__link[aria-current="page"] {
+  color: var(--color-ember);
+}
+.smh-nav__link[aria-current="page"]::after {
+  background: var(--color-ember);
+  transform: scaleX(1);
+}
+
+.smh-nav__link:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: -3px;
+}
+
+.smh-nav__chevron {
+  flex-shrink: 0;
+  transition: transform 200ms var(--smh-ease);
+  opacity: .55;
+}
+
+.smh-nav__link[aria-expanded="true"] .smh-nav__chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* ── mega panel ── */
+.smh-mega {
+  position: absolute;
+  top: 100%;
+  left: -24px;
+  min-width: 280px;
+  background: var(--color-cream);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  box-shadow: 0 32px 64px -16px rgba(22,19,15,.14);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 200ms var(--smh-ease),
+    visibility 200ms var(--smh-ease),
+    transform 200ms var(--smh-ease);
+}
+
+.smh-nav__item--has-sub:hover .smh-mega,
+.smh-nav__item--has-sub > .smh-nav__link[aria-expanded="true"] ~ .smh-mega {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.smh-mega__inner {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0;
+  padding: 28px 0 32px;
+}
+
+.smh-mega__col--label {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4px;
+  padding-right: 24px;
+  border-right: 1px solid var(--color-line);
+}
+
+.smh-mega__cat {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.smh-mega__list {
+  list-style: none;
+  margin: 0; padding: 0 0 0 28px;
+  columns: 2;
+  column-gap: 0;
+}
+
+/* single-column if few items */
+.smh-mega__list:has(> :nth-child(5)) { columns: 2; }
+.smh-mega__list:not(:has(> :nth-child(5))) { columns: 1; }
+
+.smh-mega__item { break-inside: avoid; }
+
+.smh-mega__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 28px 8px 0;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-stone);
+  transition: color 160ms var(--smh-ease);
+  position: relative;
+}
+
+.smh-mega__link::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  width: 0;
+  height: 1px;
+  background: var(--color-ember);
+  transform: translateY(-50%);
+  transition: width 180ms var(--smh-ease);
+}
+
+.smh-mega__link:hover,
+.smh-mega__link[aria-current="page"] {
+  color: var(--color-ink);
+}
+
+.smh-mega__link:hover::before,
+.smh-mega__link[aria-current="page"]::before {
+  width: 20px;
+}
+
+.smh-mega__link[aria-current="page"] {
+  color: var(--color-ember);
+}
+
+.smh-mega__link-arrow {
+  font-size: 10px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 160ms var(--smh-ease), transform 160ms var(--smh-ease);
+}
+
+.smh-mega__link:hover .smh-mega__link-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── action cluster ── */
+.smh-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+/* ── icon button ── */
+.smh-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  transition: opacity var(--smh-t) var(--smh-ease);
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.smh-icon-btn:hover { opacity: .5; }
+
+.smh-icon-btn:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 1px;
+}
+
+/* ── CTA button ── */
+.smh-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 33px;
+  padding: 0 17px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-cream);
+  background: var(--color-ink);
+  border: 1px solid var(--color-ink);
+  white-space: nowrap;
+  transition:
+    background var(--smh-t) var(--smh-ease),
+    color var(--smh-t) var(--smh-ease),
+    border-color var(--smh-t) var(--smh-ease);
+}
+
+.smh-cta:hover {
+  background: var(--color-ember);
+  border-color: var(--color-ember);
+}
+
+.smh-cta:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+}
+
+/* hide desktop CTA on mobile */
+@media (max-width: 1023px) {
+  .smh-cta:not(.smh-cta--full) { display: none; }
+}
+
+/* ── cart badge ── */
+.smh-cart { position: relative; }
+
+.smh-cart__badge {
+  position: absolute;
+  top: 5px; right: 5px;
+  min-width: 15px; height: 15px;
+  padding: 0 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-ember);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0;
+  border-radius: 99px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ── hamburger ── */
+.smh-menu-toggle {
+  width: 36px; height: 36px;
+  margin-right: 4px;
+}
+
+.smh-hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 20px;
+  pointer-events: none;
+}
+
+.smh-hamburger__line {
+  display: block;
+  height: 1px;
+  background: currentColor;
+  transition:
+    transform 240ms var(--smh-ease),
+    opacity 200ms var(--smh-ease),
+    width 200ms var(--smh-ease);
+  transform-origin: center;
+}
+
+.smh-hamburger__line--bot { width: 72%; }
+
+.smh-menu-toggle[aria-expanded="true"] .smh-hamburger__line--top {
+  transform: translateY(6px) rotate(45deg);
+}
+.smh-menu-toggle[aria-expanded="true"] .smh-hamburger__line--mid {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.smh-menu-toggle[aria-expanded="true"] .smh-hamburger__line--bot {
+  width: 100%;
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ── search panel ── */
+.smh-search-panel {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  z-index: calc(var(--smh-z) - 1);
+  background: var(--color-bone);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.smh-search-panel[hidden] { display: none; }
+
+.smh-search-panel__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 24px;
+}
+
+.smh-search-form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1.5px solid var(--color-ink);
+  padding-bottom: 10px;
+  animation: smh-search-slide-in 260ms var(--smh-ease) both;
+}
+
+@keyframes smh-search-slide-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.smh-search-input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 300;
+  letter-spacing: -.01em;
+  color: var(--color-ink);
+  outline: none;
+  padding: 4px 0;
+  caret-color: var(--color-ember);
+}
+
+.smh-search-input::placeholder {
+  color: var(--color-stone);
+  opacity: .5;
+}
+
+.smh-search-submit {
+  color: var(--color-stone);
+  flex-shrink: 0;
+}
+.smh-search-submit:hover { color: var(--color-ink); opacity: 1; }
+
+.smh-search-close { color: var(--color-stone); }
+.smh-search-close:hover { color: var(--color-ink); opacity: 1; }
+
+/* ── mobile drawer ── */
+.smh-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--smh-z) + 20);
+  pointer-events: none;
+}
+
+.smh-drawer[hidden] { display: none; }
+
+.smh-drawer:not([hidden]) { display: block; }
+
+.smh-drawer__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 19, 15, .52);
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  transition: opacity var(--smh-t-slow) var(--smh-ease);
+}
+
+.smh-drawer.is-open .smh-drawer__scrim {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.smh-drawer__inner {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: var(--smh-drawer-w);
+  background: var(--color-cream);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  pointer-events: auto;
+  transform: translateX(-100%);
+  transition: transform var(--smh-t-slow) var(--smh-ease);
+}
+
+.smh-drawer.is-open .smh-drawer__inner {
+  transform: translateX(0);
+}
+
+.smh-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--color-line);
+  flex-shrink: 0;
+}
+
+.smh-drawer__nav { flex: 1; }
+
+.smh-drawer__list {
+  list-style: none;
+  margin: 0; padding: 0;
+}
+
+.smh-drawer__item { border-bottom: 1px solid var(--color-line); }
+
+.smh-drawer__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 24px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 160ms var(--smh-ease), color 160ms var(--smh-ease);
+}
+
+.smh-drawer__link:hover { background: var(--color-sand); }
+
+.smh-drawer__link[aria-current="page"] { color: var(--color-ember); }
+
+.smh-drawer__chevron {
+  flex-shrink: 0;
+  opacity: .4;
+  transition: transform 220ms var(--smh-ease);
+}
+
+.smh-drawer__link--parent[aria-expanded="true"] .smh-drawer__chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.smh-drawer__sub {
+  list-style: none;
+  margin: 0; padding: 4px 0 8px;
+  background: var(--color-bone);
+}
+
+.smh-drawer__sub[hidden] { display: none; }
+
+.smh-drawer__sublink {
+  display: block;
+  padding: 11px 24px 11px 40px;
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-stone);
+  transition: color 160ms var(--smh-ease), padding-left 160ms var(--smh-ease);
+}
+
+.smh-drawer__sublink:hover { color: var(--color-ink); padding-left: 48px; }
+
+.smh-drawer__sublink[aria-current="page"] { color: var(--color-ember); }
+
+.smh-drawer__foot {
+  padding: 24px;
+  border-top: 1px solid var(--color-line);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.smh-cta--full {
+  width: 100%;
+  height: 44px;
+  font-size: 10.5px;
+}
+
+.smh-drawer__utils {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.smh-drawer__util-link {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-stone);
+  transition: color 160ms var(--smh-ease);
+}
+
+.smh-drawer__util-link:hover { color: var(--color-ink); }
+
+.smh-drawer__util-sep {
+  color: var(--color-line);
+  font-size: 12px;
+}
+
+/* ── reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .smh-header,
+  .smh-bar,
+  .smh-nav__list,
+  .smh-logo,
+  .smh-rule,
+  .smh-nav__link,
+  .smh-nav__link::after,
+  .smh-nav__link::before,
+  .smh-nav__chevron,
+  .smh-mega,
+  .smh-mega__link,
+  .smh-mega__link::before,
+  .smh-mega__link-arrow,
+  .smh-icon-btn,
+  .smh-cta,
+  .smh-hamburger__line,
+  .smh-drawer__inner,
+  .smh-drawer__scrim,
+  .smh-drawer__link,
+  .smh-drawer__chevron,
+  .smh-drawer__sublink,
+  .smh-search-form {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+{% endstylesheet %}
+
+{% javascript %}
+
+(function () {
+  'use strict';
+
+  /* ── element refs ── */
+  var header         = document.querySelector('[data-smh-header]');
+  var menuToggle     = document.querySelector('[data-menu-toggle]');
+  var menuCloseEls   = document.querySelectorAll('[data-menu-close]');
+  var menuEl         = document.querySelector('[data-menu]');
+  var searchToggle   = document.querySelector('[data-search-toggle]');
+  var searchPanel    = document.querySelector('[data-search-panel]');
+  var searchInput    = document.querySelector('[data-search-input]');
+  var searchClose    = document.querySelector('[data-search-close]');
+  var desktopParents = document.querySelectorAll('.smh-nav__link--parent');
+  var drawerParents  = document.querySelectorAll('.smh-drawer__link--parent');
+
+  /* ── sticky / transparent scroll ── */
+  if (header && header.classList.contains('smh-header--sticky')) {
+    var rafPending = false;
+
+    function handleScroll() {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(function () {
+        header.classList.toggle('smh-header--scrolled', window.scrollY > 48);
+        rafPending = false;
+      });
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  }
+
+  /* ── mobile drawer ── */
+  function openDrawer() {
+    if (!menuEl) return;
+    menuEl.removeAttribute('hidden');
+    /* rAF so the 'hidden' removal paints before we add transition class */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        menuEl.classList.add('is-open');
+      });
+    });
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    var firstFocusable = menuEl.querySelector('a[href], button:not([disabled])');
+    if (firstFocusable) firstFocusable.focus();
+  }
+
+  function closeDrawer() {
+    if (!menuEl) return;
+    menuEl.classList.remove('is-open');
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    /* hide after slide-out */
+    var dur = parseFloat(
+      getComputedStyle(menuEl.querySelector('.smh-drawer__inner')).transitionDuration
+    ) * 1000 || 380;
+    setTimeout(function () {
+      if (!menuEl.classList.contains('is-open')) {
+        menuEl.setAttribute('hidden', '');
+      }
+    }, dur);
+    if (menuToggle) menuToggle.focus();
+  }
+
+  if (menuToggle) {
+    menuToggle.addEventListener('click', function () {
+      this.getAttribute('aria-expanded') === 'true' ? closeDrawer() : openDrawer();
+    });
+  }
+
+  menuCloseEls.forEach(function (el) { el.addEventListener('click', closeDrawer); });
+
+  /* focus trap */
+  if (menuEl) {
+    menuEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeDrawer(); return; }
+      if (e.key !== 'Tab') return;
+      var focusable = Array.from(menuEl.querySelectorAll('a[href], button:not([disabled])')).filter(function (el) {
+        return !el.closest('[hidden]');
+      });
+      var first = focusable[0];
+      var last  = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    });
+  }
+
+  /* ── search panel ── */
+  function openSearch() {
+    if (!searchPanel) return;
+    searchPanel.removeAttribute('hidden');
+    if (searchToggle) searchToggle.setAttribute('aria-expanded', 'true');
+    if (searchInput) { searchInput.value = ''; searchInput.focus(); }
+  }
+
+  function closeSearch() {
+    if (!searchPanel) return;
+    searchPanel.setAttribute('hidden', '');
+    if (searchToggle) { searchToggle.setAttribute('aria-expanded', 'false'); searchToggle.focus(); }
+  }
+
+  if (searchToggle) {
+    searchToggle.addEventListener('click', function () {
+      this.getAttribute('aria-expanded') === 'true' ? closeSearch() : openSearch();
+    });
+  }
+
+  if (searchClose) searchClose.addEventListener('click', closeSearch);
+
+  if (searchPanel) {
+    searchPanel.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSearch();
+    });
+  }
+
+  /* ── desktop mega nav ── */
+  function closeAllMega() {
+    desktopParents.forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+  }
+
+  desktopParents.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var open = this.getAttribute('aria-expanded') === 'true';
+      closeAllMega();
+      if (!open) this.setAttribute('aria-expanded', 'true');
+    });
+
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeAllMega(); this.focus(); }
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.smh-nav__item--has-sub')) closeAllMega();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeAllMega(); closeSearch(); }
+  });
+
+  /* ── drawer sub-menus ── */
+  drawerParents.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var open = this.getAttribute('aria-expanded') === 'true';
+      var sub  = this.nextElementSibling;
+      this.setAttribute('aria-expanded', open ? 'false' : 'true');
+      if (sub) {
+        open ? sub.setAttribute('hidden', '') : sub.removeAttribute('hidden');
+      }
+    });
+  });
+
+})();
+
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
-    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "Shuffle Mode" },
-    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
-    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Get on the list" },
-    { "type": "url", "id": "cta_url", "label": "CTA link" }
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "Shuffle Mode"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "Get on the list"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Behaviour"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_hero",
+      "label": "Transparent over hero",
+      "info": "Header renders without background at the top of the page — ideal when the first section is a full-bleed hero image.",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
+    }
   ]
 }
 {% endschema %}

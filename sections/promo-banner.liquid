@@ -1,0 +1,595 @@
+{% stylesheet %}
+.smpb-root {
+  --smpb-bg: var(--color-ink);
+  --smpb-min-h: 90vh;
+  --smpb-scrim-opacity: 0.52;
+  --smpb-scrim-color: var(--color-ink);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--smpb-min-h);
+  overflow: hidden;
+  background-color: var(--smpb-bg);
+  isolation: isolate;
+}
+
+.smpb-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.smpb-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--smpb-focal, center center);
+  animation: smpb-kenburns var(--smpb-kb-duration, 18s) ease-in-out infinite alternate;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+@keyframes smpb-kenburns {
+  0%   { transform: scale(1)    translate(0%, 0%); }
+  100% { transform: scale(1.08) translate(-1.5%, 1%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smpb-media img {
+    animation: none;
+    transform: none;
+  }
+}
+
+.smpb-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    160deg,
+    rgba(var(--smpb-scrim-r, 22), var(--smpb-scrim-g, 19), var(--smpb-scrim-b, 15), calc(var(--smpb-scrim-opacity) * 0.7)) 0%,
+    rgba(var(--smpb-scrim-r, 22), var(--smpb-scrim-g, 19), var(--smpb-scrim-b, 15), var(--smpb-scrim-opacity)) 50%,
+    rgba(var(--smpb-scrim-r, 22), var(--smpb-scrim-g, 19), var(--smpb-scrim-b, 15), calc(var(--smpb-scrim-opacity) + 0.18)) 100%
+  );
+}
+
+.smpb-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(4rem, 10vw, 8rem) 1.5rem;
+  text-align: var(--smpb-align, center);
+  display: flex;
+  flex-direction: column;
+  align-items: var(--smpb-items, center);
+  gap: 0;
+}
+
+.smpb-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-sand);
+  opacity: 0.85;
+  margin-bottom: 1.25rem;
+  padding: 0.35em 0.85em;
+  border: 1px solid rgba(234, 223, 205, 0.28);
+  border-radius: 0;
+}
+
+.smpb-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 7vw, 6rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--color-bone);
+  margin: 0 0 1.25rem;
+  max-width: 14ch;
+}
+
+.smpb-subtext {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.6vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--color-sand);
+  opacity: 0.82;
+  max-width: 44ch;
+  margin: 0 0 2.5rem;
+}
+
+.smpb-countdown {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(1rem, 3vw, 2.25rem);
+  margin-bottom: 2.75rem;
+  flex-wrap: wrap;
+  justify-content: var(--smpb-just, center);
+}
+
+.smpb-countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 3.5ch;
+}
+
+.smpb-countdown-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.5vw, 4.25rem);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--color-bone);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.2s ease;
+}
+
+.smpb-countdown-label {
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smpb-countdown-sep {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--color-ember);
+  opacity: 0.55;
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+  align-self: flex-end;
+}
+
+.smpb-countdown-expired {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  margin-bottom: 2.75rem;
+}
+
+.smpb-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65em;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-ink);
+  background: var(--color-bone);
+  padding: 0.95em 2.5em;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.smpb-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-ember);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: 0;
+}
+
+.smpb-cta span {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.smpb-cta:hover,
+.smpb-cta:focus-visible {
+  color: var(--color-bone);
+  border-color: var(--color-ember);
+  outline: none;
+}
+
+.smpb-cta:hover::before,
+.smpb-cta:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.smpb-cta:focus-visible {
+  outline: 2px solid var(--color-bone);
+  outline-offset: 3px;
+}
+
+.smpb-cta-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.smpb-cta:hover .smpb-cta-arrow,
+.smpb-cta:focus-visible .smpb-cta-arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smpb-cta::before {
+    transition: none;
+  }
+  .smpb-cta-arrow {
+    transition: none;
+  }
+}
+
+.smpb-root[data-align="left"] {
+  --smpb-align: left;
+  --smpb-items: flex-start;
+  --smpb-just: flex-start;
+}
+
+.smpb-root[data-align="left"] .smpb-inner {
+  margin: 0 auto 0 calc((100% - 880px) / 2);
+}
+
+@media (max-width: 767px) {
+  .smpb-root {
+    --smpb-min-h: 80vh;
+  }
+  .smpb-root[data-align="left"] .smpb-inner {
+    margin: 0 auto;
+  }
+  .smpb-headline {
+    max-width: 100%;
+  }
+}
+{% endstylesheet %}
+
+{%- liquid
+  assign has_image  = false
+  if section.settings.background_image != blank
+    assign has_image = true
+  endif
+  assign align_attr = section.settings.text_align | default: 'center'
+-%}
+
+<section
+  class="smpb-root"
+  data-align="{{ align_attr }}"
+  aria-label="{{ section.settings.headline | escape }}"
+  style="
+    --smpb-min-h: {{ section.settings.min_height }}vh;
+    --smpb-scrim-opacity: {{ section.settings.scrim_opacity | divided_by: 100.0 }};
+    --smpb-kb-duration: {{ section.settings.kb_duration }}s;
+    --smpb-focal: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+  "
+>
+
+  {%- if has_image -%}
+  <div class="smpb-media" aria-hidden="true">
+    {{
+      section.settings.background_image
+      | image_url: width: 2400
+      | image_tag:
+        loading: 'eager',
+        fetchpriority: 'high',
+        widths: '750,1100,1500,1800,2400',
+        sizes: '100vw',
+        alt: ''
+    }}
+  </div>
+  {%- endif -%}
+
+  <div class="smpb-scrim" aria-hidden="true"></div>
+
+  <div class="smpb-inner">
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="smpb-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.headline != blank -%}
+      <h2 class="smpb-headline">{{ section.settings.headline }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.subtext != blank -%}
+      <p class="smpb-subtext">{{ section.settings.subtext | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.countdown_enabled -%}
+      <div
+        class="smpb-countdown"
+        id="smpb-countdown-{{ section.id }}"
+        data-drop="{{ section.settings.drop_date | escape }}"
+        aria-live="polite"
+        aria-label="Countdown to drop"
+      >
+        <div class="smpb-countdown-unit">
+          <span class="smpb-countdown-num" id="smpb-d-{{ section.id }}">--</span>
+          <span class="smpb-countdown-label">Days</span>
+        </div>
+        <span class="smpb-countdown-sep" aria-hidden="true">:</span>
+        <div class="smpb-countdown-unit">
+          <span class="smpb-countdown-num" id="smpb-h-{{ section.id }}">--</span>
+          <span class="smpb-countdown-label">Hours</span>
+        </div>
+        <span class="smpb-countdown-sep" aria-hidden="true">:</span>
+        <div class="smpb-countdown-unit">
+          <span class="smpb-countdown-num" id="smpb-m-{{ section.id }}">--</span>
+          <span class="smpb-countdown-label">Mins</span>
+        </div>
+        <span class="smpb-countdown-sep" aria-hidden="true">:</span>
+        <div class="smpb-countdown-unit">
+          <span class="smpb-countdown-num" id="smpb-s-{{ section.id }}">--</span>
+          <span class="smpb-countdown-label">Secs</span>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
+      <a
+        href="{{ section.settings.cta_url }}"
+        class="smpb-cta"
+        {%- if section.settings.cta_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}
+      >
+        <span>{{ section.settings.cta_label | escape }}</span>
+        <span class="smpb-cta-arrow" aria-hidden="true">→</span>
+      </a>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% javascript %}
+(function () {
+  function smpbInit(sectionId) {
+    var wrap = document.getElementById('smpb-countdown-' + sectionId);
+    if (!wrap) return;
+
+    var raw = wrap.getAttribute('data-drop') || '';
+    if (!raw) return;
+
+    var iso = raw.replace(' ', 'T');
+    var target = new Date(iso);
+    if (isNaN(target.getTime())) return;
+
+    var dEl = document.getElementById('smpb-d-' + sectionId);
+    var hEl = document.getElementById('smpb-h-' + sectionId);
+    var mEl = document.getElementById('smpb-m-' + sectionId);
+    var sEl = document.getElementById('smpb-s-' + sectionId);
+
+    function pad(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    function tick() {
+      var now  = Date.now();
+      var diff = target.getTime() - now;
+
+      if (diff <= 0) {
+        wrap.innerHTML = '<p class="smpb-countdown-expired">The drop is live — shop now</p>';
+        return;
+      }
+
+      var totalSec = Math.floor(diff / 1000);
+      var days  = Math.floor(totalSec / 86400);
+      var hours = Math.floor((totalSec % 86400) / 3600);
+      var mins  = Math.floor((totalSec % 3600) / 60);
+      var secs  = totalSec % 60;
+
+      if (dEl) dEl.textContent = pad(days);
+      if (hEl) hEl.textContent = pad(hours);
+      if (mEl) mEl.textContent = pad(mins);
+      if (sEl) sEl.textContent = pad(secs);
+
+      requestAnimationFrame(function () {
+        setTimeout(tick, 1000);
+      });
+    }
+
+    tick();
+  }
+
+  document.querySelectorAll('[id^="smpb-countdown-"]').forEach(function (el) {
+    var id = el.id.replace('smpb-countdown-', '');
+    smpbInit(id);
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Promo Banner",
+  "tag": "section",
+  "class": "smpb-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "scrim_opacity",
+      "label": "Ink scrim opacity",
+      "min": 20,
+      "max": 85,
+      "step": 5,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Focal point — horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Focal point — vertical",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "kb_duration",
+      "label": "Ken-Burns duration",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 18,
+      "unit": "s"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Min height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 90,
+      "unit": "vh"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left",   "label": "Left"   }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Dropping Soon"
+    },
+    {
+      "type": "richtext",
+      "id": "headline",
+      "label": "Headline",
+      "default": "<p>The New Season<br>Awaits</p>"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Exclusive pieces curated for those who move in silence. One drop. No restocks."
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Explore the Drop"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_new_tab",
+      "label": "Open in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Countdown Timer"
+    },
+    {
+      "type": "checkbox",
+      "id": "countdown_enabled",
+      "label": "Enable countdown",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "drop_date",
+      "label": "Drop date & time",
+      "info": "Format: YYYY-MM-DD HH:MM — uses your store's local time zone.",
+      "default": "2026-06-07 12:00"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Banner — Next Drop",
+      "settings": {
+        "eyebrow": "Dropping Soon",
+        "headline": "<p>The New Season<br>Awaits</p>",
+        "subtext": "Exclusive pieces curated for those who move in silence. One drop. No restocks.",
+        "cta_label": "Explore the Drop",
+        "scrim_opacity": 50,
+        "min_height": 90,
+        "text_align": "center",
+        "kb_duration": 18,
+        "focal_x": 50,
+        "focal_y": 50,
+        "countdown_enabled": true,
+        "drop_date": "2026-06-07 12:00"
+      }
+    },
+    {
+      "name": "Promo Banner — Editorial Left",
+      "settings": {
+        "eyebrow": "Now Available",
+        "headline": "<p>Wear the<br>Silence</p>",
+        "subtext": "A limited collection. Designed to disappear — wear it before it does.",
+        "cta_label": "Shop the Edit",
+        "scrim_opacity": 55,
+        "min_height": 100,
+        "text_align": "left",
+        "kb_duration": 22,
+        "focal_x": 60,
+        "focal_y": 40,
+        "countdown_enabled": false,
+        "drop_date": "2026-06-07 12:00"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,336 @@
+{% stylesheet %}
+.smif-icon-features {
+  --smif-bg: var(--color-cream);
+  --smif-fg: var(--color-ink);
+  --smif-sub: var(--color-stone);
+  --smif-line-c: var(--color-line);
+  --smif-accent: var(--color-ember);
+  background: var(--smif-bg);
+  color: var(--smif-fg);
+  padding: 5rem 0;
+}
+
+.smif-icon-features--dark {
+  --smif-bg: var(--color-ink);
+  --smif-fg: var(--color-bone);
+  --smif-sub: var(--color-sand);
+  --smif-line-c: rgba(246,242,234,.1);
+}
+
+.smif-icon-features__inner {
+  max-width: var(--container-max, 1280px);
+  margin: 0 auto;
+  padding: 0 var(--container-gutter, 2rem);
+}
+
+.smif-icon-features__header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.smif-icon-features__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--smif-accent);
+  margin: 0 0 0.875rem;
+}
+
+.smif-icon-features__heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--smif-fg);
+}
+
+.smif-icon-features__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 768px) {
+  .smif-icon-features__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.smif-icon-features__item {
+  position: relative;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: background 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smif-icon-features__item {
+    transition: none;
+  }
+}
+
+.smif-icon-features__item::after {
+  content: '';
+  position: absolute;
+  background: var(--smif-line-c);
+}
+
+/* Mobile: horizontal rule below each item except last */
+@media (max-width: 767px) {
+  .smif-icon-features__item::after {
+    bottom: 0;
+    left: 2rem;
+    right: 2rem;
+    height: 1px;
+  }
+
+  .smif-icon-features__item:last-child::after {
+    display: none;
+  }
+}
+
+/* Desktop: vertical rule between items */
+@media (min-width: 768px) {
+  .smif-icon-features__item::after {
+    top: 2rem;
+    bottom: 2rem;
+    right: 0;
+    width: 1px;
+    height: auto;
+  }
+
+  .smif-icon-features__item:last-child::after {
+    display: none;
+  }
+}
+
+.smif-icon-features__item:hover {
+  background: var(--smif-hover-bg, transparent);
+}
+
+.smif-icon-features--light .smif-icon-features__item:hover {
+  --smif-hover-bg: rgba(22,19,15,.03);
+}
+
+.smif-icon-features--dark .smif-icon-features__item:hover {
+  --smif-hover-bg: rgba(246,242,234,.04);
+}
+
+.smif-icon-features__icon-wrap {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.smif-icon-features__icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.smif-icon-features__glyph {
+  font-size: 1.75rem;
+  line-height: 1;
+  user-select: none;
+}
+
+.smif-icon-features__rule {
+  width: 1.5rem;
+  height: 1px;
+  background: var(--smif-accent);
+  flex-shrink: 0;
+}
+
+.smif-icon-features__title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.25;
+  margin: 0;
+  color: var(--smif-fg);
+}
+
+.smif-icon-features__text {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--smif-sub);
+  margin: 0;
+  max-width: 22ch;
+}
+{% endstylesheet %}
+
+{%- liquid
+  assign dark = section.settings.dark
+  assign mod_light = 'smif-icon-features--light'
+  assign mod_dark = 'smif-icon-features--dark'
+  assign mod = dark | default: false
+-%}
+
+<section
+  class="smif-icon-features{% if dark %} smif-icon-features--dark{% else %} smif-icon-features--light{% endif %}"
+  id="smif-icon-features-{{ section.id }}"
+>
+  <div class="smif-icon-features__inner">
+
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <header class="smif-icon-features__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="smif-icon-features__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="smif-icon-features__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="smif-icon-features__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'feature' -%}
+          <div
+            class="smif-icon-features__item"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.icon != blank -%}
+              <div class="smif-icon-features__icon-wrap">
+                <img
+                  class="smif-icon-features__icon-img"
+                  src="{{ block.settings.icon | image_url: width: 88 }}"
+                  alt=""
+                  role="presentation"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                >
+              </div>
+            {%- elsif block.settings.glyph != blank -%}
+              <div class="smif-icon-features__icon-wrap" aria-hidden="true">
+                <span class="smif-icon-features__glyph">{{ block.settings.glyph }}</span>
+              </div>
+            {%- endif -%}
+
+            <div class="smif-icon-features__rule" aria-hidden="true"></div>
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="smif-icon-features__title">{{ block.settings.title | escape }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.text != blank -%}
+              <p class="smif-icon-features__text">{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Icon Features",
+  "tag": "section",
+  "class": "smif-section-icon-features",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "placeholder": "Why Shuffle Mode"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Crafted with intention"
+    },
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark background",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image",
+          "info": "Optional. Use a square SVG or PNG. Falls back to glyph."
+        },
+        {
+          "type": "text",
+          "id": "glyph",
+          "label": "Glyph / emoji",
+          "info": "Used when no icon image is set.",
+          "placeholder": "✦"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature title"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "A short line that makes it feel worth it."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon Features",
+      "settings": {
+        "eyebrow": "Why Shuffle Mode",
+        "heading": "Crafted with intention",
+        "dark": false
+      },
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "glyph": "✦",
+            "title": "Made in small batches",
+            "text": "Limited runs only. Once it's gone, it's gone — and that's the point."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "glyph": "◎",
+            "title": "New drop every Sunday",
+            "text": "Something fresh each week. Show up, stay curious, add to cart."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "glyph": "◈",
+            "title": "Designed for your mood",
+            "text": "Editorial pieces that move with you — wherever the week takes you."
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

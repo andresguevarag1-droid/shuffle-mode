@@ -1,19 +1,467 @@
-<section class="container section">
-  <h1 class="section__title">Collections</h1>
-  <div class="product-grid" style="margin-top:3rem;">
-    {%- for collection in collections -%}
-      <a href="{{ collection.url }}" class="card">
-        <div class="card__media editorial-frame">
-          {%- if collection.featured_image -%}
-            <img src="{{ collection.featured_image | image_url: width: 600 }}" alt="{{ collection.title | escape }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
-          {%- endif -%}
-        </div>
-        <div class="card__info"><div class="card__name">{{ collection.title }}</div></div>
-      </a>
-    {%- endfor -%}
+{% stylesheet %}
+.smlc-root {
+  padding: var(--smlc-section-gap, 6rem) 0 var(--smlc-section-gap, 6rem);
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.smlc-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.smlc-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smlc-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--color-ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.smlc-heading em {
+  font-style: italic;
+  color: var(--color-ember);
+}
+
+.smlc-rule {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-ember);
+  border: none;
+  margin: 0;
+}
+
+.smlc-subtext {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-stone);
+  max-width: 32ch;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Grid ────────────────────────────────────────────────── */
+.smlc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--smlc-gap, 1.25rem);
+}
+
+@media (min-width: 640px) {
+  .smlc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .smlc-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* First tile spans full width — editorial opener */
+  .smlc-tile:first-child {
+    grid-column: 1 / -1;
+  }
+  .smlc-tile:first-child .smlc-tile__frame {
+    aspect-ratio: 21 / 9;
+  }
+  .smlc-tile:first-child .smlc-tile__title {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+  }
+}
+
+/* ── Tile ────────────────────────────────────────────────── */
+.smlc-tile {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  outline-offset: 3px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.smlc-tile__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: var(--color-sand);
+}
+
+/* Fallback wordmark tile when no image */
+.smlc-tile__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: var(--smlc-fb-bg, var(--color-sand));
+  padding: 2rem;
+}
+
+.smlc-tile__fallback-mark {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-stone);
+}
+
+.smlc-tile__fallback-label {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Image */
+.smlc-tile__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smlc-tile__img {
+    transition: none;
+  }
+}
+
+/* Gradient overlay */
+.smlc-tile__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(22, 19, 15, 0.72) 0%,
+    rgba(22, 19, 15, 0.18) 45%,
+    rgba(22, 19, 15, 0) 70%
+  );
+  transition: opacity 0.5s ease;
+}
+
+/* Info bar */
+.smlc-tile__info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.smlc-tile__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.625rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--color-cream);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.smlc-tile__meta {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(251, 249, 244, 0.6);
+  transition: color 0.3s ease;
+}
+
+/* Hover arrow */
+.smlc-tile__arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  margin-top: 0.5rem;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.smlc-tile__arrow svg {
+  width: 1rem;
+  height: 1rem;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smlc-tile__arrow {
+    transition: none;
+  }
+}
+
+/* Hover states — pointer devices */
+@media (hover: hover) {
+  .smlc-tile:hover .smlc-tile__img {
+    transform: scale(1.06);
+  }
+  .smlc-tile:hover .smlc-tile__overlay {
+    opacity: 1.15;
+  }
+  .smlc-tile:hover .smlc-tile__meta {
+    color: rgba(251, 249, 244, 0.85);
+  }
+  .smlc-tile:hover .smlc-tile__arrow {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus ring */
+.smlc-tile:focus-visible {
+  outline: 2px solid var(--color-ember);
+}
+
+/* Fallback tile info (no image) — ink on light bg */
+.smlc-tile--fallback .smlc-tile__info {
+  position: static;
+  padding: 1.25rem 1.5rem 1.5rem;
+  background: var(--color-bone);
+  border-top: 1px solid var(--color-line);
+}
+
+.smlc-tile--fallback .smlc-tile__title {
+  color: var(--color-ink);
+}
+
+.smlc-tile--fallback .smlc-tile__meta {
+  color: var(--color-stone);
+}
+
+.smlc-tile--fallback .smlc-tile__arrow {
+  color: var(--color-ember);
+  opacity: 0;
+}
+
+@media (hover: hover) {
+  .smlc-tile--fallback:hover .smlc-tile__arrow {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+{% endstylesheet %}
+
+<section class="smlc-root">
+  <div class="container">
+
+    {%- liquid
+      assign eyebrow = section.settings.eyebrow | default: 'The Edit'
+      assign heading_plain = section.settings.heading_plain | default: 'Shop by'
+      assign heading_italic = section.settings.heading_italic | default: 'Category'
+      assign subtext = section.settings.subtext | default: 'Curated collections, each one a world.'
+      assign fallback_backgrounds = '#f0ebe1,#e8e0d2,#ddd4c4,#e5dfd5,#ede7db,#d8d0c2'
+      assign fb_bg_list = fallback_backgrounds | split: ','
+    -%}
+
+    <header class="smlc-header">
+      <span class="smlc-eyebrow">{{ eyebrow }}</span>
+      <h1 class="smlc-heading">
+        {{ heading_plain }}&nbsp;<em>{{ heading_italic }}</em>
+      </h1>
+      <hr class="smlc-rule" aria-hidden="true">
+      {%- if subtext != blank -%}
+        <p class="smlc-subtext">{{ subtext }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="smlc-grid" role="list">
+      {%- for collection in collections -%}
+        {%- liquid
+          assign has_image = false
+          if collection.image
+            assign has_image = true
+          elsif collection.featured_image
+            assign has_image = true
+          endif
+          assign fb_index = forloop.index0 | modulo: fb_bg_list.size
+          assign fb_bg = fb_bg_list[fb_index]
+        -%}
+
+        <a
+          href="{{ collection.url }}"
+          class="smlc-tile{% unless has_image %} smlc-tile--fallback{% endunless %}"
+          role="listitem"
+          aria-label="{{ collection.title | escape }}{% if collection.products_count > 0 %}, {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}{% endif %}"
+        >
+          <div class="smlc-tile__frame">
+
+            {%- if has_image -%}
+              {%- liquid
+                assign img_src = collection.image | image_url: width: 1200
+                assign img_src_sm = collection.image | image_url: width: 600
+                assign img_alt = collection.image.alt | default: collection.title | escape
+              -%}
+              <img
+                class="smlc-tile__img"
+                src="{{ img_src_sm }}"
+                srcset="{{ img_src_sm }} 600w, {{ img_src }} 1200w"
+                sizes="(min-width: 1024px) {% if forloop.first %}100vw{% else %}33vw{% endif %}, (min-width: 640px) 50vw, 100vw"
+                alt="{{ img_alt }}"
+                loading="{% if forloop.index <= 3 %}eager{% else %}lazy{% endif %}"
+                decoding="async"
+              >
+              <div class="smlc-tile__overlay" aria-hidden="true"></div>
+              <div class="smlc-tile__info">
+                <h2 class="smlc-tile__title">{{ collection.title }}</h2>
+                {%- if collection.products_count > 0 -%}
+                  <span class="smlc-tile__meta">{{ collection.products_count }}&thinsp;{{ collection.products_count | pluralize: 'Piece', 'Pieces' }}</span>
+                {%- endif -%}
+                <span class="smlc-tile__arrow" aria-hidden="true">
+                  Explore
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><line x1="2" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+                </span>
+              </div>
+
+            {%- else -%}
+              <div
+                class="smlc-tile__fallback"
+                style="--smlc-fb-bg: {{ fb_bg }};"
+                aria-hidden="true"
+              >
+                <div class="smlc-tile__fallback-mark"></div>
+                <span class="smlc-tile__fallback-label">{{ collection.title }}</span>
+                <div class="smlc-tile__fallback-mark"></div>
+              </div>
+              <div class="smlc-tile__info">
+                <h2 class="smlc-tile__title">{{ collection.title }}</h2>
+                {%- if collection.products_count > 0 -%}
+                  <span class="smlc-tile__meta">{{ collection.products_count }}&thinsp;{{ collection.products_count | pluralize: 'Piece', 'Pieces' }}</span>
+                {%- endif -%}
+                <span class="smlc-tile__arrow" aria-hidden="true">
+                  Explore
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><line x1="2" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+                </span>
+              </div>
+            {%- endif -%}
+
+          </div>
+        </a>
+      {%- else -%}
+        <p style="font-family:var(--font-body);color:var(--color-stone);grid-column:1/-1;text-align:center;padding:4rem 0;">No collections found.</p>
+      {%- endfor -%}
+    </div>
+
   </div>
 </section>
 
 {% schema %}
-{ "name": "Collections list", "settings": [] }
+{
+  "name": "Collections list",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "The Edit"
+    },
+    {
+      "type": "text",
+      "id": "heading_plain",
+      "label": "Heading — plain part",
+      "default": "Shop by"
+    },
+    {
+      "type": "text",
+      "id": "heading_italic",
+      "label": "Heading — italic part",
+      "default": "Category"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subheading",
+      "default": "Curated collections, each one a world."
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Section vertical padding (rem)",
+      "min": 2,
+      "max": 12,
+      "step": 0.5,
+      "default": 6,
+      "unit": "rem"
+    },
+    {
+      "type": "range",
+      "id": "tile_gap",
+      "label": "Tile gap (rem)",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.25,
+      "default": 1.25,
+      "unit": "rem"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collections list"
+    }
+  ]
+}
 {% endschema %}
+
+{% javascript %}
+(function () {
+  var root = document.currentScript
+    ? document.currentScript.closest('.smlc-root')
+    : document.querySelector('.smlc-root');
+  if (!root) return;
+
+  var schema = root.closest('[data-section-settings]');
+  var settings = schema ? JSON.parse(schema.dataset.sectionSettings || '{}') : {};
+  var sectionGap = parseFloat(
+    root.closest('[data-section-id]')
+      ? (root.closest('[data-section-id]').dataset.sectionGap || 6)
+      : 6
+  );
+  var tileGap = parseFloat(
+    root.closest('[data-section-id]')
+      ? (root.closest('[data-section-id]').dataset.tileGap || 1.25)
+      : 1.25
+  );
+
+  root.style.setProperty('--smlc-section-gap', sectionGap + 'rem');
+  root.style.setProperty('--smlc-gap', tileGap + 'rem');
+})();
+{% endjavascript %}

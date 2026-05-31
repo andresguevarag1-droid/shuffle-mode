@@ -1,0 +1,437 @@
+{% stylesheet %}
+.smes-root {
+  --smes-gap: 0px;
+  --smes-img-parallax: 0px;
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+.smes-root.smes-dark {
+  background: var(--color-ink);
+  color: var(--color-bone);
+}
+.smes-root.smes-dark .smes-eyebrow {
+  color: var(--color-stone);
+}
+.smes-root.smes-dark .smes-divider {
+  background: rgba(246,242,234,.15);
+}
+.smes-root.smes-dark .smes-cta {
+  color: var(--color-bone);
+  border-color: rgba(246,242,234,.35);
+}
+.smes-root.smes-dark .smes-cta:hover {
+  background: var(--color-bone);
+  color: var(--color-ink);
+  border-color: var(--color-bone);
+}
+
+.smes-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 80vh;
+  align-items: stretch;
+}
+@media (max-width: 899px) {
+  .smes-inner {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+/* --- image side --- */
+.smes-image-col {
+  position: relative;
+  overflow: hidden;
+  min-height: 55vmin;
+}
+@media (max-width: 899px) {
+  .smes-image-col {
+    order: 0;
+    min-height: 60vw;
+  }
+}
+.smes-image-wrap {
+  position: absolute;
+  inset: -8% 0;
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .smes-image-wrap {
+    inset: 0;
+    transition: none;
+    will-change: auto;
+  }
+}
+.smes-image-wrap img,
+.smes-image-wrap .smes-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.smes-fallback {
+  background: var(--color-sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.smes-fallback svg {
+  width: 48px;
+  height: 48px;
+  opacity: .28;
+}
+
+/* --- text side --- */
+.smes-text-col {
+  display: flex;
+  align-items: center;
+  padding: clamp(3rem, 8vw, 7rem) clamp(2rem, 6vw, 6rem);
+}
+@media (max-width: 899px) {
+  .smes-text-col {
+    order: 1;
+    padding: clamp(2.5rem, 8vw, 4rem) clamp(1.5rem, 5vw, 3rem);
+  }
+}
+
+.smes-text-inner {
+  max-width: 480px;
+}
+
+.smes-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin: 0 0 1.25rem;
+}
+
+.smes-divider {
+  width: 2.5rem;
+  height: 1px;
+  background: rgba(22,19,15,.18);
+  margin: 0 0 1.75rem;
+}
+
+.smes-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.75rem;
+  font-style: italic;
+}
+
+.smes-body {
+  font-family: var(--font-body);
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  line-height: 1.72;
+  color: inherit;
+  opacity: .82;
+  margin: 0 0 2.5rem;
+}
+.smes-body p { margin: 0 0 1em; }
+.smes-body p:last-child { margin-bottom: 0; }
+
+.smes-cta-wrap {
+  margin-top: 2.75rem;
+}
+
+.smes-cta {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-ink);
+  border: 1px solid rgba(22,19,15,.35);
+  padding: 0.9em 2.2em;
+  transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+  cursor: pointer;
+}
+.smes-cta:hover {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+/* image-right: swap columns visually */
+.smes-inner.smes-img-right .smes-image-col {
+  order: 2;
+}
+.smes-inner.smes-img-right .smes-text-col {
+  order: 1;
+  justify-content: flex-end;
+}
+@media (max-width: 899px) {
+  .smes-inner.smes-img-right .smes-image-col { order: 0; }
+  .smes-inner.smes-img-right .smes-text-col  { order: 1; justify-content: flex-start; }
+}
+
+/* reveal animation */
+.smes-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.72s cubic-bezier(.22,.6,.36,1), transform 0.72s cubic-bezier(.22,.6,.36,1);
+}
+.smes-reveal.smes-visible {
+  opacity: 1;
+  transform: none;
+}
+.smes-reveal:nth-child(2) { transition-delay: 0.1s; }
+.smes-reveal:nth-child(3) { transition-delay: 0.2s; }
+.smes-reveal:nth-child(4) { transition-delay: 0.3s; }
+.smes-reveal:nth-child(5) { transition-delay: 0.42s; }
+@media (prefers-reduced-motion: reduce) {
+  .smes-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+{% endstylesheet %}
+
+{%- liquid
+  assign dark       = section.settings.dark
+  assign img_pos    = section.settings.image_position
+  assign eyebrow    = section.settings.eyebrow
+  assign heading    = section.settings.heading
+  assign body_text  = section.settings.body_text
+  assign cta_label  = section.settings.cta_label
+  assign cta_url    = section.settings.cta_url
+  assign image      = section.settings.image
+-%}
+
+<section
+  class="smes-root{% if dark %} smes-dark{% endif %}"
+  id="smes-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="smes-inner{% if img_pos == 'right' %} smes-img-right{% endif %}">
+
+    {%- comment %} IMAGE COLUMN {%- endcomment %}
+    <div class="smes-image-col" aria-hidden="true">
+      <div class="smes-image-wrap" data-smes-parallax>
+        {%- if image != blank -%}
+          {{
+            image
+            | image_url: width: 1600
+            | image_tag:
+              loading: 'lazy',
+              widths: '600, 900, 1200, 1600',
+              sizes: '(max-width: 899px) 100vw, 50vw',
+              alt: image.alt | escape
+          }}
+        {%- else -%}
+          <div class="smes-fallback" role="img" aria-label="Editorial image placeholder">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="4" y="8" width="40" height="32" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="17" cy="20" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 34l10-9 8 7 6-5 16 13" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment %} TEXT COLUMN {%- endcomment %}
+    <div class="smes-text-col">
+      <div class="smes-text-inner">
+        {%- if eyebrow != blank -%}
+          <p class="smes-eyebrow smes-reveal">{{ eyebrow | escape }}</p>
+        {%- endif -%}
+
+        <div class="smes-divider smes-reveal" role="presentation"></div>
+
+        {%- if heading != blank -%}
+          <h2 class="smes-heading smes-reveal">{{ heading | escape }}</h2>
+        {%- endif -%}
+
+        {%- if body_text != blank -%}
+          <div class="smes-body smes-reveal">{{ body_text }}</div>
+        {%- endif -%}
+
+        {%- if cta_label != blank and cta_url != blank -%}
+          <div class="smes-cta-wrap smes-reveal">
+            <a href="{{ cta_url }}" class="smes-cta">{{ cta_label | escape }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% javascript %}
+(function () {
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // --- reveal on scroll ---
+  function initReveal(root) {
+    if (reduceMotion) return;
+    var items = root.querySelectorAll('.smes-reveal');
+    if (!items.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('smes-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(function (el) { io.observe(el); });
+  }
+
+  // --- parallax ---
+  function initParallax(root) {
+    if (reduceMotion) return;
+    var wrap = root.querySelector('[data-smes-parallax]');
+    if (!wrap) return;
+
+    var ticking = false;
+    var lastY = 0;
+
+    function update() {
+      var rect = root.getBoundingClientRect();
+      var viewH = window.innerHeight;
+      var progress = 1 - (rect.bottom / (viewH + rect.height));
+      var shift = progress * 60; // px total travel across scroll range
+      wrap.style.transform = 'translateY(' + shift + 'px)';
+      ticking = false;
+    }
+
+    function onScroll() {
+      lastY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+  }
+
+  function init(root) {
+    initReveal(root);
+    initParallax(root);
+  }
+
+  // Shopify OS2 section re-rendering support
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.smes-root').forEach(init);
+  });
+
+  document.addEventListener('shopify:section:load', function (e) {
+    var root = e.target.querySelector('.smes-root');
+    if (root) init(root);
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Editorial Split",
+  "tag": "section",
+  "class": "smes-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left",  "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark background",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Collection"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Dressed for the spaces between moments"
+    },
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Body",
+      "default": "<p>Each piece is conceived at the intersection of restraint and intention — cut from materials that earn their keep across decades, not seasons.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Explore the edit"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Split — Image Left",
+      "settings": {
+        "image_position": "left",
+        "dark": false,
+        "eyebrow": "The Collection",
+        "heading": "Dressed for the spaces between moments",
+        "body_text": "<p>Each piece is conceived at the intersection of restraint and intention — cut from materials that earn their keep across decades, not seasons.</p>",
+        "cta_label": "Explore the edit"
+      }
+    },
+    {
+      "name": "Editorial Split — Image Right (Dark)",
+      "settings": {
+        "image_position": "right",
+        "dark": true,
+        "eyebrow": "Behind the craft",
+        "heading": "Made without compromise",
+        "body_text": "<p>From first sketch to final stitch, every garment passes through hands that know the difference between good and irreplaceable.</p>",
+        "cta_label": "Our story"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,37 +1,584 @@
-<section class="section section--sand">
+{% stylesheet %}
+.smt-section {
+  background: var(--color-sand);
+  padding: 96px 0 104px;
+  overflow: hidden;
+}
+
+.smt-head {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.smt-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: 20px;
+}
+
+.smt-eyebrow::before,
+.smt-eyebrow::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--color-stone);
+  opacity: .5;
+}
+
+.smt-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* ── track ── */
+.smt-track-outer {
+  position: relative;
+}
+
+.smt-track {
+  display: grid;
+  grid-template-columns: repeat(var(--smt-cols, 3), 1fr);
+  gap: 24px;
+}
+
+/* ── card ── */
+.smt-card {
+  background: var(--color-cream);
+  border: 1px solid var(--color-line);
+  padding: 40px 36px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+
+.smt-card:hover {
+  box-shadow: 0 12px 48px rgba(22,19,15,.08);
+  transform: translateY(-3px);
+}
+
+.smt-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.smt-stars {
+  display: flex;
+  gap: 3px;
+  color: var(--color-ember);
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.smt-mark {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: .7;
+  color: var(--color-ember);
+  opacity: .25;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.smt-quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.smt-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-line);
+}
+
+/* avatar */
+.smt-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-stone);
+  border: 1px solid var(--color-line);
+}
+
+.smt-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.smt-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.smt-author {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--color-ink);
+}
+
+.smt-detail {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smt-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.smt-verified::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: var(--color-ember);
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%23fbf9f4' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: cover;
+  flex-shrink: 0;
+}
+
+/* ── mobile carousel ── */
+@media (max-width: 767px) {
+  .smt-section {
+    padding: 72px 0 80px;
+  }
+
+  .smt-track-outer {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+
+  .smt-track {
+    --smt-cols: 1;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 20px 4px;
+    gap: 16px;
+  }
+
+  .smt-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .smt-card {
+    flex: 0 0 min(82vw, 340px);
+    scroll-snap-align: center;
+  }
+
+  .smt-card:hover {
+    transform: none;
+  }
+
+  .smt-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 28px;
+  }
+
+  .smt-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-stone);
+    opacity: .25;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: opacity .3s ease, transform .3s ease;
+  }
+
+  .smt-dot[aria-current="true"] {
+    opacity: 1;
+    background: var(--color-ember);
+    transform: scale(1.35);
+  }
+
+  .smt-pause-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-line);
+    background: transparent;
+    cursor: pointer;
+    margin: 16px auto 0;
+    color: var(--color-stone);
+    transition: color .2s ease, border-color .2s ease;
+  }
+
+  .smt-pause-btn:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  .smt-pause-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    display: block;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .smt-track {
+    --smt-cols: 2;
+  }
+}
+
+@media (min-width: 768px) {
+  .smt-dots,
+  .smt-pause-btn {
+    display: none;
+  }
+}
+
+/* ── reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .smt-card {
+    transition: none;
+  }
+}
+
+/* ── reveal animation ── */
+.smt-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease;
+}
+
+.smt-card.smt-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.smt-card:hover.smt-visible {
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smt-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .smt-card:hover.smt-visible {
+    transform: none;
+  }
+}
+{% endstylesheet %}
+
+<section class="smt-section" id="smt-{{ section.id }}">
   <div class="container">
-    <div class="section__head reveal" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;">
-      <span class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</span>
-      <h2 class="section__title">{{ section.settings.heading }}</h2>
+
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <div class="smt-head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="smt-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="smt-heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="smt-track-outer">
+      <div class="smt-track" id="smt-track-{{ section.id }}" role="list" aria-label="Customer testimonials">
+        {%- for block in section.blocks -%}
+          {%- assign first_letter = block.settings.author | slice: 0 -%}
+          <figure class="smt-card" role="listitem" {{ block.shopify_attributes }} style="transition-delay: {{ forloop.index0 | times: 80 }}ms;">
+            <div class="smt-card__top">
+              <div class="smt-stars" aria-label="5 out of 5 stars" role="img">
+                <span aria-hidden="true">★</span>
+                <span aria-hidden="true">★</span>
+                <span aria-hidden="true">★</span>
+                <span aria-hidden="true">★</span>
+                <span aria-hidden="true">★</span>
+              </div>
+              <span class="smt-mark" aria-hidden="true">"</span>
+            </div>
+
+            <blockquote class="smt-quote">
+              <p>{{ block.settings.quote }}</p>
+            </blockquote>
+
+            <figcaption class="smt-footer">
+              <div class="smt-avatar" aria-hidden="true">
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 88
+                    | image_tag: loading: 'lazy', alt: block.settings.author, widths: '44,88'
+                  }}
+                {%- else -%}
+                  {{ first_letter }}
+                {%- endif -%}
+              </div>
+              <div class="smt-meta">
+                <span class="smt-author">{{ block.settings.author }}</span>
+                {%- if block.settings.detail != blank -%}
+                  <span class="smt-detail smt-verified">{{ block.settings.detail }}</span>
+                {%- endif -%}
+              </div>
+            </figcaption>
+          </figure>
+        {%- endfor -%}
+      </div>
+
+      <div class="smt-dots" id="smt-dots-{{ section.id }}" role="tablist" aria-label="Testimonial navigation">
+        {%- for block in section.blocks -%}
+          <button
+            class="smt-dot"
+            role="tab"
+            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-label="Testimonial {{ forloop.index }}"
+            data-index="{{ forloop.index0 }}"
+          ></button>
+        {%- endfor -%}
+      </div>
+
+      <button class="smt-pause-btn" id="smt-pause-{{ section.id }}" aria-label="Pause auto-rotation" aria-pressed="false">
+        <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="2" y="1" width="3.5" height="12" rx=".5"/>
+          <rect x="8.5" y="1" width="3.5" height="12" rx=".5"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="testimonials">
-      {%- for block in section.blocks -%}
-        <figure class="testimonial reveal" {{ block.shopify_attributes }}>
-          <div class="testimonial__stars" aria-hidden="true">★★★★★</div>
-          <blockquote class="testimonial__quote">{{ block.settings.quote }}</blockquote>
-          <figcaption class="testimonial__author">— {{ block.settings.author }}{% if block.settings.detail != blank %}, <span>{{ block.settings.detail }}</span>{% endif %}</figcaption>
-        </figure>
-      {%- endfor -%}
-    </div>
   </div>
 </section>
+
+{% javascript %}
+(function () {
+  var sectionId = '{{ section.id }}';
+  var track = document.getElementById('smt-track-' + sectionId);
+  var dotsContainer = document.getElementById('smt-dots-' + sectionId);
+  var pauseBtn = document.getElementById('smt-pause-' + sectionId);
+
+  if (!track) return;
+
+  /* ── reveal on scroll ── */
+  var cards = Array.prototype.slice.call(track.querySelectorAll('.smt-card'));
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reducedMotion) {
+    cards.forEach(function (c) { c.classList.add('smt-visible'); });
+  } else {
+    var revealObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('smt-visible');
+          revealObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    cards.forEach(function (c) { revealObs.observe(c); });
+  }
+
+  /* ── carousel (mobile only) ── */
+  if (!dotsContainer) return;
+  var dots = Array.prototype.slice.call(dotsContainer.querySelectorAll('.smt-dot'));
+  var total = cards.length;
+  if (total < 2) return;
+
+  var current = 0;
+  var paused = false;
+  var interval = null;
+  var DELAY = 4500;
+
+  function isMobile () {
+    return window.matchMedia('(max-width: 767px)').matches;
+  }
+
+  function goTo (index, smooth) {
+    if (!isMobile()) return;
+    current = (index + total) % total;
+    var card = cards[current];
+    track.scrollTo({
+      left: card.offsetLeft - track.offsetLeft - (track.clientWidth - card.clientWidth) / 2,
+      behavior: (reducedMotion || smooth === false) ? 'instant' : 'smooth'
+    });
+    dots.forEach(function (d, i) {
+      d.setAttribute('aria-current', i === current ? 'true' : 'false');
+    });
+  }
+
+  function start () {
+    if (reducedMotion) return;
+    clearInterval(interval);
+    interval = setInterval(function () {
+      if (!paused && isMobile()) goTo(current + 1, true);
+    }, DELAY);
+  }
+
+  function stop () {
+    clearInterval(interval);
+  }
+
+  /* dot clicks */
+  dots.forEach(function (dot, i) {
+    dot.addEventListener('click', function () {
+      goTo(i, true);
+      paused = true;
+      pauseBtn.setAttribute('aria-pressed', 'true');
+      stop();
+    });
+  });
+
+  /* pause button */
+  pauseBtn.addEventListener('click', function () {
+    paused = !paused;
+    pauseBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    pauseBtn.setAttribute('aria-label', paused ? 'Resume auto-rotation' : 'Pause auto-rotation');
+    if (paused) {
+      stop();
+      /* swap to play icon */
+      pauseBtn.querySelector('svg').innerHTML = '<polygon points="3,1 3,13 12,7" rx="0.5"/>';
+    } else {
+      pauseBtn.querySelector('svg').innerHTML = '<rect x="2" y="1" width="3.5" height="12" rx=".5"/><rect x="8.5" y="1" width="3.5" height="12" rx=".5"/>';
+      start();
+    }
+  });
+
+  /* sync dots on native scroll */
+  var scrollTimer;
+  track.addEventListener('scroll', function () {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function () {
+      var cx = track.scrollLeft + track.clientWidth / 2;
+      var closest = 0;
+      var minDist = Infinity;
+      cards.forEach(function (card, i) {
+        var center = card.offsetLeft - track.offsetLeft + card.clientWidth / 2;
+        var dist = Math.abs(cx - center);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      current = closest;
+      dots.forEach(function (d, i) {
+        d.setAttribute('aria-current', i === current ? 'true' : 'false');
+      });
+    }, 80);
+  });
+
+  /* pause on hover/focus */
+  track.addEventListener('mouseenter', function () { if (!paused) stop(); });
+  track.addEventListener('mouseleave', function () { if (!paused) start(); });
+  track.addEventListener('focusin', function () { if (!paused) stop(); });
+  track.addEventListener('focusout', function () { if (!paused) start(); });
+
+  /* restart on resize */
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (!paused) { stop(); start(); }
+    }, 200);
+  });
+
+  if (!reducedMotion) start();
+})();
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Testimonials",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Loved by the mood-dressers" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Worn, not just bought" }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Loved by the mood-dressers"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Worn, not just bought"
+    }
   ],
   "blocks": [
     {
       "type": "quote",
       "name": "Testimonial",
       "settings": [
-        { "type": "textarea", "id": "quote", "label": "Quote", "default": "The slip dress is the most worn thing in my closet. I get stopped every time." },
-        { "type": "text", "id": "author", "label": "Author", "default": "Maya R." },
-        { "type": "text", "id": "detail", "label": "Detail", "default": "Drop 01" }
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "The slip dress is the most worn thing in my closet. I get stopped every single time."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name",
+          "default": "Maya R."
+        },
+        {
+          "type": "text",
+          "id": "detail",
+          "label": "Detail / label",
+          "default": "Verified Buyer",
+          "info": "Shown below author — e.g. 'Verified Buyer', 'Drop 01', 'Size 2, 5'7\"'"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Avatar photo (optional)"
+        }
       ]
     }
   ],
@@ -39,9 +586,30 @@
     {
       "name": "Testimonials",
       "blocks": [
-        { "type": "quote", "settings": { "quote": "The slip dress is the most worn thing in my closet. I get stopped every time.", "author": "Maya R.", "detail": "verified buyer" } },
-        { "type": "quote", "settings": { "quote": "Finally a brand that gets it — I dress for how I feel, and these pieces just work together.", "author": "Lena P.", "detail": "verified buyer" } },
-        { "type": "quote", "settings": { "quote": "Ordered Sunday, wore it Friday, sold out by Monday. The hype is real.", "author": "Priya S.", "detail": "verified buyer" } }
+        {
+          "type": "quote",
+          "settings": {
+            "quote": "The slip dress is the most worn thing in my closet. I get stopped every single time — 'where is that from?' every time.",
+            "author": "Maya R.",
+            "detail": "Verified Buyer"
+          }
+        },
+        {
+          "type": "quote",
+          "settings": {
+            "quote": "Finally a brand that gets mood-dressing. I don't want a look, I want a feeling — and these pieces deliver it every drop.",
+            "author": "Lena P.",
+            "detail": "Verified Buyer"
+          }
+        },
+        {
+          "type": "quote",
+          "settings": {
+            "quote": "Ordered Sunday. Wore it Friday. Checked the site Monday — sold out. The hype is completely earned.",
+            "author": "Priya S.",
+            "detail": "Verified Buyer"
+          }
+        }
       ]
     }
   ]

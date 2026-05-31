@@ -8,60 +8,138 @@
   else
     assign mode = 'link'
   endif
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
 -%}
-<div class="card" data-card data-card-mode="{{ mode }}">
+<article class="card" data-card data-card-mode="{{ mode }}">
+
+  {{- '<!-- media -->' }}
   <div class="card__media">
-    <a href="{{ product.url }}" class="card__link" aria-label="{{ product.title | escape }}"></a>
+
+    {{- '<!-- stretched invisible link — covers the whole image -->' }}
+    <a href="{{ product.url }}" class="card__link" aria-label="{{ product.title | escape }}" tabindex="-1"></a>
 
     {%- if product.featured_image -%}
-      <img class="card__img card__img--primary"
+      <img
+        class="card__img card__img--primary"
         src="{{ product.featured_image | image_url: width: 700 }}"
-        srcset="{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 800 }} 800w"
-        sizes="(min-width: 1024px) 25vw, 50vw"
+        srcset="
+          {{ product.featured_image | image_url: width: 400 }} 400w,
+          {{ product.featured_image | image_url: width: 700 }} 700w,
+          {{ product.featured_image | image_url: width: 1000 }} 1000w"
+        sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 640px) 38vw, 50vw"
         alt="{{ product.featured_image.alt | escape | default: product.title }}"
-        width="700" height="875" loading="lazy">
+        width="700" height="875"
+        loading="lazy"
+        decoding="async">
       {%- if product.images[1] -%}
-        <img class="card__img card__img--secondary" src="{{ product.images[1] | image_url: width: 700 }}" alt="" aria-hidden="true" width="700" height="875" loading="lazy">
+        <img
+          class="card__img card__img--secondary"
+          src="{{ product.images[1] | image_url: width: 700 }}"
+          srcset="
+            {{ product.images[1] | image_url: width: 400 }} 400w,
+            {{ product.images[1] | image_url: width: 700 }} 700w"
+          sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 640px) 38vw, 50vw"
+          alt=""
+          aria-hidden="true"
+          width="700" height="875"
+          loading="lazy"
+          decoding="async">
       {%- endif -%}
     {%- else -%}
       <div class="card__ph"><span>{{ shop.name }}</span></div>
     {%- endif -%}
 
-    {%- if product.available == false -%}
-      <span class="card__badge card__badge--muted">Sold out</span>
-    {%- elsif product.tags contains 'new' -%}
-      <span class="card__badge">New</span>
-    {%- elsif product.compare_at_price > product.price -%}
-      <span class="card__badge card__badge--sale">Sale</span>
-    {%- endif -%}
+    {{- '<!-- badges — top-left stack -->' }}
+    <div class="card__badges" aria-hidden="true">
+      {%- if product.available == false -%}
+        <span class="card__badge card__badge--muted">Sold out</span>
+      {%- elsif product.tags contains 'new' -%}
+        <span class="card__badge">New</span>
+      {%- elsif on_sale -%}
+        <span class="card__badge card__badge--sale">Sale</span>
+      {%- endif -%}
+    </div>
 
-    {%- comment -%} Quick add {%- endcomment -%}
+    {{- '<!-- quick add / size tray -->' }}
     {%- if product.available -%}
       {%- case mode -%}
+
         {%- when 'single' -%}
-          <button type="button" class="card__quick" data-quick-add data-vid="{{ first_variant.id }}">Quick add +</button>
+          <button
+            type="button"
+            class="card__quick"
+            data-quick-add
+            data-vid="{{ first_variant.id }}"
+            aria-label="Quick add {{ product.title | escape }} to bag">
+            <span aria-hidden="true">Add to Bag</span>
+          </button>
+
         {%- when 'options' -%}
-          <button type="button" class="card__quick" data-quick-add>Quick add +</button>
-          <div class="card__sizes" data-size-tray hidden>
+          <button
+            type="button"
+            class="card__quick"
+            data-quick-add
+            aria-label="Select size for {{ product.title | escape }}"
+            aria-expanded="false"
+            aria-controls="size-tray-{{ product.id }}">
+            <span aria-hidden="true">Select Size</span>
+          </button>
+          <div
+            class="card__sizes"
+            data-size-tray
+            id="size-tray-{{ product.id }}"
+            hidden
+            role="group"
+            aria-label="Available sizes for {{ product.title | escape }}">
             {%- for v in product.variants -%}
-              <button type="button" class="card__size" data-card-size data-vid="{{ v.id }}" {% unless v.available %}disabled{% endunless %}>{{ v.title }}</button>
+              <button
+                type="button"
+                class="card__size"
+                data-card-size
+                data-vid="{{ v.id }}"
+                {%- unless v.available -%} disabled aria-disabled="true"{%- endunless -%}>
+                {{ v.title }}
+              </button>
             {%- endfor -%}
           </div>
+
         {%- else -%}
-          <a href="{{ product.url }}" class="card__quick">Choose options</a>
+          <a href="{{ product.url }}" class="card__quick" aria-label="View options for {{ product.title | escape }}">
+            <span aria-hidden="true">Choose Options</span>
+          </a>
+
       {%- endcase -%}
     {%- endif -%}
-  </div>
 
+  </div>{{- '<!-- /card__media -->' }}
+
+  {{- '<!-- info row -->' }}
   <div class="card__info">
+
     <div class="card__text">
       <a href="{{ product.url }}" class="card__name">{{ product.title }}</a>
-      {% render 'rating', product: product, compact: true %}
-      {%- if product.type != blank -%}<span class="card__cat">{{ product.type }}</span>{%- endif -%}
+      {%- render 'rating', product: product, compact: true -%}
+      {%- if product.type != blank -%}
+        <span class="card__cat">{{ product.type }}</span>
+      {%- endif -%}
     </div>
-    <span class="card__price">
-      {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
-      {{ product.price | money }}
+
+    <span class="card__price" aria-label="
+      {%- if on_sale -%}
+        Original price {{ product.compare_at_price | money }}, sale price {{ product.price | money }}
+      {%- else -%}
+        {{ product.price | money }}
+      {%- endif -%}
+    ">
+      {%- if on_sale -%}
+        <s aria-hidden="true">{{ product.compare_at_price | money }}</s>
+      {%- endif -%}
+      {{- product.price | money -}}
     </span>
+
   </div>
-</div>
+
+</article>
