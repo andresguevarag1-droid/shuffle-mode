@@ -15,8 +15,8 @@ export default function Hero() {
           </h1>
 
           <p className="mt-6 max-w-md text-lg text-stone leading-relaxed">
-            Minimal pieces with maximum presence — elevated silhouettes designed
-            to move with whoever you are this week. New drop every Sunday.
+            Minimal pieces that elevate your wardrobe instantly — elevated
+            silhouettes with maximum presence. New drop every Sunday.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
@@ -46,7 +46,7 @@ export default function Hero() {
             <div className="editorial-frame col-span-2 row-span-4 rounded-2xl" />
             <div className="editorial-frame col-span-2 row-span-2 rounded-2xl flex items-end p-4">
               <span className="font-display text-cream/90 text-sm">
-                Drop 014
+                Drop 01
               </span>
             </div>
           </div>

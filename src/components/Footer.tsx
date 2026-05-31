@@ -19,8 +19,8 @@ export default function Footer() {
       <div className="container-x py-16">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <p className="font-display text-3xl font-semibold">
-              Shuffle<span className="text-ember-soft">.</span>Mode
+            <p className="font-display text-2xl font-semibold uppercase tracking-[0.18em]">
+              Shuffle Mode<span className="text-ember-soft">.</span>
             </p>
             <p className="mt-4 max-w-xs text-cream/70">
               Dress for the mood, not the occasion. Limited weekly drops, made in

@@ -18,12 +18,14 @@ export type Product = {
   swatch: [string, string]; // placeholder gradient
 };
 
+// Aligned to the live store: Shopify currently runs "Drop 01" with 19 pieces.
 export const DROP = {
-  number: 14,
-  title: "Drop 014 — Quiet Power",
+  number: 1,
+  title: "Drop 01",
   // Next Sunday relative to build; the countdown recalculates on the client too.
   releasesAt: "2026-06-07T17:00:00Z",
-  piecesLeft: 38,
+  totalPieces: 19,
+  piecesLeft: 7,
 };
 
 export const MOODS: Mood[] = [
@@ -56,21 +58,21 @@ export const MOODS: Mood[] = [
 export const PRODUCTS: Product[] = [
   {
     id: "p1",
-    name: "The Statement Blazer",
-    category: "Outerwear",
-    price: 168,
-    mood: "sharp",
-    badge: "Drop 014",
-    swatch: ["#3a3631", "#6b655c"],
+    name: "Ruched Ivory Slip Dress",
+    category: "Dresses",
+    price: 124,
+    mood: "soft",
+    badge: "Almost gone",
+    swatch: ["#efe6d6", "#cdbda1"],
   },
   {
     id: "p2",
-    name: "Ember Slip Dress",
-    category: "Dresses",
-    price: 124,
-    mood: "bold",
-    badge: "Almost gone",
-    swatch: ["#c2502e", "#8f3420"],
+    name: "Pinstripe Wide-Leg Trouser",
+    category: "Bottoms",
+    price: 112,
+    mood: "sharp",
+    badge: "Drop 01",
+    swatch: ["#2c2a28", "#56514a"],
   },
   {
     id: "p3",
@@ -82,11 +84,11 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "p4",
-    name: "Wide-Leg Linen Trouser",
-    category: "Bottoms",
-    price: 112,
-    mood: "free",
-    swatch: ["#9aa67f", "#727d57"],
+    name: "The Statement Blazer",
+    category: "Outerwear",
+    price: 168,
+    mood: "sharp",
+    swatch: ["#3a3631", "#6b655c"],
   },
   {
     id: "p5",

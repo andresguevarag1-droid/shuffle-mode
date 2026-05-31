@@ -1,6 +1,6 @@
 const items = [
   "Free shipping on orders over $150",
-  "Drop 014 — Quiet Power — releasing Sunday 1PM ET",
+  "Drop 01 — releasing Sunday 1PM ET",
   "Limited weekly drops · once it's gone, it's gone",
   "Join the list for early access",
 ];

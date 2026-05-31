@@ -25,9 +25,9 @@ export default function Header() {
       <nav className="container-x flex items-center justify-between h-16 md:h-20">
         <a
           href="#top"
-          className="font-display text-xl md:text-2xl font-semibold tracking-tight"
+          className="font-display text-lg md:text-xl font-semibold uppercase tracking-[0.22em]"
         >
-          Shuffle<span className="text-ember">.</span>Mode
+          Shuffle Mode<span className="text-ember">.</span>
         </a>
 
         <ul className="hidden md:flex items-center gap-8 text-sm tracking-wide">
