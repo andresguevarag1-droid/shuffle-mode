@@ -1,15 +1,14 @@
 {% stylesheet %}
 .smfc-root {
-  --smfc-cols: {{ section.settings.columns }};
+  --smfc-cols: 3; /* fallback; overridden by inline style per-section */
   --smfc-gap: 2px;
-  padding: clamp(3rem, 6vw, 6rem) 0;
+  padding: clamp(4rem, 8vw, 7rem) 0;
   background: var(--color-cream);
 }
 
 .smfc-header {
   text-align: center;
   margin-bottom: clamp(2rem, 4vw, 3.5rem);
-  padding: 0 var(--smfc-outer-pad, 1.5rem);
 }
 
 .smfc-eyebrow {

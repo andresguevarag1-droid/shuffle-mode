@@ -7,7 +7,7 @@
   --smif-accent: var(--color-ember);
   background: var(--smif-bg);
   color: var(--smif-fg);
-  padding: 5rem 0;
+  padding: clamp(4rem, 8vw, 7rem) 0;
 }
 
 .smif-icon-features--dark {
@@ -18,9 +18,9 @@
 }
 
 .smif-icon-features__inner {
-  max-width: var(--container-max, 1280px);
+  max-width: var(--page-width, 1440px);
   margin: 0 auto;
-  padding: 0 var(--container-gutter, 2rem);
+  padding: 0 clamp(1.5rem, 4vw, 4rem);
 }
 
 .smif-icon-features__header {

@@ -274,7 +274,7 @@
 <section
   class="smpb-root"
   data-align="{{ align_attr }}"
-  aria-label="{{ section.settings.headline | escape }}"
+  aria-label="{{ section.settings.headline | strip_html | escape }}"
   style="
     --smpb-min-h: {{ section.settings.min_height }}vh;
     --smpb-scrim-opacity: {{ section.settings.scrim_opacity | divided_by: 100.0 }};

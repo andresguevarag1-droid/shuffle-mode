@@ -19,7 +19,8 @@
   color: var(--color-bone);
   border-color: rgba(246,242,234,.35);
 }
-.smes-root.smes-dark .smes-cta:hover {
+.smes-root.smes-dark .smes-cta:hover,
+.smes-root.smes-dark .smes-cta:focus-visible {
   background: var(--color-bone);
   color: var(--color-ink);
   border-color: var(--color-bone);
@@ -156,10 +157,15 @@
   transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
   cursor: pointer;
 }
-.smes-cta:hover {
+.smes-cta:hover,
+.smes-cta:focus-visible {
   background: var(--color-ink);
   color: var(--color-cream);
   border-color: var(--color-ink);
+}
+.smes-cta:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
 }
 
 /* image-right: swap columns visually */
@@ -213,6 +219,7 @@
   class="smes-root{% if dark %} smes-dark{% endif %}"
   id="smes-{{ section.id }}"
   data-section-id="{{ section.id }}"
+  {%- if heading != blank %}aria-labelledby="smes-heading-{{ section.id }}"{% elsif eyebrow != blank %}aria-label="{{ eyebrow | escape }}"{% endif %}
 >
   <div class="smes-inner{% if img_pos == 'right' %} smes-img-right{% endif %}">
 
@@ -251,7 +258,7 @@
         <div class="smes-divider smes-reveal" role="presentation"></div>
 
         {%- if heading != blank -%}
-          <h2 class="smes-heading smes-reveal">{{ heading | escape }}</h2>
+          <h2 class="smes-heading smes-reveal" id="smes-heading-{{ section.id }}">{{ heading | escape }}</h2>
         {%- endif -%}
 
         {%- if body_text != blank -%}

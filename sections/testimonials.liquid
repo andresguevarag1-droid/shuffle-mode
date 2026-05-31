@@ -1,7 +1,7 @@
 {% stylesheet %}
 .smt-section {
   background: var(--color-sand);
-  padding: 96px 0 104px;
+  padding: clamp(4rem, 8vw, 7rem) 0;
   overflow: hidden;
 }
 
@@ -187,9 +187,6 @@
 
 /* ── mobile carousel ── */
 @media (max-width: 767px) {
-  .smt-section {
-    padding: 72px 0 80px;
-  }
 
   .smt-track-outer {
     margin: 0 -20px;

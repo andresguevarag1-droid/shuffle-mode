@@ -91,6 +91,7 @@
                   | image_tag:
                     loading: 'lazy',
                     class: 'sm-look__tile-img',
+                    alt: block.settings.image.alt | default: block.settings.caption | default: '' | escape,
                     sizes: '(min-width: 1200px) 40vw, (min-width: 768px) 50vw, 90vw',
                     widths: '400,600,800,1000,1200'
                 }}
@@ -167,7 +168,7 @@
 /* ─── Lookbook section ─────────────────────────────────────────────────────── */
 .sm-look {
   background: var(--sm-look-bone);
-  padding: 5rem 0 6rem;
+  padding: clamp(4rem, 8vw, 7rem) 0;
   overflow: hidden;
 }
 

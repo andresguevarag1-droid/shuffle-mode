@@ -2,7 +2,7 @@
 {%- assign smsh_block_count = section.blocks | size -%}
 
 <section
-  id="smsh-root"
+  id="smsh-root-{{ section.id }}"
   class="smsh-root"
   aria-label="Shuffle your mood"
   style="
@@ -192,27 +192,27 @@
 
 /* ── tokens ── */
 .smsh-root {
-  --smsh-bone:   #f6f2ea;
-  --smsh-ink:    #16130f;
-  --smsh-cream:  #fbf9f4;
-  --smsh-sand:   #eadfcd;
-  --smsh-ember:  #c2502e;
-  --smsh-stone:  #6f675d;
-  --smsh-line:   rgba(22,19,15,.1);
+  --smsh-bone:   var(--color-bone);
+  --smsh-ink:    var(--color-ink);
+  --smsh-cream:  var(--color-cream);
+  --smsh-sand:   var(--color-sand);
+  --smsh-ember:  var(--color-ember);
+  --smsh-stone:  var(--color-stone);
+  --smsh-line:   var(--color-line);
   --smsh-radius: 2px;
   --smsh-pill-r: 999px;
   --smsh-ease:   cubic-bezier(.22,.6,.36,1);
   --smsh-ease-spring: cubic-bezier(.34,1.56,.64,1);
   --smsh-dur:    .72s;
   --smsh-dur-fast: .28s;
-  --smsh-c1: #c2502e;
+  --smsh-c1: var(--color-ember);
   --smsh-c2: #7a2618;
 
   position: relative;
   overflow: hidden;
   background: var(--color-cream, var(--smsh-cream));
   color: var(--color-ink, var(--smsh-ink));
-  padding: clamp(80px, 10vw, 140px) 0;
+  padding: clamp(4rem, 8vw, 7rem) 0;
   isolation: isolate;
 }
 
@@ -1027,7 +1027,7 @@
 
   /* ── initialise all instances on page ── */
   function smshBoot() {
-    document.querySelectorAll('#smsh-root').forEach(smshInit);
+    document.querySelectorAll('.smsh-root').forEach(smshInit);
   }
 
   if (document.readyState === 'loading') {
@@ -1040,10 +1040,10 @@
   if (window.Shopify && window.Shopify.designMode) {
     document.addEventListener('shopify:section:load', function (e) {
       var sec = e.target;
-      if (sec) smshInit(sec.querySelector('#smsh-root'));
+      if (sec) smshInit(sec.querySelector('.smsh-root'));
     });
     document.addEventListener('shopify:block:select', function (e) {
-      var root = document.getElementById('smsh-root');
+      var root = e.target.closest('.smsh-root');
       if (!root) return;
       var idx = e.target ? e.target.getAttribute('data-smsh-panel') : null;
       if (idx !== null) {

@@ -126,7 +126,7 @@
   background: var(--sm-manifesto-bg);
   color: var(--sm-manifesto-fg);
   overflow: hidden;
-  padding: 100px 0 96px;
+  padding: clamp(4rem, 8vw, 7rem) 0;
   transition: background 0.4s ease;
 }
 
@@ -235,7 +235,7 @@
 /* ─── EYEBROW ─── */
 .sm-manifesto__eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -397,12 +397,7 @@
   }
 }
 
-/* ─── LARGE SCREENS ─── */
-@media (min-width: 1280px) {
-  .sm-manifesto {
-    padding: 128px 0 120px;
-  }
-}
+/* ─── LARGE SCREENS — clamp already handles this, block retained for reference ─── */
 
 {% endstylesheet %}
 
