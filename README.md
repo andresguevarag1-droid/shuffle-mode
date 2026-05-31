@@ -47,4 +47,13 @@ locales/en.default.json        # translations
 - Product, cart, and checkout use Shopify's native commerce — `Add to bag`
   posts to the cart and checkout is Shopify-hosted.
 - Newsletter uses Shopify's built-in `customer` form (tags signups `newsletter`).
-- The "Shuffle my mood" moods are editable blocks in the section.
+- The "Shuffle my mood" moods are editable blocks in the section. Point it at a
+  collection and tag products `bold` / `soft` / `sharp` / `free` so each mood
+  shows real pieces (it falls back to the first products otherwise).
+- The hero shows a live **drop countdown** (set the date in the section) and a
+  single editorial image — no decorative placeholder frames.
+- Product cards swap to the **second product image** on hover; the product page
+  has a thumbnail gallery, size pills with live price/availability, and a
+  "More from this drop" related grid.
+- Catalog uses real product imagery throughout; clean tonal placeholders appear
+  only when a product (or section) has no image yet.

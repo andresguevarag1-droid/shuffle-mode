@@ -1,7 +1,7 @@
-<section class="container hero">
-  <div class="hero__grid">
-    <div class="reveal">
-      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+<section class="hero">
+  <div class="container hero__grid">
+    <div class="hero__content reveal">
+      <span class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</span>
       <h1 class="hero__title">
         {{ section.settings.heading }}
         {%- if section.settings.heading_accent != blank -%}
@@ -9,6 +9,7 @@
         {%- endif -%}
       </h1>
       <p class="hero__sub">{{ section.settings.subheading }}</p>
+
       <div class="hero__cta">
         {%- if section.settings.cta_url != blank -%}
           <a href="{{ section.settings.cta_url }}" class="btn btn--primary">{{ section.settings.cta_label }}</a>
@@ -17,17 +18,30 @@
           <a href="{{ section.settings.cta2_url }}" class="link-arrow">{{ section.settings.cta2_label }} →</a>
         {%- endif -%}
       </div>
+
+      {%- if section.settings.countdown_enabled and section.settings.drop_date != blank -%}
+        <div class="countdown" data-countdown="{{ section.settings.drop_date }}" aria-live="polite">
+          <span class="countdown__label">{{ section.settings.countdown_label }}</span>
+          <div class="countdown__clock">
+            <span><b data-d>00</b>Days</span><i>:</i>
+            <span><b data-h>00</b>Hrs</span><i>:</i>
+            <span><b data-m>00</b>Min</span><i>:</i>
+            <span><b data-s>00</b>Sec</span>
+          </div>
+        </div>
+      {%- endif -%}
     </div>
 
-    <div class="hero__collage" aria-hidden="true">
-      {%- if section.settings.image1 != blank -%}
-        <div class="rounded-lg" style="overflow:hidden;">{{ section.settings.image1 | image_url: width: 800 | image_tag: loading: 'eager', style: 'width:100%;height:100%;object-fit:cover;' }}</div>
-      {%- else -%}
-        <div class="editorial-frame rounded-lg"></div>
-      {%- endif -%}
-      <div class="editorial-frame rounded-lg"></div>
-      <div class="editorial-frame rounded-lg" style="display:flex;align-items:flex-end;padding:1rem;">
-        <span class="font-display" style="color:rgba(251,249,244,0.9);font-size:0.875rem;">{{ section.settings.collage_caption }}</span>
+    <div class="hero__media">
+      <div class="hero__frame{% unless section.settings.image1 %} hero__frame--empty{% endunless %}">
+        {%- if section.settings.image1 != blank -%}
+          {{ section.settings.image1 | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width:1024px) 50vw, 100vw', widths: '600,900,1200,1600' }}
+        {%- else -%}
+          <span class="hero__wordmark">{{ shop.name }}</span>
+        {%- endif -%}
+        {%- if section.settings.collage_caption != blank -%}
+          <span class="hero__chip">{{ section.settings.collage_caption }}</span>
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -45,8 +59,13 @@
     { "type": "url", "id": "cta_url", "label": "Primary CTA link" },
     { "type": "text", "id": "cta2_label", "label": "Secondary CTA label", "default": "Find your mood" },
     { "type": "url", "id": "cta2_url", "label": "Secondary CTA link" },
-    { "type": "image_picker", "id": "image1", "label": "Hero image" },
-    { "type": "text", "id": "collage_caption", "label": "Collage caption", "default": "Drop 01" }
+    { "type": "header", "content": "Hero image" },
+    { "type": "image_picker", "id": "image1", "label": "Image" },
+    { "type": "text", "id": "collage_caption", "label": "Image caption", "default": "Drop 01" },
+    { "type": "header", "content": "Drop countdown" },
+    { "type": "checkbox", "id": "countdown_enabled", "label": "Show countdown", "default": true },
+    { "type": "text", "id": "countdown_label", "label": "Countdown label", "default": "Next drop in" },
+    { "type": "text", "id": "drop_date", "label": "Drop date (YYYY-MM-DD HH:MM)", "info": "e.g. 2026-06-07 13:00", "default": "2026-06-07 13:00" }
   ],
   "presets": [{ "name": "Hero" }]
 }

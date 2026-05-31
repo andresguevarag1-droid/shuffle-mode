@@ -1,28 +1,43 @@
-{%- comment -%} Renders a catalog card. Expects: product {%- endcomment -%}
-<a href="{{ product.url }}" class="card">
-  <div class="card__media editorial-frame">
+{%- comment -%} Catalog card. Expects: product {%- endcomment -%}
+<div class="card">
+  <div class="card__media">
+    <a href="{{ product.url }}" class="card__link" aria-label="{{ product.title | escape }}"></a>
+
     {%- if product.featured_image -%}
-      <img
-        src="{{ product.featured_image | image_url: width: 600 }}"
+      <img class="card__img card__img--primary"
+        src="{{ product.featured_image | image_url: width: 700 }}"
         srcset="{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 800 }} 800w"
-        sizes="(min-width: 1024px) 33vw, 50vw"
+        sizes="(min-width: 1024px) 25vw, 50vw"
         alt="{{ product.featured_image.alt | escape | default: product.title }}"
-        width="400" height="500" loading="lazy">
+        width="700" height="875" loading="lazy">
+      {%- if product.images[1] -%}
+        <img class="card__img card__img--secondary"
+          src="{{ product.images[1] | image_url: width: 700 }}"
+          alt="" aria-hidden="true" width="700" height="875" loading="lazy">
+      {%- endif -%}
+    {%- else -%}
+      <div class="card__ph"><span>{{ shop.name }}</span></div>
     {%- endif -%}
 
-    {%- if product.tags contains 'new' -%}
+    {%- if product.available == false -%}
+      <span class="card__badge card__badge--muted">Sold out</span>
+    {%- elsif product.tags contains 'new' -%}
       <span class="card__badge">New</span>
-    {%- elsif product.available == false -%}
-      <span class="card__badge">Sold out</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="card__badge card__badge--sale">Sale</span>
     {%- endif -%}
+  </div>
 
-    <span class="card__cta">View piece</span>
-  </div>
   <div class="card__info">
-    <div>
-      <div class="card__name">{{ product.title }}</div>
-      {%- if product.type != blank -%}<div class="card__cat">{{ product.type }}</div>{%- endif -%}
+    <div class="card__text">
+      <a href="{{ product.url }}" class="card__name">{{ product.title }}</a>
+      {%- if product.type != blank -%}<span class="card__cat">{{ product.type }}</span>{%- endif -%}
     </div>
-    <span class="card__price">{% render 'price', product: product %}</span>
+    <span class="card__price">
+      {%- if product.compare_at_price > product.price -%}
+        <s>{{ product.compare_at_price | money }}</s>
+      {%- endif -%}
+      {{ product.price | money }}
+    </span>
   </div>
-</a>
+</div>

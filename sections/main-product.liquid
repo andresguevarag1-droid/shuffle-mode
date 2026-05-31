@@ -1,66 +1,115 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
 <div class="container">
-  <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:2.5rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
     <a href="{{ routes.all_products_collection_url }}">Shop</a>
-    <span style="margin-inline:0.5rem;color:rgba(22,19,15,0.3);">/</span>
-    <span style="color:rgba(22,19,15,0.7);">{{ product.type | default: 'Drop' }}</span>
+    <span class="breadcrumb__sep">/</span>
+    <span>{{ product.type | default: 'Drop' }}</span>
   </nav>
 
-  <div class="product">
+  <div class="product" data-product>
     {%- comment -%} Gallery {%- endcomment -%}
-    <div class="product__gallery">
-      {%- if product.featured_image -%}
-        <div class="main editorial-frame">
-          <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" width="1000" height="1250" style="width:100%;height:100%;object-fit:cover;">
+    <div class="product__gallery" data-gallery>
+      <div class="product__main">
+        {%- if product.featured_image -%}
+          <img data-main src="{{ product.featured_image | image_url: width: 1100 }}"
+            alt="{{ product.featured_image.alt | escape | default: product.title }}" width="1100" height="1375">
+        {%- else -%}
+          <div class="card__ph"><span>{{ shop.name }}</span></div>
+        {%- endif -%}
+      </div>
+      {%- if product.images.size > 1 -%}
+        <div class="product__thumbs">
+          {%- for image in product.images limit: 5 -%}
+            <button type="button" class="product__thumb{% if forloop.first %} is-active{% endif %}" data-thumb
+              data-full="{{ image | image_url: width: 1100 }}" aria-label="View image {{ forloop.index }}">
+              <img src="{{ image | image_url: width: 200 }}" alt="" loading="lazy">
+            </button>
+          {%- endfor -%}
         </div>
-        {%- for image in product.images offset: 1 limit: 2 -%}
-          <div class="thumb editorial-frame">
-            <img src="{{ image | image_url: width: 500 }}" alt="{{ image.alt | escape }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
-          </div>
-        {%- endfor -%}
-      {%- else -%}
-        <div class="main editorial-frame"></div>
-        <div class="thumb editorial-frame"></div>
-        <div class="thumb editorial-frame"></div>
       {%- endif -%}
     </div>
 
-    {%- comment -%} Info {%- endcomment -%}
+    {%- comment -%} Purchase {%- endcomment -%}
     <div class="product__info">
       <span class="eyebrow">{{ product.type | default: product.vendor }}</span>
       <h1 class="product__title">{{ product.title }}</h1>
-      <p class="product__price" id="price-{{ section.id }}">{{ product.selected_or_first_available_variant.price | money }}</p>
+      <p class="product__price" data-price>
+        {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
+        {{ current_variant.price | money }}
+      </p>
 
       {%- if product.description != blank -%}
-        <div class="rte" style="margin-top:1.25rem;color:var(--color-stone);">{{ product.description }}</div>
+        <div class="rte product__desc">{{ product.description }}</div>
       {%- endif -%}
 
       {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
-        <div style="margin-top:2rem;">
-          <span class="eyebrow">{{ 'products.product.size' | t }}</span>
-          <div class="size-list">
-            <select name="id" id="variant-select-{{ section.id }}" class="input" style="max-width:16rem;">
-              {%- for variant in product.variants -%}
-                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
-                  {{ variant.title }}{% unless variant.available %} — {{ 'products.product.sold_out' | t }}{% endunless %} · {{ variant.price | money }}
-                </option>
-              {%- endfor -%}
-            </select>
-          </div>
-        </div>
+        <input type="hidden" name="id" data-variant-id value="{{ current_variant.id }}">
 
-        <button type="submit" name="add" class="btn btn--primary btn--block" style="margin-top:1.5rem;" {% unless product.available %}disabled{% endunless %}>
-          {%- if product.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <div class="option" data-option-index="{{ forloop.index0 }}">
+              <div class="option__head">
+                <span class="eyebrow">{{ option.name }}</span>
+                {%- if option.name == 'Size' -%}<button type="button" class="option__guide">Size guide</button>{%- endif -%}
+              </div>
+              <div class="option__values">
+                {%- for value in option.values -%}
+                  <button type="button" class="pill{% if option.selected_value == value %} is-active{% endif %}"
+                    data-option-value data-index="{{ forloop.parentloop.index0 }}" data-value="{{ value | escape }}">
+                    {{ value }}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        <p class="option__error" data-unavailable hidden>That combination is unavailable.</p>
+
+        <button type="submit" name="add" class="btn btn--primary btn--block btn--lg" data-add
+          {% unless current_variant.available %}disabled{% endunless %}>
+          <span data-add-text>{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}</span>
         </button>
       {% endform %}
 
-      <p class="card__cat" style="text-align:center;margin-top:0.75rem;">Free shipping over $150 · easy 30-day returns</p>
+      <ul class="product__assurances">
+        <li>✦ Free shipping over $150</li>
+        <li>✦ Easy 30-day returns</li>
+        <li>✦ Limited drop — no restocks</li>
+      </ul>
+
+      <script type="application/json" data-variants>
+        [
+          {%- for v in product.variants -%}
+            {%- if v.featured_image -%}{%- assign vimg = v.featured_image | image_url: width: 1100 -%}{%- elsif product.featured_image -%}{%- assign vimg = product.featured_image | image_url: width: 1100 -%}{%- else -%}{%- assign vimg = '' -%}{%- endif -%}
+            { "id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available }}, "price": {{ v.price | money | json }}, "image": {{ vimg | json }} }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        ]
+      </script>
     </div>
   </div>
+
+  {%- comment -%} Related products {%- endcomment -%}
+  {%- assign rel = product.collections.first -%}
+  {%- if rel != blank and rel.products.size > 1 -%}
+    <section class="section reveal" style="padding-bottom:0;">
+      <div class="section__head">
+        <h2 class="section__title">More from this drop</h2>
+        <a href="{{ rel.url }}" class="card__cat link-arrow">View all →</a>
+      </div>
+      <div class="product-grid product-grid--4">
+        {%- assign shown = 0 -%}
+        {%- for p in rel.products -%}
+          {%- if p.id != product.id and shown < 4 -%}
+            {% render 'product-card', product: p %}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
 </div>
 
 {% schema %}
-{
-  "name": "Product",
-  "settings": []
-}
+{ "name": "Product", "settings": [] }
 {% endschema %}

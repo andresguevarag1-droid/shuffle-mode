@@ -21,7 +21,10 @@
         "cta2_label": "Find your mood",
         "cta2_url": "#shuffle",
         "image1": "shopify://shop_images/ChatGPT_Image_Feb_27_2026_at_02_08_51_AM_7d897ff2-c344-4d45-b4bf-4108fd8213bf.png",
-        "collage_caption": "Drop 01"
+        "collage_caption": "Drop 01",
+        "countdown_enabled": true,
+        "countdown_label": "Next drop in",
+        "drop_date": "2026-06-07 13:00"
       }
     },
     "drop": {
@@ -30,8 +33,9 @@
         "eyebrow": "Drop 01",
         "heading": "This week's drop",
         "note": "Restocks are rare",
+        "show_count": true,
         "collection": "maxi-silhouettes",
-        "products_to_show": 6,
+        "products_to_show": 8,
         "link_label": "View full drop",
         "link_url": ""
       }
@@ -44,6 +48,7 @@
           "settings": {
             "label": "Bold",
             "line": "Walk in like you own the room — because today, you do.",
+            "tag": "bold",
             "color1": "#c2502e",
             "color2": "#7a2618"
           }
@@ -53,6 +58,7 @@
           "settings": {
             "label": "Soft",
             "line": "Unhurried, unbothered, undeniably put-together.",
+            "tag": "soft",
             "color1": "#e3c9b5",
             "color2": "#b98c6d"
           }
@@ -62,6 +68,7 @@
           "settings": {
             "label": "Sharp",
             "line": "Clean lines, clear head. Nothing left to prove.",
+            "tag": "sharp",
             "color1": "#2c2a28",
             "color2": "#55504a"
           }
@@ -71,54 +78,29 @@
           "settings": {
             "label": "Free",
             "line": "Loose, light, and going wherever the day takes you.",
+            "tag": "free",
             "color1": "#9aa67f",
             "color2": "#5f6b48"
           }
         }
       },
-      "block_order": [
-        "bold",
-        "soft",
-        "sharp",
-        "free"
-      ],
+      "block_order": ["bold", "soft", "sharp", "free"],
       "settings": {
         "heading": "Not sure what today is? Let it shuffle.",
         "subheading": "Pick the mood you're in — or hit shuffle and let us read the room.",
         "button_label": "Shuffle my mood",
+        "collection": "maxi-silhouettes",
         "shop_url": "shopify://collections"
       }
     },
     "philosophy": {
       "type": "philosophy",
       "blocks": {
-        "s1": {
-          "type": "stat",
-          "settings": {
-            "value": "Sun",
-            "label": "New drop, every week"
-          }
-        },
-        "s2": {
-          "type": "stat",
-          "settings": {
-            "value": "200",
-            "label": "Pieces per drop, never more"
-          }
-        },
-        "s3": {
-          "type": "stat",
-          "settings": {
-            "value": "0",
-            "label": "Restocks. When it's gone, it's gone"
-          }
-        }
+        "s1": { "type": "stat", "settings": { "value": "Sun", "label": "New drop, every week" } },
+        "s2": { "type": "stat", "settings": { "value": "200", "label": "Pieces per drop, never more" } },
+        "s3": { "type": "stat", "settings": { "value": "0", "label": "Restocks. When it's gone, it's gone" } }
       },
-      "block_order": [
-        "s1",
-        "s2",
-        "s3"
-      ],
+      "block_order": ["s1", "s2", "s3"],
       "settings": {
         "eyebrow": "The philosophy",
         "heading": "Fewer pieces.",
@@ -129,41 +111,18 @@
     "lookbook": {
       "type": "lookbook",
       "blocks": {
-        "l1": {
-          "type": "shot",
-          "settings": {
-            "caption": "01 — Morning, unbothered"
-          }
-        },
-        "l2": {
-          "type": "shot",
-          "settings": {
-            "caption": "02 — The 6pm pivot"
-          }
-        },
-        "l3": {
-          "type": "shot",
-          "settings": {
-            "caption": "03 — Weekend, off the clock"
-          }
-        },
-        "l4": {
-          "type": "shot",
-          "settings": {
-            "caption": "04 — After hours"
-          }
-        }
+        "l1": { "type": "shot", "settings": { "caption": "01 — Morning, unbothered" } },
+        "l2": { "type": "shot", "settings": { "caption": "02 — The 6pm pivot" } },
+        "l3": { "type": "shot", "settings": { "caption": "03 — Weekend, off the clock" } },
+        "l4": { "type": "shot", "settings": { "caption": "04 — After hours" } }
       },
-      "block_order": [
-        "l1",
-        "l2",
-        "l3",
-        "l4"
-      ],
+      "block_order": ["l1", "l2", "l3", "l4"],
       "settings": {
+        "eyebrow": "Editorial",
         "heading": "The Lookbook",
         "link_label": "Read the journal",
-        "link_url": ""
+        "link_url": "",
+        "collection": "maxi-silhouettes"
       }
     },
     "newsletter": {
@@ -175,12 +134,5 @@
       }
     }
   },
-  "order": [
-    "hero",
-    "drop",
-    "shuffle",
-    "philosophy",
-    "lookbook",
-    "newsletter"
-  ]
+  "order": ["hero", "drop", "shuffle", "philosophy", "lookbook", "newsletter"]
 }

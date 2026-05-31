@@ -10,12 +10,9 @@
           <p class="font-display" style="margin-top:2rem;font-size:1.25rem;color:var(--color-ember);">You're on the list. See you Sunday. ✦</p>
         {%- else -%}
           <input type="hidden" name="contact[tags]" value="newsletter, shuffle-drop">
-          <input type="hidden" name="contact[context]" value="newsletter">
-          <div class="newsletter">
-            <div style="display:flex;flex-direction:column;gap:0.75rem;max-width:28rem;margin:2rem auto 0;" class="newsletter-row">
-              <input type="email" name="contact[email]" class="input" placeholder="you@email.com" aria-label="{{ 'general.newsletter_label' | t }}" required>
-              <button type="submit" class="btn btn--primary">{{ 'general.newsletter_button' | t }}</button>
-            </div>
+          <div class="newsletter-row">
+            <input type="email" name="contact[email]" class="input" placeholder="you@email.com" aria-label="{{ 'general.newsletter_label' | t }}" required>
+            <button type="submit" class="btn btn--primary">{{ 'general.newsletter_button' | t }}</button>
           </div>
         {%- endif -%}
       {% endform %}
