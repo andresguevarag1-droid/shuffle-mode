@@ -1,140 +1,348 @@
 {%- assign current_variant = product.selected_or_first_available_variant -%}
-<div class="container">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="{{ routes.all_products_collection_url }}">Shop</a>
-    <span class="breadcrumb__sep">/</span>
-    <span>{{ product.type | default: 'Drop' }}</span>
-  </nav>
 
-  <div class="product" data-product>
-    {%- comment -%} Gallery {%- endcomment -%}
-    <div class="product__gallery" data-gallery>
-      <div class="product__main">
-        {%- if product.featured_image -%}
-          <img data-main src="{{ product.featured_image | image_url: width: 1100 }}"
-            alt="{{ product.featured_image.alt | escape | default: product.title }}" width="1100" height="1375">
-        {%- else -%}
-          <div class="card__ph"><span>{{ shop.name }}</span></div>
+{%- comment -%} ── Inline custom-property bridge (dynamic Liquid values → CSS) ── {%- endcomment -%}
+<div class="pdp-root" style="--pdp-img-ratio:{{ section.settings.image_ratio | default: '0.8' }};" data-product>
+
+  <div class="container">
+
+    {%- comment -%} ── Breadcrumb ── {%- endcomment -%}
+    <nav class="pdp-breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.all_products_collection_url }}" class="pdp-breadcrumb__link">Shop</a>
+      <span class="pdp-breadcrumb__sep" aria-hidden="true">/</span>
+      <span class="pdp-breadcrumb__current">{{ product.type | default: 'Drop' }}</span>
+    </nav>
+
+    {%- comment -%} ── Two-column layout ── {%- endcomment -%}
+    <div class="pdp-layout">
+
+      {%- comment -%} ════════════ GALLERY ════════════ {%- endcomment -%}
+      <div class="pdp-gallery" data-gallery>
+
+        {%- comment -%} Thumbnail rail (vertical desktop / horizontal mobile) {%- endcomment -%}
+        {%- if product.images.size > 1 -%}
+          <div class="pdp-thumbrail" role="list" aria-label="Product images">
+            {%- for image in product.images limit: 8 -%}
+              <button type="button"
+                class="pdp-thumb{% if forloop.first %} is-active{% endif %}"
+                data-thumb
+                data-full="{{ image | image_url: width: 1100 }}"
+                aria-label="View image {{ forloop.index }}"
+                role="listitem">
+                <img
+                  src="{{ image | image_url: width: 180 }}"
+                  alt="{{ image.alt | escape | default: product.title }}"
+                  loading="{{ forloop.first | default: 'eager' | replace: 'true', 'eager' | replace: 'false', 'lazy' }}"
+                  width="180"
+                  height="225">
+              </button>
+            {%- endfor -%}
+          </div>
         {%- endif -%}
-      </div>
-      {%- if product.images.size > 1 -%}
-        <div class="product__thumbs">
-          {%- for image in product.images limit: 5 -%}
-            <button type="button" class="product__thumb{% if forloop.first %} is-active{% endif %}" data-thumb
-              data-full="{{ image | image_url: width: 1100 }}" aria-label="View image {{ forloop.index }}">
-              <img src="{{ image | image_url: width: 200 }}" alt="" loading="lazy">
-            </button>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-    </div>
 
-    {%- comment -%} Purchase {%- endcomment -%}
-    <div class="product__info">
-      <span class="eyebrow">{{ product.type | default: product.vendor }}</span>
-      <h1 class="product__title">{{ product.title }}</h1>
-      {% render 'rating', product: product %}
-      <p class="product__price" data-price>
-        {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
-        {{ current_variant.price | money }}
-      </p>
-
-      <p class="product__stock" data-stock {% unless current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 %}hidden{% endunless %}>
-        {%- if current_variant.inventory_quantity > 0 -%}Only {{ current_variant.inventory_quantity }} left{%- endif -%}
-      </p>
-
-      {%- if product.description != blank -%}
-        <div class="rte product__desc">{{ product.description }}</div>
-      {%- endif -%}
-
-      {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
-        <input type="hidden" name="id" data-variant-id value="{{ current_variant.id }}">
-
-        {%- unless product.has_only_default_variant -%}
-          {%- for option in product.options_with_values -%}
-            <div class="option" data-option-index="{{ forloop.index0 }}">
-              <div class="option__head">
-                <span class="eyebrow">{{ option.name }}</span>
-                {%- if option.name == 'Size' -%}<button type="button" class="option__guide">Size guide</button>{%- endif -%}
+        {%- comment -%} Main image ── {%- endcomment -%}
+        <div class="pdp-main-wrap">
+          <div class="pdp-main-inner">
+            {%- if product.featured_image -%}
+              <img
+                data-main
+                class="pdp-main-img"
+                src="{{ product.featured_image | image_url: width: 1100 }}"
+                alt="{{ product.featured_image.alt | escape | default: product.title }}"
+                width="1100"
+                height="1375"
+                loading="eager"
+                fetchpriority="high">
+            {%- else -%}
+              <div class="pdp-ph card__ph" aria-hidden="true">
+                <span>{{ shop.name }}</span>
               </div>
-              <div class="option__values">
-                {%- for value in option.values -%}
-                  <button type="button" class="pill{% if option.selected_value == value %} is-active{% endif %}"
-                    data-option-value data-index="{{ forloop.parentloop.index0 }}" data-value="{{ value | escape }}">
-                    {{ value }}
-                  </button>
-                {%- endfor -%}
+            {%- endif -%}
+          </div>
+
+          {%- comment -%} Drop badge ── {%- endcomment -%}
+          {%- if product.tags contains 'new-drop' or product.tags contains 'limited' -%}
+            <span class="pdp-badge" aria-label="Limited drop">Limited Drop</span>
+          {%- endif -%}
+        </div>
+
+      </div>{%- comment -%} /pdp-gallery {%- endcomment -%}
+
+      {%- comment -%} ════════════ INFO COLUMN ════════════ {%- endcomment -%}
+      <div class="pdp-info product__info">
+
+        {%- comment -%} Eyebrow / vendor ── {%- endcomment -%}
+        <span class="pdp-eyebrow eyebrow">{{ product.type | default: product.vendor }}</span>
+
+        {%- comment -%} Title ── {%- endcomment -%}
+        <h1 class="pdp-title product__title">{{ product.title }}</h1>
+
+        {%- comment -%} Rating ── {%- endcomment -%}
+        <div class="pdp-rating">
+          {% render 'rating', product: product %}
+        </div>
+
+        {%- comment -%} Price ── {%- endcomment -%}
+        <div class="pdp-price-wrap">
+          <p class="product__price pdp-price" data-price>
+            {%- if product.compare_at_price > product.price -%}
+              <s class="pdp-compare-price">{{ product.compare_at_price | money }}</s>
+            {%- endif -%}
+            <span class="pdp-current-price">{{ current_variant.price | money }}</span>
+            {%- if product.compare_at_price > product.price -%}
+              <span class="pdp-badge-sale">Sale</span>
+            {%- endif -%}
+          </p>
+        </div>
+
+        {%- comment -%} Low-stock urgency ── {%- endcomment -%}
+        <p class="product__stock pdp-stock" data-stock
+          {% unless current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 %}hidden{% endunless %}>
+          <span class="pdp-stock__dot" aria-hidden="true"></span>
+          {%- if current_variant.inventory_quantity > 0 -%}
+            Only {{ current_variant.inventory_quantity }} left — selling fast
+          {%- endif -%}
+        </p>
+
+        {%- comment -%} Short tagline (first sentence of description) ── {%- endcomment -%}
+        {%- if product.metafields.custom.tagline != blank -%}
+          <p class="pdp-tagline">{{ product.metafields.custom.tagline }}</p>
+        {%- elsif product.description != blank -%}
+          <p class="pdp-tagline">{{ product.description | strip_html | truncate: 180 }}</p>
+        {%- endif -%}
+
+        {%- comment -%} ── PRODUCT FORM ── {%- endcomment -%}
+        {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
+          <input type="hidden" name="id" data-variant-id value="{{ current_variant.id }}">
+
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              <div class="pdp-option option" data-option-index="{{ forloop.index0 }}">
+                <div class="pdp-option__head option__head">
+                  <span class="pdp-option__label eyebrow">{{ option.name }}</span>
+                  {%- if option.name == 'Size' -%}
+                    <button type="button" class="pdp-size-guide option__guide">Size guide</button>
+                  {%- endif -%}
+                </div>
+                <div class="option__values pdp-pills">
+                  {%- for value in option.values -%}
+                    <button
+                      type="button"
+                      class="pill pdp-pill{% if option.selected_value == value %} is-active{% endif %}"
+                      data-option-value
+                      data-index="{{ forloop.parentloop.index0 }}"
+                      data-value="{{ value | escape }}">
+                      {{ value }}
+                    </button>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endunless -%}
+
+          <p class="option__error pdp-option-error" data-unavailable hidden>
+            That combination is unavailable — try another size or colour.
+          </p>
+
+          {%- comment -%} Quantity + Add to Cart ── {%- endcomment -%}
+          <div class="pdp-purchase">
+            <div class="qty pdp-qty" data-qty>
+              <button type="button" class="qty__btn pdp-qty__btn" data-qty-minus aria-label="Decrease quantity">
+                <svg width="12" height="2" viewBox="0 0 12 2" fill="none" aria-hidden="true"><rect width="12" height="2" rx="1" fill="currentColor"/></svg>
+              </button>
+              <input
+                class="qty__input pdp-qty__input"
+                type="number"
+                name="quantity"
+                value="1"
+                min="1"
+                inputmode="numeric"
+                aria-label="Quantity">
+              <button type="button" class="qty__btn pdp-qty__btn" data-qty-plus aria-label="Increase quantity">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="5" width="2" height="12" rx="1" fill="currentColor"/><rect y="5" width="12" height="2" rx="1" fill="currentColor"/></svg>
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              name="add"
+              class="btn btn--primary btn--lg pdp-atc"
+              data-add
+              {% unless current_variant.available %}disabled{% endunless %}>
+              <span data-add-text>
+                {%- if current_variant.available -%}
+                  {{ 'products.product.add_to_cart' | t }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </span>
+            </button>
+          </div>
+
+        {% endform %}
+
+        {%- comment -%} Trust / shipping micro-line ── {%- endcomment -%}
+        <ul class="pdp-assurances product__assurances" aria-label="Shipping and returns">
+          <li class="pdp-assurance">
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Ships in 2–4 days
+          </li>
+          <li class="pdp-assurance">
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Free over $150
+          </li>
+          <li class="pdp-assurance">
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            30-day returns
+          </li>
+          <li class="pdp-assurance">
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Limited drop · no restocks
+          </li>
+        </ul>
+
+        {%- comment -%} ── ACCORDION ── {%- endcomment -%}
+        <div class="pdp-accordions" data-accordions>
+
+          {%- comment -%} Details (product description) ── {%- endcomment -%}
+          <details class="pdp-accordion" open>
+            <summary class="pdp-accordion__summary">
+              <span>Details</span>
+              <svg class="pdp-accordion__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </summary>
+            <div class="pdp-accordion__body">
+              <div class="rte pdp-accordion__rte">
+                {%- if product.description != blank -%}
+                  {{ product.description }}
+                {%- else -%}
+                  <p>Details coming soon.</p>
+                {%- endif -%}
+              </div>
+              {%- if product.vendor != blank or current_variant.sku != blank -%}
+                <dl class="pdp-meta">
+                  {%- if product.vendor != blank -%}
+                    <dt>Vendor</dt><dd>{{ product.vendor }}</dd>
+                  {%- endif -%}
+                  {%- if current_variant.sku != blank -%}
+                    <dt>SKU</dt><dd>{{ current_variant.sku }}</dd>
+                  {%- endif -%}
+                </dl>
+              {%- endif -%}
+            </div>
+          </details>
+
+          {%- comment -%} Size & Fit ── {%- endcomment -%}
+          <details class="pdp-accordion">
+            <summary class="pdp-accordion__summary">
+              <span>Size &amp; Fit</span>
+              <svg class="pdp-accordion__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </summary>
+            <div class="pdp-accordion__body">
+              <div class="rte pdp-accordion__rte">
+                {%- if section.settings.size_fit != blank -%}
+                  {{ section.settings.size_fit }}
+                {%- else -%}
+                  <p>Our model is 5'9" and wears a size Small. This piece runs true to size with a relaxed, editorial fit. We recommend sizing down if you prefer a more structured silhouette.</p>
+                {%- endif -%}
               </div>
             </div>
+          </details>
+
+          {%- comment -%} Shipping & Returns ── {%- endcomment -%}
+          <details class="pdp-accordion">
+            <summary class="pdp-accordion__summary">
+              <span>Shipping &amp; Returns</span>
+              <svg class="pdp-accordion__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </summary>
+            <div class="pdp-accordion__body">
+              <div class="rte pdp-accordion__rte">
+                {%- if section.settings.shipping_returns != blank -%}
+                  {{ section.settings.shipping_returns }}
+                {%- else -%}
+                  <p>Orders ship within 2–4 business days from Boston, MA. Free standard shipping on orders over $150. Expedited options available at checkout.</p>
+                  <p>We accept returns within 30 days of delivery for unworn, unwashed items with original tags attached. Final-sale items are not eligible for return. Start a return at <strong>shufflemode.com/returns</strong>.</p>
+                {%- endif -%}
+              </div>
+            </div>
+          </details>
+
+          {%- comment -%} Materials & Care ── {%- endcomment -%}
+          <details class="pdp-accordion">
+            <summary class="pdp-accordion__summary">
+              <span>Materials &amp; Care</span>
+              <svg class="pdp-accordion__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </summary>
+            <div class="pdp-accordion__body">
+              <div class="rte pdp-accordion__rte">
+                {%- if section.settings.materials != blank -%}
+                  {{ section.settings.materials }}
+                {%- else -%}
+                  <p>Crafted from responsible-sourced textiles. Dry clean or hand-wash cold; lay flat to dry. Do not tumble dry or iron directly on print.</p>
+                {%- endif -%}
+              </div>
+            </div>
+          </details>
+
+        </div>{%- comment -%} /pdp-accordions {%- endcomment -%}
+
+        {%- comment -%} Variants JSON (VERBATIM — do not alter keys) ── {%- endcomment -%}
+        <script type="application/json" data-variants>
+          [
+            {%- for v in product.variants -%}
+              {%- if v.featured_image -%}{%- assign vimg = v.featured_image | image_url: width: 1100 -%}{%- elsif product.featured_image -%}{%- assign vimg = product.featured_image | image_url: width: 1100 -%}{%- else -%}{%- assign vimg = '' -%}{%- endif -%}
+              { "id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available }}, "price": {{ v.price | money | json }}, "price_cents": {{ v.price }}, "image": {{ vimg | json }}, "tracked": {{ v.inventory_management == 'shopify' }}, "inventory": {{ v.inventory_quantity | default: 0 }} }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          ]
+        </script>
+
+      </div>{%- comment -%} /pdp-info {%- endcomment -%}
+    </div>{%- comment -%} /pdp-layout {%- endcomment -%}
+
+    {%- comment -%} ── Related products ── {%- endcomment -%}
+    {%- assign rel = product.collections.first -%}
+    {%- if rel != blank and rel.products.size > 1 -%}
+      <section class="pdp-related reveal" aria-labelledby="pdp-related-heading">
+        <header class="pdp-related__head">
+          <h2 class="pdp-related__title" id="pdp-related-heading">More from this drop</h2>
+          <a href="{{ rel.url }}" class="pdp-related__link card__cat link-arrow" aria-label="View all {{ rel.title }}">View all</a>
+        </header>
+        <div class="product-grid product-grid--4">
+          {%- assign shown = 0 -%}
+          {%- for p in rel.products -%}
+            {%- if p.id != product.id and shown < 4 -%}
+              {% render 'product-card', product: p %}
+              {%- assign shown = shown | plus: 1 -%}
+            {%- endif -%}
           {%- endfor -%}
-        {%- endunless -%}
-
-        <p class="option__error" data-unavailable hidden>That combination is unavailable.</p>
-
-        <div class="purchase-row">
-          <div class="qty" data-qty>
-            <button type="button" class="qty__btn" data-qty-minus aria-label="Decrease quantity">−</button>
-            <input class="qty__input" type="number" name="quantity" value="1" min="1" inputmode="numeric" aria-label="Quantity">
-            <button type="button" class="qty__btn" data-qty-plus aria-label="Increase quantity">+</button>
-          </div>
-          <button type="submit" name="add" class="btn btn--primary btn--lg purchase-row__add" data-add
-            {% unless current_variant.available %}disabled{% endunless %}>
-            <span data-add-text>{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}</span>
-          </button>
         </div>
-      {% endform %}
+      </section>
+    {%- endif -%}
 
-      <ul class="product__assurances">
-        <li>✦ Free shipping over $150</li>
-        <li>✦ Easy 30-day returns</li>
-        <li>✦ Limited drop — no restocks</li>
-      </ul>
+  </div>{%- comment -%} /container {%- endcomment -%}
 
-      <script type="application/json" data-variants>
-        [
-          {%- for v in product.variants -%}
-            {%- if v.featured_image -%}{%- assign vimg = v.featured_image | image_url: width: 1100 -%}{%- elsif product.featured_image -%}{%- assign vimg = product.featured_image | image_url: width: 1100 -%}{%- else -%}{%- assign vimg = '' -%}{%- endif -%}
-            { "id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available }}, "price": {{ v.price | money | json }}, "price_cents": {{ v.price }}, "image": {{ vimg | json }}, "tracked": {{ v.inventory_management == 'shopify' }}, "inventory": {{ v.inventory_quantity | default: 0 }} }{%- unless forloop.last -%},{%- endunless -%}
-          {%- endfor -%}
-        ]
-      </script>
+  {%- comment -%} ── Sticky ATC (mobile) ── {%- endcomment -%}
+  <div class="sticky-atc pdp-sticky" data-sticky-atc hidden>
+    <div class="container sticky-atc__row pdp-sticky__row">
+      <div class="sticky-atc__info pdp-sticky__info">
+        <span class="sticky-atc__name pdp-sticky__name">{{ product.title }}</span>
+        <span class="sticky-atc__price pdp-sticky__price" data-sticky-price>{{ current_variant.price | money }}</span>
+      </div>
+      <button type="button" class="btn btn--primary pdp-sticky__btn" data-sticky-add {% unless current_variant.available %}disabled{% endunless %}>
+        {{ 'products.product.add_to_cart' | t }}
+      </button>
     </div>
   </div>
 
-  {%- comment -%} Related products {%- endcomment -%}
-  {%- assign rel = product.collections.first -%}
-  {%- if rel != blank and rel.products.size > 1 -%}
-    <section class="section reveal" style="padding-bottom:0;">
-      <div class="section__head">
-        <h2 class="section__title">More from this drop</h2>
-        <a href="{{ rel.url }}" class="card__cat link-arrow">View all →</a>
-      </div>
-      <div class="product-grid product-grid--4">
-        {%- assign shown = 0 -%}
-        {%- for p in rel.products -%}
-          {%- if p.id != product.id and shown < 4 -%}
-            {% render 'product-card', product: p %}
-            {%- assign shown = shown | plus: 1 -%}
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    </section>
-  {%- endif -%}
-</div>
+</div>{%- comment -%} /pdp-root {%- endcomment -%}
 
-{%- comment -%} Sticky add-to-cart (mobile) {%- endcomment -%}
-<div class="sticky-atc" data-sticky-atc hidden>
-  <div class="container sticky-atc__row">
-    <div class="sticky-atc__info">
-      <span class="sticky-atc__name">{{ product.title }}</span>
-      <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
-    </div>
-    <button type="button" class="btn btn--primary" data-sticky-add {% unless current_variant.available %}disabled{% endunless %}>
-      {{ 'products.product.add_to_cart' | t }}
-    </button>
-  </div>
-</div>
-
+{%- comment -%} ── Structured data ── {%- endcomment -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org/",
@@ -166,6 +374,866 @@
 }
 </script>
 
+{% stylesheet %}
+/* ══════════════════════════════════════════════
+   SHUFFLE MODE — PDP STYLES
+   All classes prefixed `pdp-`
+   Uses global design tokens from theme root
+   ══════════════════════════════════════════════ */
+
+/* ── Reset & root ───────────────────────────── */
+.pdp-root {
+  background: var(--color-cream, #fbf9f4);
+  min-height: 100vh;
+}
+
+/* ── Breadcrumb ─────────────────────────────── */
+.pdp-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 0 2rem;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-stone, #6f675d);
+}
+.pdp-breadcrumb__link {
+  color: var(--color-stone, #6f675d);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.pdp-breadcrumb__link:hover {
+  color: var(--color-ink, #16130f);
+}
+.pdp-breadcrumb__sep {
+  opacity: 0.4;
+}
+.pdp-breadcrumb__current {
+  color: var(--color-ink, #16130f);
+  font-weight: 500;
+}
+
+/* ── Two-column layout ──────────────────────── */
+.pdp-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  padding-bottom: 5rem;
+}
+@media (min-width: 900px) {
+  .pdp-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
+    gap: 5vw;
+    align-items: start;
+  }
+}
+@media (min-width: 1280px) {
+  .pdp-layout {
+    grid-template-columns: minmax(0, 1fr) 480px;
+    gap: 6rem;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   GALLERY
+   ══════════════════════════════════════════════ */
+.pdp-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  position: sticky;
+  top: 1.5rem;
+}
+@media (min-width: 640px) {
+  .pdp-gallery {
+    grid-template-columns: 72px 1fr;
+    gap: 1rem;
+  }
+}
+@media (min-width: 900px) {
+  .pdp-gallery {
+    grid-template-columns: 72px 1fr;
+    gap: 1.25rem;
+    top: 6rem;
+  }
+}
+
+/* Thumbnail rail — vertical (desktop), horizontal scroll (mobile) */
+.pdp-thumbrail {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  order: 2;
+  padding-bottom: 0.25rem;
+}
+.pdp-thumbrail::-webkit-scrollbar { height: 2px; }
+.pdp-thumbrail::-webkit-scrollbar-track { background: var(--color-sand, #eadfcd); }
+.pdp-thumbrail::-webkit-scrollbar-thumb { background: var(--color-stone, #6f675d); border-radius: 99px; }
+
+@media (min-width: 640px) {
+  .pdp-thumbrail {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    max-height: 560px;
+    order: 1;
+    padding-bottom: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-stone, #6f675d) var(--color-sand, #eadfcd);
+  }
+}
+
+/* Thumbnail buttons */
+.pdp-thumb {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  width: 64px;
+  height: 80px;
+  border: 1.5px solid transparent;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  background: var(--color-sand, #eadfcd);
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+  opacity: 0.6;
+}
+@media (min-width: 640px) {
+  .pdp-thumb {
+    width: 72px;
+    height: 90px;
+  }
+}
+.pdp-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pdp-thumb:hover {
+  opacity: 0.9;
+  border-color: var(--color-stone, #6f675d);
+}
+.pdp-thumb.is-active {
+  border-color: var(--color-ink, #16130f);
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pdp-thumb { transition: border-color 0.2s ease, opacity 0.25s ease; }
+}
+
+/* Main image wrapper */
+.pdp-main-wrap {
+  order: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--color-sand, #eadfcd);
+  line-height: 0;
+}
+@media (min-width: 640px) {
+  .pdp-main-wrap { order: 2; }
+}
+
+.pdp-main-inner {
+  overflow: hidden;
+}
+
+.pdp-main-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  transition: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pdp-main-img {
+    transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+  }
+  .pdp-main-inner:hover .pdp-main-img {
+    transform: scale(1.04);
+  }
+}
+
+/* Gallery cross-fade */
+@media (prefers-reduced-motion: no-preference) {
+  .pdp-main-img.pdp-fade-out {
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+  .pdp-main-img.pdp-fade-in {
+    opacity: 1;
+    transition: opacity 0.28s ease;
+  }
+}
+
+/* Drop badge */
+.pdp-badge {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  background: var(--color-ink, #16130f);
+  color: var(--color-bone, #f6f2ea);
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.75rem;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Placeholder */
+.pdp-ph {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-sand, #eadfcd);
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: 1.25rem;
+  color: var(--color-stone, #6f675d);
+}
+
+/* ══════════════════════════════════════════════
+   INFO COLUMN
+   ══════════════════════════════════════════════ */
+.pdp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: 0.25rem;
+}
+
+/* Eyebrow */
+.pdp-eyebrow {
+  display: block;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stone, #6f675d);
+  margin-bottom: 0.75rem;
+}
+
+/* Title */
+.pdp-title {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-ink, #16130f);
+  margin: 0 0 1.25rem;
+}
+
+/* Rating */
+.pdp-rating {
+  margin-bottom: 1.25rem;
+}
+
+/* Price */
+.pdp-price-wrap {
+  margin-bottom: 0.875rem;
+}
+.pdp-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+.pdp-current-price {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 400;
+  color: var(--color-ink, #16130f);
+  letter-spacing: -0.01em;
+}
+.pdp-compare-price {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 1rem;
+  color: var(--color-stone, #6f675d);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+.pdp-badge-sale {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-ember, #c2502e);
+  color: #fff;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+  align-self: center;
+}
+
+/* Low-stock urgency */
+.pdp-stock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-ember, #c2502e);
+  margin: 0 0 1.25rem;
+  letter-spacing: 0.01em;
+}
+.pdp-stock[hidden] { display: none; }
+.pdp-stock__dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-ember, #c2502e);
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pdp-stock__dot {
+    animation: pdp-pulse 1.8s ease-in-out infinite;
+  }
+}
+@keyframes pdp-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* Short tagline */
+.pdp-tagline {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-stone, #6f675d);
+  margin: 0 0 2rem;
+  max-width: 42ch;
+}
+
+/* ── Variant options ─────────────────────────── */
+.pdp-option {
+  margin-bottom: 1.5rem;
+}
+.pdp-option__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.pdp-option__label {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stone, #6f675d);
+}
+.pdp-size-guide {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--color-stone, #6f675d);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.pdp-size-guide:hover { color: var(--color-ink, #16130f); }
+
+/* Pill chips */
+.pdp-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.pdp-pill {
+  min-width: 3rem;
+  height: 2.75rem;
+  padding: 0 1.1rem;
+  border: 1.5px solid var(--color-line, rgba(22,19,15,.1));
+  border-radius: 3px;
+  background: var(--color-cream, #fbf9f4);
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-ink, #16130f);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdp-pill:hover {
+  border-color: var(--color-stone, #6f675d);
+  background: var(--color-bone, #f6f2ea);
+}
+.pdp-pill.is-active {
+  border-color: var(--color-ink, #16130f);
+  background: var(--color-ink, #16130f);
+  color: var(--color-bone, #f6f2ea);
+}
+.pdp-pill:focus-visible {
+  outline: 2px solid var(--color-ember, #c2502e);
+  outline-offset: 2px;
+}
+
+/* Option error */
+.pdp-option-error {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8rem;
+  color: var(--color-ember, #c2502e);
+  margin: -0.75rem 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 2px solid var(--color-ember, #c2502e);
+  background: rgba(194, 80, 46, 0.06);
+  border-radius: 0 2px 2px 0;
+}
+.pdp-option-error[hidden] { display: none; }
+
+/* ── Purchase row ────────────────────────────── */
+.pdp-purchase {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+  margin-bottom: 1.5rem;
+}
+
+/* Quantity stepper */
+.pdp-qty {
+  display: flex;
+  align-items: stretch;
+  border: 1.5px solid var(--color-line, rgba(22,19,15,.1));
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--color-cream, #fbf9f4);
+  flex-shrink: 0;
+}
+.pdp-qty__btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-ink, #16130f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  padding: 0;
+}
+.pdp-qty__btn:hover {
+  background: var(--color-bone, #f6f2ea);
+}
+.pdp-qty__btn:focus-visible {
+  outline: 2px solid var(--color-ember, #c2502e);
+  outline-offset: -2px;
+}
+.pdp-qty__input {
+  width: 3rem;
+  border: none;
+  border-left: 1.5px solid var(--color-line, rgba(22,19,15,.1));
+  border-right: 1.5px solid var(--color-line, rgba(22,19,15,.1));
+  background: none;
+  text-align: center;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-ink, #16130f);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.pdp-qty__input::-webkit-outer-spin-button,
+.pdp-qty__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.pdp-qty__input:focus { outline: none; background: var(--color-bone, #f6f2ea); }
+
+/* Add to cart button */
+.pdp-atc {
+  flex: 1;
+  height: 2.75rem;
+  border-radius: 3px;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--color-ink, #16130f);
+  color: var(--color-bone, #f6f2ea);
+  border: 1.5px solid var(--color-ink, #16130f);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdp-atc:hover:not(:disabled) {
+  background: var(--color-ember, #c2502e);
+  border-color: var(--color-ember, #c2502e);
+}
+.pdp-atc:focus-visible {
+  outline: 2px solid var(--color-ember, #c2502e);
+  outline-offset: 2px;
+}
+.pdp-atc:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Assurances ──────────────────────────────── */
+.pdp-assurances {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  border-top: 1px solid var(--color-line, rgba(22,19,15,.1));
+  padding-top: 1.25rem;
+}
+.pdp-assurance {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-stone, #6f675d);
+}
+.pdp-assurance__icon {
+  color: var(--color-ember, #c2502e);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════
+   ACCORDIONS
+   ══════════════════════════════════════════════ */
+.pdp-accordions {
+  border-top: 1px solid var(--color-line, rgba(22,19,15,.1));
+}
+
+.pdp-accordion {
+  border-bottom: 1px solid var(--color-line, rgba(22,19,15,.1));
+}
+
+.pdp-accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink, #16130f);
+  user-select: none;
+  transition: color 0.15s ease;
+}
+.pdp-accordion__summary::-webkit-details-marker { display: none; }
+.pdp-accordion__summary::marker { display: none; }
+.pdp-accordion__summary:hover { color: var(--color-stone, #6f675d); }
+.pdp-accordion__summary:focus-visible {
+  outline: 2px solid var(--color-ember, #c2502e);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.pdp-accordion__chevron {
+  flex-shrink: 0;
+  color: var(--color-stone, #6f675d);
+  transition: transform 0.25s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdp-accordion__chevron { transition: none; }
+}
+
+.pdp-accordion[open] .pdp-accordion__chevron {
+  transform: rotate(180deg);
+}
+
+.pdp-accordion__body {
+  overflow: hidden;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pdp-accordion__body {
+    animation: pdp-accordion-open 0.28s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+}
+@keyframes pdp-accordion-open {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pdp-accordion__rte {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--color-stone, #6f675d);
+  padding-bottom: 1.25rem;
+}
+.pdp-accordion__rte p { margin: 0 0 0.75rem; }
+.pdp-accordion__rte p:last-child { margin-bottom: 0; }
+
+/* Meta (vendor/sku) */
+.pdp-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.75rem;
+  color: var(--color-stone, #6f675d);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line, rgba(22,19,15,.1));
+}
+.pdp-meta dt {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.65rem;
+  color: var(--color-stone, #6f675d);
+  opacity: 0.7;
+}
+.pdp-meta dd { margin: 0; }
+
+/* ══════════════════════════════════════════════
+   RELATED PRODUCTS
+   ══════════════════════════════════════════════ */
+.pdp-related {
+  padding: 5rem 0 3rem;
+  border-top: 1px solid var(--color-line, rgba(22,19,15,.1));
+}
+.pdp-related__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.pdp-related__title {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--color-ink, #16130f);
+  margin: 0;
+}
+.pdp-related__link {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-stone, #6f675d);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.pdp-related__link:hover { color: var(--color-ink, #16130f); }
+
+/* ══════════════════════════════════════════════
+   STICKY ATC
+   ══════════════════════════════════════════════ */
+.pdp-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: var(--color-bone, #f6f2ea);
+  border-top: 1px solid var(--color-line, rgba(22,19,15,.1));
+  padding: 0.875rem 0;
+  box-shadow: 0 -4px 24px rgba(22,19,15,.08);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pdp-sticky { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+}
+.pdp-sticky[hidden] { display: none; }
+.pdp-sticky__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.pdp-sticky__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.pdp-sticky__name {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-ink, #16130f);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pdp-sticky__price {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: 1rem;
+  color: var(--color-stone, #6f675d);
+}
+.pdp-sticky__btn {
+  flex-shrink: 0;
+  height: 2.5rem;
+  padding: 0 1.5rem;
+  border-radius: 3px;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--color-ink, #16130f);
+  color: var(--color-bone, #f6f2ea);
+  border: 1.5px solid var(--color-ink, #16130f);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.pdp-sticky__btn:hover:not(:disabled) {
+  background: var(--color-ember, #c2502e);
+  border-color: var(--color-ember, #c2502e);
+}
+.pdp-sticky__btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ══════════════════════════════════════════════
+   UTILITY
+   ══════════════════════════════════════════════ */
+.rte.pdp-accordion__rte a {
+  color: var(--color-ink, #16130f);
+  text-underline-offset: 3px;
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  /* ── Gallery ───────────────────────────────── */
+  function initGallery(root) {
+    var gallery = root.querySelector('[data-gallery]');
+    if (!gallery) return;
+    var mainImg = gallery.querySelector('[data-main]');
+    var thumbs  = gallery.querySelectorAll('[data-thumb]');
+    if (!mainImg || !thumbs.length) return;
+
+    function activateThumb(btn) {
+      thumbs.forEach(function (t) { t.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+
+      var full = btn.getAttribute('data-full');
+      if (!full || full === mainImg.getAttribute('src')) return;
+
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) {
+        mainImg.setAttribute('src', full);
+      } else {
+        mainImg.classList.add('pdp-fade-out');
+        setTimeout(function () {
+          mainImg.setAttribute('src', full);
+          mainImg.classList.remove('pdp-fade-out');
+          mainImg.classList.add('pdp-fade-in');
+          setTimeout(function () { mainImg.classList.remove('pdp-fade-in'); }, 280);
+        }, 180);
+      }
+    }
+
+    thumbs.forEach(function (btn) {
+      btn.addEventListener('click', function () { activateThumb(btn); });
+    });
+
+    /* External variant-image swap hook */
+    root.addEventListener('pdp:image-change', function (e) {
+      if (!e.detail || !e.detail.src) return;
+      var matchThumb = null;
+      thumbs.forEach(function (t) {
+        if (t.getAttribute('data-full') === e.detail.src) matchThumb = t;
+      });
+      if (matchThumb) {
+        activateThumb(matchThumb);
+      } else {
+        mainImg.setAttribute('src', e.detail.src);
+      }
+    });
+  }
+
+  /* ── Single-open accordion ─────────────────── */
+  function initAccordions(root) {
+    var container = root.querySelector('[data-accordions]');
+    if (!container) return;
+    var items = container.querySelectorAll('details.pdp-accordion');
+
+    items.forEach(function (detail) {
+      detail.addEventListener('toggle', function () {
+        if (detail.open) {
+          items.forEach(function (other) {
+            if (other !== detail && other.open) other.removeAttribute('open');
+          });
+        }
+      });
+    });
+  }
+
+  /* ── Init on DOMContentLoaded ──────────────── */
+  function init() {
+    var root = document.querySelector('[data-product]');
+    if (!root) return;
+    initGallery(root);
+    initAccordions(root);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+{% endjavascript %}
+
 {% schema %}
-{ "name": "Product", "settings": [] }
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "size_fit",
+      "label": "Size & Fit content",
+      "default": "<p>Our model is 5’9” and wears a size Small. This piece runs true to size with a relaxed, editorial fit. We recommend sizing down if you prefer a more structured silhouette.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_returns",
+      "label": "Shipping & Returns content",
+      "default": "<p>Orders ship within 2–4 business days from Boston, MA. Free standard shipping on orders over $150. Expedited options available at checkout.</p><p>We accept returns within 30 days of delivery for unworn, unwashed items with original tags attached. Final-sale items are not eligible for return.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "materials",
+      "label": "Materials & Care content",
+      "default": "<p>Crafted from responsibly sourced textiles. Dry clean or hand-wash cold; lay flat to dry. Do not tumble dry or iron directly on print.</p>"
+    }
+  ]
+}
 {% endschema %}
