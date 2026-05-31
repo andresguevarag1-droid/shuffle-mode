@@ -188,13 +188,87 @@ export const LOOKBOOK: { id: string; caption: string; tall?: boolean }[] = [
   { id: "l4", caption: "04 — After hours", tall: true },
 ];
 
+export type JournalPost = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string; // ISO date
+  readMinutes: number;
+  tag: string;
+  palette: [string, string]; // cover gradient
+  body: string[]; // paragraphs
+};
+
+export const JOURNAL: JournalPost[] = [
+  {
+    slug: "dress-for-the-mood",
+    title: "Dress for the mood, not the occasion",
+    excerpt:
+      "The closet question was never \"where am I going?\" It was always \"who am I today?\" Here's how we build around the answer.",
+    date: "2026-05-24",
+    readMinutes: 4,
+    tag: "Philosophy",
+    palette: ["#c2502e", "#7a2618"],
+    body: [
+      "Most wardrobes are organized around events — the work thing, the dinner thing, the wedding two states over. It's a tidy system that quietly assumes you know who you'll be by the time you get dressed. You usually don't.",
+      "We build the other way around. A drop is a small set of pieces designed to answer a feeling: bold on the days you want to take up room, soft on the ones you don't, sharp when the calendar is unforgiving. The occasion can sort itself out.",
+      "It sounds like a small reframe. In practice it changes everything about what you buy. You stop collecting outfits for hypothetical futures and start collecting pieces that meet you where you already are.",
+      "That's the whole brief behind Shuffle Mode: fewer pieces, chosen for mood, that shuffle into each other so the getting-dressed part takes thirty seconds and still feels like a decision you made.",
+    ],
+  },
+  {
+    slug: "the-case-against-restocks",
+    title: "The case against restocks",
+    excerpt:
+      "Why \"when it's gone, it's gone\" isn't a marketing line — it's the only way we know how to make clothes we'd actually wear.",
+    date: "2026-05-17",
+    readMinutes: 3,
+    tag: "How we make",
+    palette: ["#9aa67f", "#5f6b48"],
+    body: [
+      "Restocking is the default in fashion, and it quietly bends every decision toward the safe and the forgettable. If a piece has to sell forever, it has to offend no one — which is another way of saying it has to mean nothing.",
+      "We design in small weekly drops and we don't bring pieces back. That constraint is the point. It lets us take the cut a little further, use the better fabric, and commit to a color that won't read the same in six months.",
+      "It also keeps the closet honest. A drop is a moment, not a catalog. If something speaks to you on Sunday, that's the window — and we'd rather you own three pieces you reach for than thirty you maintain.",
+    ],
+  },
+  {
+    slug: "five-ways-one-slip",
+    title: "Five ways, one slip dress",
+    excerpt:
+      "The Ruched Ivory Slip is the most flexible thing in Drop 01. Here's how to shuffle it from morning coffee to after hours.",
+    date: "2026-05-10",
+    readMinutes: 5,
+    tag: "Styling",
+    palette: ["#e3c9b5", "#b98c6d"],
+    body: [
+      "A good slip dress is less a dress than a foundation. On its own it's an evening, but layered down it carries the whole week — which is exactly why it anchors this drop.",
+      "Morning: throw the Cloud Knit over the top, push the sleeves up, and let the hem do the talking. Midday: the Statement Blazer, sharp shoes, and suddenly it's a meeting. Evening: nothing, and a good earring.",
+      "The trick with a single hero piece is to change the volume around it, not the piece itself. A heavier knit reads cozy; a structured shoulder reads deliberate; bare reads done. Same dress, three different days.",
+      "Weekend: the Off-Duty Trench open over the top, sneakers, no plan. After hours: belt the trench, lose the layers underneath, and let the satin catch the light. Five looks, one piece, zero deliberation.",
+    ],
+  },
+];
+
+// Helpers for the journal routes.
+export const journalHref = (p: Pick<JournalPost, "slug">) =>
+  `/journal/${p.slug}`;
+export const getPost = (slug: string) =>
+  JOURNAL.find((p) => p.slug === slug);
+
+export const formatDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
 // Hash links are prefixed with "/" so they resolve from any route, not just
 // the homepage.
 export const NAV = [
   { label: "Shop", href: "/shop" },
   { label: "This Drop", href: "/#drop" },
   { label: "Shuffle", href: "/#shuffle" },
-  { label: "Lookbook", href: "/#journal" },
+  { label: "Journal", href: "/journal" },
   { label: "About", href: "/#about" },
 ];
 

@@ -98,12 +98,13 @@ replacing `.editorial-frame` blocks with `next/image`.
 
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4.
 - **Now mock-data driven** (`src/lib/content.ts`) so it runs with no backend.
-- **Routes (implemented):** `/` (homepage), `/shop` (full drop catalog), and
-  `/product/[slug]` (statically generated per piece via `generateStaticParams`,
-  with per-product `generateMetadata` and a styled `not-found`). The shared
-  chrome (announcement, header, footer) now lives in the root `layout`, and the
-  catalog card is a reusable `ProductCard`. Every CTA points at a real route
-  instead of a placeholder anchor.
+- **Routes (implemented):** `/` (homepage), `/shop` (full drop catalog),
+  `/product/[slug]` (per-piece detail) and `/journal` + `/journal/[slug]`
+  (editorial index and posts). Both dynamic segments are statically generated
+  via `generateStaticParams`, carry per-item `generateMetadata`, and `notFound`
+  to a styled 404. The shared chrome (announcement, header, footer) now lives in
+  the root `layout`; the catalog card is a reusable `ProductCard`. Every nav,
+  footer and CTA link points at a real route — no placeholder anchors remain.
 
 Recommended follow-ups, in order:
 1. Pull the real 19 products + photography from the existing Shopify store
@@ -113,6 +114,6 @@ Recommended follow-ups, in order:
    headless against the Shopify Storefront API.
 3. Wire a real email provider for the drop list, and a real cart/checkout
    behind the (currently mock) "Add to bag" flow on `/product/[slug]`.
-4. Add the `/journal/[slug]` route (the remaining dynamic segment) once
-   editorial content exists.
+4. Move journal posts to a CMS / MDX once the editorial cadence is set (the
+   route and layout are in place; only the data source is mock).
 5. Analytics + A/B test the hero CTA and the Shuffle interaction.
