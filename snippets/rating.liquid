@@ -1,0 +1,16 @@
+{%- comment -%}
+  Star rating from the standard `reviews` metafield (Shopify Product Reviews,
+  Judge.me, etc.). Renders nothing when no rating exists. Expects: product, [compact]
+{%- endcomment -%}
+{%- assign rating = product.metafields.reviews.rating.value -%}
+{%- if rating != blank and rating.rating != blank -%}
+  {%- assign count = product.metafields.reviews.rating_count | default: 0 -%}
+  {%- assign stars = rating.rating | times: 5.0 | divided_by: rating.scale_max | round -%}
+  <span class="rating{% if compact %} rating--compact{% endif %}" aria-label="{{ rating.rating }} out of {{ rating.scale_max }} stars">
+    <span class="rating__stars" aria-hidden="true">
+      {%- for i in (1..5) -%}{% if i <= stars %}★{% else %}☆{% endif %}{%- endfor -%}
+    </span>
+    {%- unless compact -%}<span class="rating__count">{{ rating.rating }} ({{ count }} reviews)</span>{%- endunless -%}
+    {%- if compact and count > 0 -%}<span class="rating__count">({{ count }})</span>{%- endif -%}
+  </span>
+{%- endif -%}

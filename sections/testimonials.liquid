@@ -1,0 +1,49 @@
+<section class="section section--sand">
+  <div class="container">
+    <div class="section__head reveal" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;">
+      <span class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</span>
+      <h2 class="section__title">{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="testimonials">
+      {%- for block in section.blocks -%}
+        <figure class="testimonial reveal" {{ block.shopify_attributes }}>
+          <div class="testimonial__stars" aria-hidden="true">★★★★★</div>
+          <blockquote class="testimonial__quote">{{ block.settings.quote }}</blockquote>
+          <figcaption class="testimonial__author">— {{ block.settings.author }}{% if block.settings.detail != blank %}, <span>{{ block.settings.detail }}</span>{% endif %}</figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Loved by the mood-dressers" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Worn, not just bought" }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "The slip dress is the most worn thing in my closet. I get stopped every time." },
+        { "type": "text", "id": "author", "label": "Author", "default": "Maya R." },
+        { "type": "text", "id": "detail", "label": "Detail", "default": "Drop 01" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "quote", "settings": { "quote": "The slip dress is the most worn thing in my closet. I get stopped every time.", "author": "Maya R.", "detail": "verified buyer" } },
+        { "type": "quote", "settings": { "quote": "Finally a brand that gets it — I dress for how I feel, and these pieces just work together.", "author": "Lena P.", "detail": "verified buyer" } },
+        { "type": "quote", "settings": { "quote": "Ordered Sunday, wore it Friday, sold out by Monday. The hype is real.", "author": "Priya S.", "detail": "verified buyer" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

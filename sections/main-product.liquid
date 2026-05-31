@@ -33,6 +33,7 @@
     <div class="product__info">
       <span class="eyebrow">{{ product.type | default: product.vendor }}</span>
       <h1 class="product__title">{{ product.title }}</h1>
+      {% render 'rating', product: product %}
       <p class="product__price" data-price>
         {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
         {{ current_variant.price | money }}
@@ -119,6 +120,19 @@
       </div>
     </section>
   {%- endif -%}
+</div>
+
+{%- comment -%} Sticky add-to-cart (mobile) {%- endcomment -%}
+<div class="sticky-atc" data-sticky-atc hidden>
+  <div class="container sticky-atc__row">
+    <div class="sticky-atc__info">
+      <span class="sticky-atc__name">{{ product.title }}</span>
+      <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
+    </div>
+    <button type="button" class="btn btn--primary" data-sticky-add {% unless current_variant.available %}disabled{% endunless %}>
+      {{ 'products.product.add_to_cart' | t }}
+    </button>
+  </div>
 </div>
 
 <script type="application/ld+json">

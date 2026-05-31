@@ -1,0 +1,40 @@
+<div class="trust-bar{% if section.settings.dark %} trust-bar--dark{% endif %}">
+  <div class="container trust-bar__row">
+    {%- for block in section.blocks -%}
+      <div class="trust-bar__item" {{ block.shopify_attributes }}>
+        <span class="trust-bar__mark" aria-hidden="true">{{ block.settings.icon | default: '✦' }}</span>
+        <span class="trust-bar__text">{{ block.settings.text }}</span>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust bar",
+  "settings": [
+    { "type": "checkbox", "id": "dark", "label": "Dark background", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (emoji/glyph)", "default": "✦" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping over $150" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust bar",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "✦", "text": "Free shipping over $150" } },
+        { "type": "item", "settings": { "icon": "↺", "text": "Easy 30-day returns" } },
+        { "type": "item", "settings": { "icon": "✦", "text": "Limited drops — no restocks" } },
+        { "type": "item", "settings": { "icon": "🔒", "text": "Secure checkout" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

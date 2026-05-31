@@ -57,3 +57,18 @@ locales/en.default.json        # translations
   "More from this drop" related grid.
 - Catalog uses real product imagery throughout; clean tonal placeholders appear
   only when a product (or section) has no image yet.
+
+### Conversion features (merchant setup)
+
+- **Quick-add + cart drawer**: cards add to a slide-in cart via AJAX. Works out
+  of the box.
+- **Search & filters**: enable the **Search & Discovery** app and configure
+  filters (size/price/availability) so collection facets appear.
+- **Free-shipping bar**: set the threshold in *Theme settings → Cart* and match
+  it in *Settings → Shipping*.
+- **Star ratings**: render automatically from the standard `reviews` product
+  metafield (Shopify Product Reviews, Judge.me, etc.) — install a reviews app to
+  populate them; the theme hides ratings until they exist.
+- **Newsletter 10% off**: the form captures emails (tagged `newsletter`). Create
+  an automatic discount + a welcome email (Shopify Email/Flow) to deliver the 10%.
+- **Trust bar & testimonials**: editable sections on the homepage.

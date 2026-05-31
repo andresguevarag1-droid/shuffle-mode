@@ -1,5 +1,15 @@
-{%- comment -%} Catalog card. Expects: product {%- endcomment -%}
-<div class="card">
+{%- comment -%} Catalog card with quick-add. Expects: product {%- endcomment -%}
+{%- liquid
+  assign first_variant = product.selected_or_first_available_variant
+  if product.has_only_default_variant
+    assign mode = 'single'
+  elsif product.options.size == 1
+    assign mode = 'options'
+  else
+    assign mode = 'link'
+  endif
+-%}
+<div class="card" data-card data-card-mode="{{ mode }}">
   <div class="card__media">
     <a href="{{ product.url }}" class="card__link" aria-label="{{ product.title | escape }}"></a>
 
@@ -11,9 +21,7 @@
         alt="{{ product.featured_image.alt | escape | default: product.title }}"
         width="700" height="875" loading="lazy">
       {%- if product.images[1] -%}
-        <img class="card__img card__img--secondary"
-          src="{{ product.images[1] | image_url: width: 700 }}"
-          alt="" aria-hidden="true" width="700" height="875" loading="lazy">
+        <img class="card__img card__img--secondary" src="{{ product.images[1] | image_url: width: 700 }}" alt="" aria-hidden="true" width="700" height="875" loading="lazy">
       {%- endif -%}
     {%- else -%}
       <div class="card__ph"><span>{{ shop.name }}</span></div>
@@ -26,17 +34,33 @@
     {%- elsif product.compare_at_price > product.price -%}
       <span class="card__badge card__badge--sale">Sale</span>
     {%- endif -%}
+
+    {%- comment -%} Quick add {%- endcomment -%}
+    {%- if product.available -%}
+      {%- case mode -%}
+        {%- when 'single' -%}
+          <button type="button" class="card__quick" data-quick-add data-vid="{{ first_variant.id }}">Quick add +</button>
+        {%- when 'options' -%}
+          <button type="button" class="card__quick" data-quick-add>Quick add +</button>
+          <div class="card__sizes" data-size-tray hidden>
+            {%- for v in product.variants -%}
+              <button type="button" class="card__size" data-card-size data-vid="{{ v.id }}" {% unless v.available %}disabled{% endunless %}>{{ v.title }}</button>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <a href="{{ product.url }}" class="card__quick">Choose options</a>
+      {%- endcase -%}
+    {%- endif -%}
   </div>
 
   <div class="card__info">
     <div class="card__text">
       <a href="{{ product.url }}" class="card__name">{{ product.title }}</a>
+      {% render 'rating', product: product, compact: true %}
       {%- if product.type != blank -%}<span class="card__cat">{{ product.type }}</span>{%- endif -%}
     </div>
     <span class="card__price">
-      {%- if product.compare_at_price > product.price -%}
-        <s>{{ product.compare_at_price | money }}</s>
-      {%- endif -%}
+      {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
       {{ product.price | money }}
     </span>
   </div>

@@ -27,6 +27,17 @@
         "drop_date": "2026-06-07 13:00"
       }
     },
+    "trust": {
+      "type": "trust-bar",
+      "blocks": {
+        "t1": { "type": "item", "settings": { "icon": "✦", "text": "Free shipping over $150" } },
+        "t2": { "type": "item", "settings": { "icon": "↺", "text": "Easy 30-day returns" } },
+        "t3": { "type": "item", "settings": { "icon": "✦", "text": "Limited drops — no restocks" } },
+        "t4": { "type": "item", "settings": { "icon": "🔒", "text": "Secure checkout" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
+      "settings": { "dark": false }
+    },
     "drop": {
       "type": "featured-drop",
       "settings": {
@@ -93,6 +104,16 @@
         "shop_url": "shopify://collections"
       }
     },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "q1": { "type": "quote", "settings": { "quote": "The slip dress is the most worn thing in my closet. I get stopped every time.", "author": "Maya R.", "detail": "verified buyer" } },
+        "q2": { "type": "quote", "settings": { "quote": "Finally a brand that gets it — I dress for how I feel, and these pieces just work together.", "author": "Lena P.", "detail": "verified buyer" } },
+        "q3": { "type": "quote", "settings": { "quote": "Ordered Sunday, wore it Friday, sold out by Monday. The hype is real.", "author": "Priya S.", "detail": "verified buyer" } }
+      },
+      "block_order": ["q1", "q2", "q3"],
+      "settings": { "eyebrow": "Loved by the mood-dressers", "heading": "Worn, not just bought" }
+    },
     "philosophy": {
       "type": "philosophy",
       "blocks": {
@@ -129,10 +150,10 @@
       "type": "newsletter",
       "settings": {
         "eyebrow": "First in line",
-        "heading": "Get the drop before it's gone",
-        "subheading": "Drops sell out fast. Join the list for early access, mood guides, and the occasional note — never spam."
+        "heading": "Get 10% off your first drop",
+        "subheading": "Join the list for early access and 10% off your first order. Drops sell out fast — never spam."
       }
     }
   },
-  "order": ["hero", "drop", "shuffle", "philosophy", "lookbook", "newsletter"]
+  "order": ["hero", "trust", "drop", "shuffle", "testimonials", "philosophy", "lookbook", "newsletter"]
 }
