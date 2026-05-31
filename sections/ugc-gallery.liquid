@@ -1,0 +1,704 @@
+{% liquid
+  assign section_id = 'sm-ugc-' | append: section.id
+  assign ig_handle = section.settings.instagram_handle | default: '@shufflemodeboston'
+  assign ig_url    = section.settings.instagram_url    | default: 'https://instagram.com/shufflemodeboston'
+  assign eyebrow   = section.settings.eyebrow          | default: 'Community'
+  assign heading   = section.settings.heading          | default: 'Styled by you'
+  assign subtext   = section.settings.subtext          | default: 'Real people, real moods — shop the looks our community loves.'
+%}
+
+<section
+  id="{{ section_id }}"
+  class="sm-ugc"
+  style="
+    --ugc-bg: {{ section.settings.bg_color }};
+    --ugc-gap: {{ section.settings.grid_gap }}px;
+    --ugc-radius: {{ section.settings.tile_radius }}px;
+  "
+  aria-label="{{ heading | escape }}"
+>
+  <div class="container sm-ugc__inner">
+
+    {%- comment -%} ── Header ─────────────────────────────────────────────── {%- endcomment -%}
+    <header class="sm-ugc__header">
+      {%- if eyebrow != blank -%}
+        <p class="sm-ugc__eyebrow">{{ eyebrow }}</p>
+      {%- endif -%}
+
+      <h2 class="sm-ugc__heading">{{ heading }}</h2>
+
+      {%- if subtext != blank -%}
+        <p class="sm-ugc__subtext">{{ subtext }}</p>
+      {%- endif -%}
+
+      {%- if ig_handle != blank -%}
+        <a
+          class="sm-ugc__ig-link"
+          href="{{ ig_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Follow us on Instagram {{ ig_handle }}"
+        >
+          {%- comment -%} Instagram glyph inline SVG {%- endcomment -%}
+          <svg class="sm-ugc__ig-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+          </svg>
+          <span>{{ ig_handle }}</span>
+        </a>
+      {%- endif -%}
+    </header>
+
+    {%- comment -%} ── Grid ───────────────────────────────────────────────── {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <ul class="sm-ugc__grid" role="list">
+        {%- for block in section.blocks -%}
+          {%- assign has_image   = false -%}
+          {%- if block.settings.image != blank -%}{%- assign has_image = true -%}{%- endif -%}
+
+          {%- assign has_product = false -%}
+          {%- if block.settings.product != blank -%}{%- assign has_product = true -%}{%- endif -%}
+
+          {%- assign tile_url = ig_url -%}
+          {%- if has_product -%}
+            {%- assign tile_url = block.settings.product.url -%}
+          {%- endif -%}
+
+          {%- assign product_title = '' -%}
+          {%- assign product_price = '' -%}
+          {%- if has_product -%}
+            {%- assign product_title = block.settings.product.title -%}
+            {%- assign product_price = block.settings.product.price | money -%}
+          {%- endif -%}
+
+          <li
+            class="sm-ugc__tile{% unless has_image %} sm-ugc__tile--empty{% endunless %}"
+            {{ block.shopify_attributes }}
+          >
+            <a
+              class="sm-ugc__tile-link"
+              href="{{ tile_url }}"
+              {% unless has_product %}target="_blank" rel="noopener noreferrer"{% endunless %}
+              aria-label="{% if has_product %}Shop {{ product_title | escape }}{% else %}View on Instagram{% endif %}"
+            >
+              {%- comment -%} Image or elegant fallback {%- endcomment -%}
+              <div class="sm-ugc__media" aria-hidden="true">
+                {%- if has_image -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 800
+                    | image_tag:
+                      class: 'sm-ugc__img',
+                      loading: 'lazy',
+                      widths: '400, 600, 800',
+                      sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw',
+                      alt: block.settings.caption | default: product_title | default: ig_handle | escape
+                  }}
+                {%- else -%}
+                  <div class="sm-ugc__placeholder" aria-hidden="true">
+                    <span class="sm-ugc__placeholder-wordmark">SM</span>
+                    {%- comment -%} Decorative tonal glyph {%- endcomment -%}
+                    <svg class="sm-ugc__placeholder-glyph" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+                      <circle cx="30" cy="30" r="28" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3" opacity=".35"/>
+                      <path d="M22 38 Q30 22 38 38" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+                    </svg>
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%} Corner Instagram glyph {%- endcomment -%}
+                <span class="sm-ugc__corner-ig" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" stroke="currentColor" stroke-width="1.8"/>
+                    <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/>
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+                  </svg>
+                </span>
+
+                {%- comment -%} Hover overlay {%- endcomment -%}
+                <div class="sm-ugc__overlay" aria-hidden="true">
+                  <div class="sm-ugc__overlay-inner">
+                    {%- if has_product -%}
+                      <span class="sm-ugc__bag-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                          <line x1="3" y1="6" x2="21" y2="6"/>
+                          <path d="M16 10a4 4 0 01-8 0"/>
+                        </svg>
+                      </span>
+                      <p class="sm-ugc__overlay-title">{{ product_title | truncate: 36 }}</p>
+                      <p class="sm-ugc__overlay-price">{{ product_price }}</p>
+                    {%- else -%}
+                      <span class="sm-ugc__bag-icon sm-ugc__bag-icon--ig">
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" stroke="currentColor" stroke-width="1.8"/>
+                          <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/>
+                          <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+                        </svg>
+                      </span>
+                      {%- if block.settings.caption != blank -%}
+                        <p class="sm-ugc__overlay-title">{{ block.settings.caption | truncate: 48 }}</p>
+                      {%- else -%}
+                        <p class="sm-ugc__overlay-title">View on Instagram</p>
+                      {%- endif -%}
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+
+              {%- comment -%} Optional visible caption below tile {%- endcomment -%}
+              {%- if block.settings.caption != blank and section.settings.show_captions -%}
+                <p class="sm-ugc__caption">{{ block.settings.caption | escape }}</p>
+              {%- endif -%}
+
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if section.settings.show_cta -%}
+      <div class="sm-ugc__cta-wrap">
+        <a
+          class="sm-ugc__cta"
+          href="{{ ig_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{- section.settings.cta_text | default: 'Follow along' -}}
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% stylesheet %}
+
+/* ─── Reset / scope ─────────────────────────────────────────── */
+.sm-ugc *,
+.sm-ugc *::before,
+.sm-ugc *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Section shell ─────────────────────────────────────────── */
+.sm-ugc {
+  background-color: var(--ugc-bg, var(--color-cream));
+  padding: 72px 0 80px;
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
+.sm-ugc__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.sm-ugc__eyebrow {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: 12px;
+}
+
+.sm-ugc__heading {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.sm-ugc__subtext {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-stone);
+  max-width: 42ch;
+  margin: 0 auto 24px;
+}
+
+.sm-ugc__ig-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.sm-ugc__ig-link:hover,
+.sm-ugc__ig-link:focus-visible {
+  color: var(--color-ember);
+  border-color: var(--color-ember);
+}
+
+.sm-ugc__ig-link:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.sm-ugc__ig-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ─── Grid ──────────────────────────────────────────────────── */
+.sm-ugc__grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ugc-gap, 8px);
+}
+
+@media (min-width: 680px) {
+  .sm-ugc__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .sm-ugc__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ─── Tile ──────────────────────────────────────────────────── */
+.sm-ugc__tile {
+  position: relative;
+  border-radius: var(--ugc-radius, 0px);
+  overflow: hidden;
+  background-color: var(--color-sand);
+}
+
+.sm-ugc__tile-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sm-ugc__tile-link:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+  border-radius: var(--ugc-radius, 0px);
+}
+
+/* Square aspect ratio */
+.sm-ugc__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--ugc-radius, 0px);
+  background-color: var(--color-sand);
+}
+
+.sm-ugc__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* Zoom on hover — guarded by reduced-motion */
+@media (hover: hover) {
+  .sm-ugc__tile-link:hover .sm-ugc__img {
+    transform: scale(1.065);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-ugc__img {
+    transition: none;
+  }
+}
+
+/* ─── Placeholder (empty tile) ──────────────────────────────── */
+.sm-ugc__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(145deg, var(--color-sand) 0%, var(--color-bone) 100%);
+}
+
+.sm-ugc__placeholder-wordmark {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: var(--color-stone);
+  opacity: 0.55;
+  text-transform: uppercase;
+}
+
+.sm-ugc__placeholder-glyph {
+  width: 52px;
+  height: 52px;
+  color: var(--color-stone);
+}
+
+/* ─── Corner Instagram glyph ────────────────────────────────── */
+.sm-ugc__corner-ig {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  color: #fff;
+  opacity: 0.85;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.sm-ugc__tile-link:hover .sm-ugc__corner-ig,
+.sm-ugc__tile-link:focus-visible .sm-ugc__corner-ig {
+  opacity: 0;
+}
+
+.sm-ugc__corner-ig svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Hover overlay ─────────────────────────────────────────── */
+.sm-ugc__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(22, 19, 15, 0.01) 0%,
+    rgba(22, 19, 15, 0.78) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+@media (hover: hover) {
+  .sm-ugc__tile-link:hover .sm-ugc__overlay {
+    opacity: 1;
+  }
+}
+
+/* Always visible on touch / keyboard focus */
+.sm-ugc__tile-link:focus-visible .sm-ugc__overlay {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  /* On touch screens, subtle persistent gradient */
+  .sm-ugc__overlay {
+    opacity: 0.65;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-ugc__overlay {
+    transition: none;
+  }
+}
+
+.sm-ugc__overlay-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transform: translateY(6px);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (hover: hover) {
+  .sm-ugc__tile-link:hover .sm-ugc__overlay-inner {
+    transform: translateY(0);
+  }
+}
+
+.sm-ugc__tile-link:focus-visible .sm-ugc__overlay-inner {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-ugc__overlay-inner {
+    transform: none;
+    transition: none;
+  }
+}
+
+.sm-ugc__bag-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  margin-bottom: 6px;
+  opacity: 0.9;
+}
+
+.sm-ugc__bag-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sm-ugc__overlay-title {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.sm-ugc__overlay-price {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.03em;
+}
+
+/* ─── Caption (optional below-tile) ────────────────────────── */
+.sm-ugc__caption {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.75rem;
+  color: var(--color-stone);
+  line-height: 1.5;
+  padding: 8px 4px 0;
+}
+
+/* ─── CTA ───────────────────────────────────────────────────── */
+.sm-ugc__cta-wrap {
+  text-align: center;
+  margin-top: 48px;
+}
+
+.sm-ugc__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  text-decoration: none;
+  border: 1px solid var(--color-ink);
+  padding: 14px 32px;
+  border-radius: 2px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.sm-ugc__cta:hover,
+.sm-ugc__cta:focus-visible {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+}
+
+.sm-ugc__cta:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+}
+
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  /* Touch devices: tapping a tile first "reveals" the overlay,
+     second tap navigates — matching native Instagram UX patterns. */
+
+  var tiles = document.querySelectorAll('.sm-ugc__tile-link');
+  if (!tiles.length) return;
+
+  /* Only intercept on coarse-pointer (touch) devices */
+  var isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (!isTouch) return;
+
+  tiles.forEach(function (link) {
+    var revealed = false;
+
+    link.addEventListener('click', function (e) {
+      if (!revealed) {
+        e.preventDefault();
+        revealed = true;
+        link.classList.add('sm-ugc__tile-link--revealed');
+      }
+      /* Second tap proceeds to href naturally */
+    });
+
+    /* Reset if user taps elsewhere */
+    document.addEventListener('click', function (e) {
+      if (!link.contains(e.target)) {
+        revealed = false;
+        link.classList.remove('sm-ugc__tile-link--revealed');
+      }
+    });
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "UGC Gallery",
+  "tag": "section",
+  "class": "sm-ugc-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Community"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Styled by you"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Real people, real moods — shop the looks our community loves."
+    },
+    {
+      "type": "header",
+      "content": "Instagram"
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram handle",
+      "default": "@shufflemodeboston"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap between tiles (px)",
+      "min": 2,
+      "max": 24,
+      "step": 2,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "tile_radius",
+      "label": "Tile corner radius (px)",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "show_captions",
+      "label": "Show captions below tiles",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#fbf9f4"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show follow button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Follow along"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "post",
+      "name": "Post",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Linked product"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption / alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC Gallery",
+      "blocks": [
+        { "type": "post" },
+        { "type": "post" },
+        { "type": "post" },
+        { "type": "post" },
+        { "type": "post" },
+        { "type": "post" },
+        { "type": "post" },
+        { "type": "post" }
+      ]
+    }
+  ]
+}
+{% endschema %}

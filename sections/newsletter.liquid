@@ -1,33 +1,566 @@
-<section id="newsletter" class="section section--sand">
-  <div class="container">
-    <div class="newsletter reveal">
-      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
-      <h2 class="section__title" style="margin-top:1rem;">{{ section.settings.heading }}</h2>
-      <p class="hero__sub" style="margin-inline:auto;">{{ section.settings.subheading }}</p>
+{%- liquid
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+  assign dark_mode = section.settings.dark
+-%}
 
-      {% form 'customer' %}
+<section
+  class="sm-news"
+  id="sm-news-{{ section.id }}"
+  style="
+    --sm-news-bg: {% if dark_mode %}var(--color-ink){% else %}var(--color-sand){% endif %};
+    --sm-news-fg: {% if dark_mode or has_image %}var(--color-bone){% else %}var(--color-ink){% endif %};
+    --sm-news-muted: {% if dark_mode or has_image %}rgba(246,242,234,.55){% else %}var(--color-stone){% endif %};
+    --sm-news-accent: var(--color-ember);
+    --sm-news-input-bg: {% if dark_mode or has_image %}rgba(246,242,234,.08){% else %}rgba(22,19,15,.04){% endif %};
+    --sm-news-input-border: {% if dark_mode or has_image %}rgba(246,242,234,.22){% else %}rgba(22,19,15,.18){% endif %};
+    --sm-news-input-focus: {% if dark_mode or has_image %}var(--color-bone){% else %}var(--color-ink){% endif %};
+  "
+>
+
+  {%- if has_image -%}
+    <div class="sm-news__media" aria-hidden="true">
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          widths: '600,900,1200,1800,2400',
+          sizes: '100vw',
+          class: 'sm-news__img',
+          alt: ''
+      }}
+      <div class="sm-news__scrim"></div>
+    </div>
+  {%- else -%}
+    <div class="sm-news__wordmark-bg" aria-hidden="true">
+      <span class="sm-news__bg-word">DROP</span>
+      <span class="sm-news__bg-word">LIST</span>
+    </div>
+  {%- endif -%}
+
+  <div class="container sm-news__inner">
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="sm-news__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    <h2 class="sm-news__heading">{{ section.settings.heading }}</h2>
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="sm-news__sub">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="sm-news__perks" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'perk' and block.settings.text != blank -%}
+            <li class="sm-news__perk" {{ block.shopify_attributes }}>
+              <span class="sm-news__perk-icon" aria-hidden="true">✦</span>
+              <span>{{ block.settings.text }}</span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="sm-news__form-wrap">
+      {% form 'customer', class: 'sm-news__form' %}
+
         {%- if form.posted_successfully? -%}
-          <p class="font-display" style="margin-top:2rem;font-size:1.25rem;color:var(--color-ember);">You're on the list. See you Sunday. ✦</p>
-        {%- else -%}
-          <input type="hidden" name="contact[tags]" value="newsletter, shuffle-drop">
-          <div class="newsletter-row">
-            <input type="email" name="contact[email]" class="input" placeholder="you@email.com" aria-label="{{ 'general.newsletter_label' | t }}" required>
-            <button type="submit" class="btn btn--primary">{{ 'general.newsletter_button' | t }}</button>
+          <div class="sm-news__success" role="status" aria-live="polite">
+            <span class="sm-news__success-mark" aria-hidden="true">✦</span>
+            <p class="sm-news__success-text">You're on the list. See you Sunday. ✦</p>
           </div>
+
+        {%- else -%}
+
+          {%- if form.errors -%}
+            <p class="sm-news__error" role="alert">
+              {{ form.errors.translated_fields['email'] | capitalize }}
+              {{ form.errors.messages['email'] }}
+            </p>
+          {%- endif -%}
+
+          <input type="hidden" name="contact[tags]" value="newsletter, drop-list">
+
+          <div class="sm-news__field-row">
+            <label for="sm-news-email-{{ section.id }}" class="sm-news__sr-label">Email address</label>
+            <input
+              id="sm-news-email-{{ section.id }}"
+              class="sm-news__input"
+              type="email"
+              name="contact[email]"
+              placeholder="your@email.com"
+              autocomplete="email"
+              required
+              aria-required="true"
+              aria-label="Email address"
+            >
+            <button type="submit" class="sm-news__btn">
+              <span class="sm-news__btn-text">Join the Drop List</span>
+              <span class="sm-news__btn-icon" aria-hidden="true">→</span>
+            </button>
+          </div>
+
+          <p class="sm-news__trust">{{ section.settings.trust_copy }}</p>
+
         {%- endif -%}
+
       {% endform %}
     </div>
+
   </div>
 </section>
 
+{% stylesheet %}
+/* ─── SM-NEWS: Drop List Newsletter ─── */
+
+.sm-news {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--sm-news-bg, var(--color-sand));
+  color: var(--sm-news-fg, var(--color-ink));
+  padding-block: clamp(4rem, 10vw, 8rem);
+  isolation: isolate;
+}
+
+/* ── Background image ── */
+.sm-news__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.sm-news__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.sm-news__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(22, 19, 15, 0.72) 0%,
+    rgba(22, 19, 15, 0.56) 50%,
+    rgba(22, 19, 15, 0.68) 100%
+  );
+}
+
+/* ── Tonal wordmark fallback ── */
+.sm-news__wordmark-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25em;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sm-news__bg-word {
+  font-family: var(--font-display, serif);
+  font-size: clamp(6rem, 22vw, 18rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(22, 19, 15, 0.07);
+  text-stroke: 1px rgba(22, 19, 15, 0.07);
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* ── Inner layout ── */
+.sm-news__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+}
+
+/* ── Eyebrow ── */
+.sm-news__eyebrow {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sm-news-accent);
+  margin: 0;
+}
+
+/* ── Heading ── */
+.sm-news__heading {
+  font-family: var(--font-display, serif);
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--sm-news-fg);
+  margin: 0;
+  max-width: 18ch;
+}
+
+/* ── Subheading ── */
+.sm-news__sub {
+  font-family: var(--font-body, sans-serif);
+  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  line-height: 1.65;
+  color: var(--sm-news-muted);
+  margin: 0;
+  max-width: 42ch;
+}
+
+/* ── Perk bullets ── */
+.sm-news__perks {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sm-news__perk {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.875rem;
+  color: var(--sm-news-muted);
+  letter-spacing: 0.01em;
+}
+
+.sm-news__perk-icon {
+  color: var(--sm-news-accent);
+  font-size: 0.625rem;
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
+}
+
+/* ── Form wrapper ── */
+.sm-news__form-wrap {
+  width: 100%;
+  max-width: 38rem;
+  margin-top: 0.75rem;
+}
+
+.sm-news__form {
+  width: 100%;
+}
+
+/* ── Field row ── */
+.sm-news__field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+@media (min-width: 540px) {
+  .sm-news__field-row {
+    flex-direction: row;
+    gap: 0;
+    background: var(--sm-news-input-bg);
+    border: 1px solid var(--sm-news-input-border);
+    border-radius: 999px;
+    padding: 0.3125rem 0.3125rem 0.3125rem 1.5rem;
+    align-items: center;
+    transition: border-color 0.2s ease;
+  }
+
+  .sm-news__field-row:focus-within {
+    border-color: var(--sm-news-input-focus);
+  }
+
+  .sm-news__input {
+    border: none !important;
+    background: transparent !important;
+    padding: 0.75rem 0 !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* ── SR-only label ── */
+.sm-news__sr-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Email input ── */
+.sm-news__input {
+  width: 100%;
+  flex: 1 1 auto;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.9375rem;
+  color: var(--sm-news-fg);
+  background: var(--sm-news-input-bg);
+  border: 1px solid var(--sm-news-input-border);
+  border-radius: 999px;
+  padding: 0.9375rem 1.5rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sm-news__input::placeholder {
+  color: var(--sm-news-muted);
+  opacity: 1;
+}
+
+.sm-news__input:focus {
+  border-color: var(--sm-news-input-focus);
+}
+
+/* ── Submit button ── */
+.sm-news__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-bone);
+  background: var(--color-ink);
+  border: none;
+  border-radius: 999px;
+  padding: 0.9375rem 2rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s ease, transform 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sm-news__btn:hover {
+  background: var(--color-ember);
+}
+
+.sm-news__btn:active {
+  transform: scale(0.97);
+}
+
+.sm-news__btn-icon {
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.sm-news__btn:hover .sm-news__btn-icon {
+  transform: translateX(3px);
+}
+
+/* When pill row is active, button goes inside ── */
+@media (min-width: 540px) {
+  .sm-news__input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .sm-news__btn {
+    padding: 0.75rem 1.75rem;
+  }
+}
+
+/* ── Trust microcopy ── */
+.sm-news__trust {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.75rem;
+  color: var(--sm-news-muted);
+  letter-spacing: 0.03em;
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+
+/* ── Error ── */
+.sm-news__error {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.8125rem;
+  color: var(--color-ember);
+  margin-bottom: 0.75rem;
+}
+
+/* ── Success state ── */
+.sm-news__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+}
+
+.sm-news__success-mark {
+  font-size: 2rem;
+  color: var(--sm-news-accent);
+  display: block;
+  animation: sm-news-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.sm-news__success-text {
+  font-family: var(--font-display, serif);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 300;
+  color: var(--sm-news-fg);
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.3;
+}
+
+@keyframes sm-news-pop {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .sm-news__btn,
+  .sm-news__btn-icon,
+  .sm-news__input,
+  .sm-news__field-row {
+    transition: none;
+  }
+
+  .sm-news__success-mark {
+    animation: none;
+  }
+
+  .sm-news__btn:active {
+    transform: none;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  var section = document.getElementById('sm-news-{{ section.id }}');
+  if (!section) return;
+
+  var input = section.querySelector('.sm-news__input');
+  var row   = section.querySelector('.sm-news__field-row');
+  if (!input || !row) return;
+
+  input.addEventListener('focus', function () {
+    row.setAttribute('data-focus', 'true');
+  });
+
+  input.addEventListener('blur', function () {
+    row.removeAttribute('data-focus');
+  });
+})();
+{% endjavascript %}
+
 {% schema %}
 {
-  "name": "Newsletter",
+  "name": "Newsletter — Drop List",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "First in line" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Get the drop before it's gone" },
-    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Drops sell out fast. Join the list for early access, mood guides, and the occasional note — never spam." }
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "First in line"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get 10% off your first drop"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Join the list for early access and 10% off your first order. Drops sell out fast — never spam."
+    },
+    {
+      "type": "text",
+      "id": "trust_copy",
+      "label": "Trust microcopy",
+      "default": "No spam. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Recommended: 2400×1600px. Displayed with an ink scrim overlay."
+    },
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark background (ink) when no image",
+      "default": true
+    }
   ],
-  "presets": [{ "name": "Newsletter" }]
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "Perk bullet",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Perk text",
+          "default": "Early access to every weekly drop"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter — Drop List",
+      "settings": {
+        "eyebrow": "First in line",
+        "heading": "Get 10% off your first drop",
+        "subheading": "Join the list for early access and 10% off your first order. Drops sell out fast — never spam.",
+        "trust_copy": "No spam. Unsubscribe anytime.",
+        "dark": true
+      },
+      "blocks": [
+        {
+          "type": "perk",
+          "settings": { "text": "Early access to every weekly drop" }
+        },
+        {
+          "type": "perk",
+          "settings": { "text": "Members-only pieces, never restocked" }
+        },
+        {
+          "type": "perk",
+          "settings": { "text": "Styling notes straight to your inbox" }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

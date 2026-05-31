@@ -27,16 +27,92 @@
         "drop_date": "2026-06-07 13:00"
       }
     },
+    "marquee": {
+      "type": "marquee",
+      "blocks": {
+        "phrase-1": {
+          "type": "phrase",
+          "settings": {
+            "text": "NEW DROP EVERY SUNDAY"
+          }
+        },
+        "phrase-2": {
+          "type": "phrase",
+          "settings": {
+            "text": "WHEN IT'S GONE, IT'S GONE"
+          }
+        },
+        "phrase-3": {
+          "type": "phrase",
+          "settings": {
+            "text": "DRESS FOR THE MOOD"
+          }
+        },
+        "phrase-4": {
+          "type": "phrase",
+          "settings": {
+            "text": "MADE IN SMALL BATCHES"
+          }
+        },
+        "phrase-5": {
+          "type": "phrase",
+          "settings": {
+            "text": "FREE SHIPPING OVER $150"
+          }
+        }
+      },
+      "block_order": [
+        "phrase-1",
+        "phrase-2",
+        "phrase-3",
+        "phrase-4",
+        "phrase-5"
+      ],
+      "settings": {
+        "dark": false
+      }
+    },
     "trust": {
       "type": "trust-bar",
       "blocks": {
-        "t1": { "type": "item", "settings": { "icon": "✦", "text": "Free shipping over $150" } },
-        "t2": { "type": "item", "settings": { "icon": "↺", "text": "Easy 30-day returns" } },
-        "t3": { "type": "item", "settings": { "icon": "✦", "text": "Limited drops — no restocks" } },
-        "t4": { "type": "item", "settings": { "icon": "🔒", "text": "Secure checkout" } }
+        "t1": {
+          "type": "item",
+          "settings": {
+            "icon": "✦",
+            "text": "Free shipping over $150"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "icon": "↺",
+            "text": "Easy 30-day returns"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "icon": "✦",
+            "text": "Limited drops — no restocks"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "icon": "🔒",
+            "text": "Secure checkout"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4"],
-      "settings": { "dark": false }
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {
+        "dark": false
+      }
     },
     "drop": {
       "type": "featured-drop",
@@ -49,6 +125,12 @@
         "products_to_show": 8,
         "link_label": "View full drop",
         "link_url": ""
+      }
+    },
+    "manifesto": {
+      "type": "manifesto",
+      "settings": {
+        "dark": false
       }
     },
     "shuffle": {
@@ -95,7 +177,12 @@
           }
         }
       },
-      "block_order": ["bold", "soft", "sharp", "free"],
+      "block_order": [
+        "bold",
+        "soft",
+        "sharp",
+        "free"
+      ],
       "settings": {
         "heading": "Not sure what today is? Let it shuffle.",
         "subheading": "Pick the mood you're in — or hit shuffle and let us read the room.",
@@ -104,40 +191,112 @@
         "shop_url": "shopify://collections"
       }
     },
-    "testimonials": {
-      "type": "testimonials",
+    "press": {
+      "type": "press-bar",
       "blocks": {
-        "q1": { "type": "quote", "settings": { "quote": "The slip dress is the most worn thing in my closet. I get stopped every time.", "author": "Maya R.", "detail": "verified buyer" } },
-        "q2": { "type": "quote", "settings": { "quote": "Finally a brand that gets it — I dress for how I feel, and these pieces just work together.", "author": "Lena P.", "detail": "verified buyer" } },
-        "q3": { "type": "quote", "settings": { "quote": "Ordered Sunday, wore it Friday, sold out by Monday. The hype is real.", "author": "Priya S.", "detail": "verified buyer" } }
+        "stat-1": {
+          "type": "stat",
+          "settings": {
+            "value": "50000",
+            "suffix": "+",
+            "label": "mood-dressers"
+          }
+        },
+        "stat-2": {
+          "type": "stat",
+          "settings": {
+            "value": "4.9",
+            "suffix": "★",
+            "label": "avg rating"
+          }
+        },
+        "stat-3": {
+          "type": "stat",
+          "settings": {
+            "value": "48",
+            "suffix": "h",
+            "label": "sold out in"
+          }
+        },
+        "stat-4": {
+          "type": "stat",
+          "settings": {
+            "value": "12",
+            "suffix": "+",
+            "label": "drops & counting"
+          }
+        },
+        "press-5": {
+          "type": "press",
+          "settings": {
+            "name": "VOGUE"
+          }
+        },
+        "press-6": {
+          "type": "press",
+          "settings": {
+            "name": "ELLE"
+          }
+        },
+        "press-7": {
+          "type": "press",
+          "settings": {
+            "name": "REFINERY29"
+          }
+        },
+        "press-8": {
+          "type": "press",
+          "settings": {
+            "name": "WHO WHAT WEAR"
+          }
+        }
       },
-      "block_order": ["q1", "q2", "q3"],
-      "settings": { "eyebrow": "Loved by the mood-dressers", "heading": "Worn, not just bought" }
-    },
-    "philosophy": {
-      "type": "philosophy",
-      "blocks": {
-        "s1": { "type": "stat", "settings": { "value": "Sun", "label": "New drop, every week" } },
-        "s2": { "type": "stat", "settings": { "value": "200", "label": "Pieces per drop, never more" } },
-        "s3": { "type": "stat", "settings": { "value": "0", "label": "Restocks. When it's gone, it's gone" } }
-      },
-      "block_order": ["s1", "s2", "s3"],
-      "settings": {
-        "eyebrow": "The philosophy",
-        "heading": "Fewer pieces.",
-        "heading_accent": "More you.",
-        "body": "We don't chase seasons or trends. Each week we design a small, considered set of pieces — then we let them go. No overstock, no markdowns, no noise."
-      }
+      "block_order": [
+        "stat-1",
+        "stat-2",
+        "stat-3",
+        "stat-4",
+        "press-5",
+        "press-6",
+        "press-7",
+        "press-8"
+      ],
+      "settings": {}
     },
     "lookbook": {
       "type": "lookbook",
       "blocks": {
-        "l1": { "type": "shot", "settings": { "caption": "01 — Morning, unbothered" } },
-        "l2": { "type": "shot", "settings": { "caption": "02 — The 6pm pivot" } },
-        "l3": { "type": "shot", "settings": { "caption": "03 — Weekend, off the clock" } },
-        "l4": { "type": "shot", "settings": { "caption": "04 — After hours" } }
+        "l1": {
+          "type": "shot",
+          "settings": {
+            "caption": "01 — Morning, unbothered"
+          }
+        },
+        "l2": {
+          "type": "shot",
+          "settings": {
+            "caption": "02 — The 6pm pivot"
+          }
+        },
+        "l3": {
+          "type": "shot",
+          "settings": {
+            "caption": "03 — Weekend, off the clock"
+          }
+        },
+        "l4": {
+          "type": "shot",
+          "settings": {
+            "caption": "04 — After hours"
+          }
+        }
       },
-      "block_order": ["l1", "l2", "l3", "l4"],
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4"
+      ],
       "settings": {
         "eyebrow": "Editorial",
         "heading": "The Lookbook",
@@ -146,8 +305,175 @@
         "collection": "maxi-silhouettes"
       }
     },
+    "ugc": {
+      "type": "ugc-gallery",
+      "blocks": {
+        "post-1": {
+          "type": "post",
+          "settings": {}
+        },
+        "post-2": {
+          "type": "post",
+          "settings": {}
+        },
+        "post-3": {
+          "type": "post",
+          "settings": {}
+        },
+        "post-4": {
+          "type": "post",
+          "settings": {}
+        },
+        "post-5": {
+          "type": "post",
+          "settings": {}
+        },
+        "post-6": {
+          "type": "post",
+          "settings": {}
+        },
+        "post-7": {
+          "type": "post",
+          "settings": {}
+        },
+        "post-8": {
+          "type": "post",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "post-1",
+        "post-2",
+        "post-3",
+        "post-4",
+        "post-5",
+        "post-6",
+        "post-7",
+        "post-8"
+      ],
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "quote": "The slip dress is the most worn thing in my closet. I get stopped every time.",
+            "author": "Maya R.",
+            "detail": "verified buyer"
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "quote": "Finally a brand that gets it — I dress for how I feel, and these pieces just work together.",
+            "author": "Lena P.",
+            "detail": "verified buyer"
+          }
+        },
+        "q3": {
+          "type": "quote",
+          "settings": {
+            "quote": "Ordered Sunday, wore it Friday, sold out by Monday. The hype is real.",
+            "author": "Priya S.",
+            "detail": "verified buyer"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {
+        "eyebrow": "Loved by the mood-dressers",
+        "heading": "Worn, not just bought"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "question": "How does sizing and fit run?",
+            "answer": "<p>Our pieces are designed with an intentional, relaxed silhouette — we generally recommend sizing down if you prefer a more fitted look. Each product page includes a detailed size guide with exact measurements, plus notes from the designer on how that specific garment is cut.</p><p>Still unsure? Our fit notes are written by real humans who've worn the pieces. If you're between sizes, reach out — we're happy to help you choose.</p>"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "question": "When do new drops launch?",
+            "answer": "<p>New collections drop every <strong>Thursday at 10 AM EST</strong> — small, intentional, and gone when they're gone. Sign up for our SMS or email list to get early access 24 hours before the public drop goes live.</p><p>Each drop is announced with full editorial imagery and styling notes so you can decide with confidence before it sells out.</p>"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "question": "Do you restock sold-out pieces?",
+            "answer": "<p>Rarely — and that's intentional. Shuffle Mode runs on limited quantities to keep things special. Once a piece sells out, it typically doesn't return in the same form.</p><p>That said, we do occasionally revisit archive favourites in new colourways or fabrics. Join the waitlist on a sold-out product page and you'll be the first to know if it makes a comeback.</p>"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "question": "What are your shipping options?",
+            "answer": "<p>Standard shipping is <strong>free on orders over $150</strong>. Orders under that ship at a flat rate of $8. Express options are available at checkout.</p><p>Orders placed before 12 PM EST on weekdays typically ship the same day. You'll receive a tracking link as soon as your order leaves our hands — usually within 24 hours.</p>"
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "question": "What is your return and exchange policy?",
+            "answer": "<p>We offer <strong>free returns and exchanges within 30 days</strong> of delivery — no questions asked, no restocking fees. Items must be unworn, unwashed, and in original condition with tags attached.</p><p>To start a return or swap for a different size, visit our returns portal or email us directly. Exchanges ship out within 1–2 business days of us receiving your original item.</p>"
+          }
+        },
+        "item-6": {
+          "type": "item",
+          "settings": {
+            "question": "What materials do you use, and how should I care for them?",
+            "answer": "<p>We work with natural and low-impact fabrics — linen, Tencel, deadstock cotton, and responsibly sourced silk blends. Every fibre choice is deliberate: breathable, beautiful, and made to last.</p><p>Care instructions are printed inside each garment and listed on every product page. Most pieces do best with a <strong>cold gentle machine wash or hand wash</strong> and a low-heat or air dry. Treat them well and they'll only get better with time.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6"
+      ],
+      "settings": {}
+    },
     "newsletter": {
       "type": "newsletter",
+      "blocks": {
+        "perk-1": {
+          "type": "perk",
+          "settings": {
+            "text": "Early access to every weekly drop"
+          }
+        },
+        "perk-2": {
+          "type": "perk",
+          "settings": {
+            "text": "Members-only pieces, never restocked"
+          }
+        },
+        "perk-3": {
+          "type": "perk",
+          "settings": {
+            "text": "Styling notes straight to your inbox"
+          }
+        }
+      },
+      "block_order": [
+        "perk-1",
+        "perk-2",
+        "perk-3"
+      ],
       "settings": {
         "eyebrow": "First in line",
         "heading": "Get 10% off your first drop",
@@ -155,5 +481,18 @@
       }
     }
   },
-  "order": ["hero", "trust", "drop", "shuffle", "testimonials", "philosophy", "lookbook", "newsletter"]
+  "order": [
+    "hero",
+    "marquee",
+    "trust",
+    "drop",
+    "manifesto",
+    "shuffle",
+    "press",
+    "lookbook",
+    "ugc",
+    "testimonials",
+    "faq",
+    "newsletter"
+  ]
 }

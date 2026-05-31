@@ -1,72 +1,1002 @@
-<section class="hero">
-  <div class="container hero__grid">
-    <div class="hero__content reveal">
-      <span class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</span>
-      <h1 class="hero__title">
-        {{ section.settings.heading }}
-        {%- if section.settings.heading_accent != blank -%}
-          <span class="accent">{{ section.settings.heading_accent }}</span>
-        {%- endif -%}
-      </h1>
-      <p class="hero__sub">{{ section.settings.subheading }}</p>
+{%- liquid
+  assign has_image = false
+  if section.settings.image1 != blank
+    assign has_image = true
+  endif
+  assign show_countdown = false
+  if section.settings.countdown_enabled and section.settings.drop_date != blank
+    assign show_countdown = true
+  endif
+-%}
 
-      <div class="hero__cta">
-        {%- if section.settings.cta_url != blank -%}
-          <a href="{{ section.settings.cta_url }}" class="btn btn--primary">{{ section.settings.cta_label }}</a>
-        {%- endif -%}
-        {%- if section.settings.cta2_url != blank -%}
-          <a href="{{ section.settings.cta2_url }}" class="link-arrow">{{ section.settings.cta2_label }} →</a>
-        {%- endif -%}
+<section
+  class="sm-hero__root{% unless has_image %} sm-hero__root--no-image{% endunless %}"
+  aria-label="{{ section.settings.heading | default: shop.name | escape }} — Hero"
+  style="
+    --sm-hero-scrim-mid: 0.56;
+    --sm-hero-scrim-bot: 0.82;
+  "
+>
+
+  {%- comment %} ══ BACKGROUND LAYER ══════════════════════════════════ {%- endcomment %}
+  <div class="sm-hero__bg" aria-hidden="true">
+    {%- if has_image -%}
+      <div class="sm-hero__kenburns" aria-hidden="true">
+        {{
+          section.settings.image1
+          | image_url: width: 2800
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            class: 'sm-hero__img',
+            alt: section.settings.image1.alt | default: shop.name,
+            sizes: '100vw',
+            widths: '640,750,900,1080,1440,1920,2400,2800'
+        }}
       </div>
+    {%- else -%}
+      <div class="sm-hero__fallback" aria-hidden="true">
+        <span class="sm-hero__fallback-wordmark" aria-hidden="true">{{ shop.name }}</span>
+        <div class="sm-hero__fallback-grain" aria-hidden="true"></div>
+      </div>
+    {%- endif -%}
 
-      {%- if section.settings.countdown_enabled and section.settings.drop_date != blank -%}
-        <div class="countdown" data-countdown="{{ section.settings.drop_date }}" aria-live="polite">
-          <span class="countdown__label">{{ section.settings.countdown_label }}</span>
-          <div class="countdown__clock">
-            <span><b data-d>00</b>Days</span><i>:</i>
-            <span><b data-h>00</b>Hrs</span><i>:</i>
-            <span><b data-m>00</b>Min</span><i>:</i>
-            <span><b data-s>00</b>Sec</span>
-          </div>
+    {%- comment %} Multi-layer scrim: directional + bottom vignette {%- endcomment %}
+    <div class="sm-hero__scrim" aria-hidden="true"></div>
+  </div>
+
+  {%- comment %} ══ CONTENT LAYER ════════════════════════════════════ {%- endcomment %}
+  <div class="sm-hero__stage">
+    <div class="container sm-hero__container">
+      <div class="sm-hero__content">
+
+        {%- comment %} — Eyebrow — {%- endcomment %}
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="sm-hero__eyebrow">
+            <span class="sm-hero__eyebrow-rule" aria-hidden="true"></span>
+            <span class="sm-hero__eyebrow-text">{{ section.settings.eyebrow }}</span>
+          </p>
+        {%- endif -%}
+
+        {%- comment %} — Headline — {%- endcomment %}
+        <h1 class="sm-hero__heading">
+          {%- if section.settings.heading != blank -%}
+            <span class="sm-hero__heading-line1">{{ section.settings.heading }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading_accent != blank -%}
+            <em class="sm-hero__heading-accent">{{ section.settings.heading_accent }}</em>
+          {%- endif -%}
+        </h1>
+
+        {%- comment %} — Subheading — {%- endcomment %}
+        {%- if section.settings.subheading != blank -%}
+          <p class="sm-hero__sub">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+
+        {%- comment %} — CTAs — {%- endcomment %}
+        <div class="sm-hero__ctas" role="group" aria-label="Shop actions">
+          {%- if section.settings.cta_label != blank -%}
+            <a
+              href="{{ section.settings.cta_url | default: '#' }}"
+              class="sm-hero__btn sm-hero__btn--primary"
+            >
+              <span class="sm-hero__btn-label">{{ section.settings.cta_label }}</span>
+              <span class="sm-hero__btn-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.5 7.5H12.5M8.5 3.5L12.5 7.5L8.5 11.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.cta2_label != blank -%}
+            <a
+              href="{{ section.settings.cta2_url | default: '#' }}"
+              class="sm-hero__btn sm-hero__btn--ghost"
+            >
+              <span class="sm-hero__btn-label">{{ section.settings.cta2_label }}</span>
+            </a>
+          {%- endif -%}
         </div>
-      {%- endif -%}
-    </div>
 
-    <div class="hero__media">
-      <div class="hero__frame{% unless section.settings.image1 %} hero__frame--empty{% endunless %}">
-        {%- if section.settings.image1 != blank -%}
-          {{ section.settings.image1 | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width:1024px) 50vw, 100vw', widths: '600,900,1200,1600' }}
-        {%- else -%}
-          <span class="hero__wordmark">{{ shop.name }}</span>
+        {%- comment %} — Countdown — {%- endcomment %}
+        {%- if show_countdown -%}
+          <div
+            class="sm-hero__countdown"
+            data-sm-countdown="{{ section.settings.drop_date | escape }}"
+            role="timer"
+            aria-live="polite"
+            aria-atomic="false"
+            aria-label="{{ section.settings.countdown_label | escape }}"
+          >
+            <p class="sm-hero__countdown-label">
+              <span class="sm-hero__countdown-pip" aria-hidden="true"></span>
+              {{ section.settings.countdown_label }}
+            </p>
+            <div class="sm-hero__clock" aria-hidden="true">
+              <span class="sm-hero__unit">
+                <b class="sm-hero__digit" data-sm-d>00</b>
+                <small class="sm-hero__unit-label">Days</small>
+              </span>
+              <span class="sm-hero__sep" aria-hidden="true">:</span>
+              <span class="sm-hero__unit">
+                <b class="sm-hero__digit" data-sm-h>00</b>
+                <small class="sm-hero__unit-label">Hrs</small>
+              </span>
+              <span class="sm-hero__sep" aria-hidden="true">:</span>
+              <span class="sm-hero__unit">
+                <b class="sm-hero__digit" data-sm-m>00</b>
+                <small class="sm-hero__unit-label">Min</small>
+              </span>
+              <span class="sm-hero__sep" aria-hidden="true">:</span>
+              <span class="sm-hero__unit">
+                <b class="sm-hero__digit" data-sm-s>00</b>
+                <small class="sm-hero__unit-label">Sec</small>
+              </span>
+            </div>
+            <span class="sm-hero__countdown-sr" aria-live="polite"></span>
+          </div>
         {%- endif -%}
-        {%- if section.settings.collage_caption != blank -%}
-          <span class="hero__chip">{{ section.settings.collage_caption }}</span>
-        {%- endif -%}
+
       </div>
     </div>
   </div>
+
+  {%- comment %} ══ DROP CHIP (bottom-right) ══════════════════════════ {%- endcomment %}
+  {%- if section.settings.collage_caption != blank -%}
+    <div class="sm-hero__chip-wrap">
+      <span class="sm-hero__chip" aria-label="{{ section.settings.collage_caption | escape }}">
+        <span class="sm-hero__chip-dot" aria-hidden="true"></span>
+        <span class="sm-hero__chip-text">{{ section.settings.collage_caption }}</span>
+      </span>
+    </div>
+  {%- endif -%}
+
+  {%- comment %} ══ SCROLL CUE ════════════════════════════════════════ {%- endcomment %}
+  <div class="sm-hero__scroll-cue" aria-hidden="true">
+    <span class="sm-hero__scroll-track">
+      <span class="sm-hero__scroll-bead"></span>
+    </span>
+  </div>
+
 </section>
+
+{% stylesheet %}
+
+/* ━━━ Root ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__root {
+  position: relative;
+  width: 100%;
+  min-height: clamp(560px, 88vh, 900px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--color-ink);
+  isolation: isolate;
+}
+
+/* ━━━ Background / image ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.sm-hero__kenburns {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.sm-hero__img {
+  position: absolute;
+  inset: -5%;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  object-position: center 20%;
+  transform-origin: 55% 45%;
+  will-change: transform;
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sm-hero__img {
+    animation: sm-hero-kenburns 26s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes sm-hero-kenburns {
+  0%   { transform: scale(1)     translate(0%,    0%   ); }
+  50%  { transform: scale(1.045) translate(-0.8%, 0.6% ); }
+  100% { transform: scale(1.09)  translate(-1.8%, 1.2% ); }
+}
+
+/* ━━━ Fallback gradient (no image) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, #2f2619 0%, transparent 70%),
+    linear-gradient(160deg, #1e1a12 0%, #2a2219 35%, #16130f 65%, #0f0d09 100%);
+  overflow: hidden;
+}
+
+/* SVG-free subtle noise via a repeating CSS gradient trick */
+.sm-hero__fallback-grain {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(251,249,244,0.012) 0px,
+      rgba(251,249,244,0.012) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+}
+
+.sm-hero__fallback-wordmark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 11vw, 10rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(251, 249, 244, 0.045);
+  text-transform: uppercase;
+  user-select: none;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ━━━ Gradient scrim ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__scrim {
+  position: absolute;
+  inset: 0;
+  /* Layer 1: left-to-right directional — wraps text in darkness */
+  background:
+    linear-gradient(
+      100deg,
+      rgba(22,19,15,0.82) 0%,
+      rgba(22,19,15,0.52) 42%,
+      rgba(22,19,15,0.12) 72%,
+      rgba(22,19,15,0.04) 100%
+    );
+}
+/* Layer 2: bottom vignette — anchors editorial type */
+.sm-hero__scrim::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(22,19,15,0.78) 0%,
+      rgba(22,19,15,0.28) 32%,
+      rgba(22,19,15,0) 62%
+    );
+}
+
+/* ━━━ Content stage ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__stage {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  padding-top: clamp(6rem, 14vh, 10rem);
+  padding-bottom: clamp(3.5rem, 8vh, 6rem);
+}
+
+.sm-hero__container {
+  width: 100%;
+}
+
+.sm-hero__content {
+  max-width: 740px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ━━━ Eyebrow ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0 0 clamp(1.125rem, 2.5vh, 1.75rem);
+  opacity: 0;
+  animation: sm-hero-rise 0.75s 0.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.sm-hero__eyebrow-rule {
+  display: block;
+  width: 1.875rem;
+  height: 1.5px;
+  background-color: var(--color-ember);
+  flex-shrink: 0;
+  border-radius: 1px;
+}
+
+.sm-hero__eyebrow-text {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.155em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  opacity: 0.68;
+}
+
+/* ━━━ Headline ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6.4vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.025;
+  letter-spacing: -0.028em;
+  color: var(--color-cream);
+  margin: 0 0 clamp(1rem, 2.5vh, 1.625rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.06em;
+  opacity: 0;
+  animation: sm-hero-rise 0.85s 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.sm-hero__heading-line1 {
+  display: block;
+}
+
+.sm-hero__heading-accent {
+  display: block;
+  font-style: italic;
+  color: var(--color-ember);
+  font-weight: 300;
+  /* Slightly tighter tracking for italic to feel intentional */
+  letter-spacing: -0.025em;
+}
+
+/* ━━━ Subheading ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__sub {
+  font-family: var(--font-body);
+  font-size: clamp(0.875rem, 1.45vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--color-cream);
+  opacity: 0;
+  margin: 0 0 clamp(1.75rem, 4vh, 2.5rem);
+  max-width: 46ch;
+  animation: sm-hero-rise-sub 0.85s 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes sm-hero-rise-sub {
+  from { opacity: 0;    transform: translateY(16px); }
+  to   { opacity: 0.72; transform: translateY(0);    }
+}
+
+/* ━━━ CTAs ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem 2rem;
+  margin-bottom: clamp(1.75rem, 4vh, 2.75rem);
+  opacity: 0;
+  animation: sm-hero-rise 0.85s 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Base button token */
+.sm-hero__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.78125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: gap 0.22s ease;
+  position: relative;
+}
+
+/* Primary */
+.sm-hero__btn--primary {
+  padding: 0.9375rem 2.125rem;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-cream);
+  transition:
+    background-color 0.24s ease,
+    color            0.24s ease,
+    border-color     0.24s ease,
+    gap              0.22s ease;
+}
+
+.sm-hero__btn--primary:hover,
+.sm-hero__btn--primary:focus-visible {
+  background-color: transparent;
+  color: var(--color-cream);
+  gap: 0.75rem;
+}
+
+.sm-hero__btn--primary:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 4px;
+}
+
+.sm-hero__btn-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: transform 0.22s ease;
+}
+
+.sm-hero__btn--primary:hover .sm-hero__btn-icon {
+  transform: translateX(4px);
+}
+
+/* Ghost / underline */
+.sm-hero__btn--ghost {
+  color: var(--color-cream);
+  opacity: 0.78;
+  padding-bottom: 3px;
+  transition: opacity 0.22s ease;
+}
+
+.sm-hero__btn--ghost::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left center;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sm-hero__btn--ghost:hover,
+.sm-hero__btn--ghost:focus-visible {
+  opacity: 1;
+}
+
+.sm-hero__btn--ghost:hover::after {
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+
+.sm-hero__btn--ghost:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 4px;
+}
+
+/* ━━━ Countdown ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__countdown {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1.125rem 1.5rem 1rem;
+  border: 1px solid rgba(251,249,244,0.13);
+  background: rgba(16, 13, 9, 0.42);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  opacity: 0;
+  animation: sm-hero-rise 0.85s 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+  width: fit-content;
+  /* Fine top accent line */
+  box-shadow:
+    inset 0 1px 0 rgba(194,80,46,0.4),
+    0 8px 32px rgba(0,0,0,0.22);
+}
+
+.sm-hero__countdown-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.175em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  margin: 0;
+  line-height: 1;
+}
+
+.sm-hero__countdown-pip {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--color-ember);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sm-hero__countdown-pip {
+    animation: sm-hero-pip 2s 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes sm-hero-pip {
+  0%, 100% { opacity: 1; transform: scale(1);   }
+  50%       { opacity: 0.4; transform: scale(0.65); }
+}
+
+.sm-hero__clock {
+  display: flex;
+  align-items: baseline;
+  gap: 0.125rem;
+}
+
+.sm-hero__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.75ch;
+}
+
+.sm-hero__digit {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-cream);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.sm-hero__unit-label {
+  font-family: var(--font-body);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  opacity: 0.42;
+  margin-top: 0.3rem;
+  display: block;
+}
+
+.sm-hero__sep {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2.2vw, 1.625rem);
+  color: var(--color-cream);
+  opacity: 0.3;
+  line-height: 1;
+  align-self: flex-start;
+  padding-top: 0.06em;
+  margin: 0 0.15rem;
+  letter-spacing: 0;
+}
+
+.sm-hero__countdown-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ━━━ Drop chip ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__chip-wrap {
+  position: absolute;
+  bottom: clamp(1.75rem, 5vh, 3.25rem);
+  right: clamp(1.5rem, 4vw, 4rem);
+  z-index: 4;
+  opacity: 0;
+  animation: sm-hero-fade 0.7s 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.sm-hero__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(16, 13, 9, 0.62);
+  border: 1px solid rgba(251,249,244,0.2);
+  backdrop-filter: blur(12px) saturate(110%);
+  -webkit-backdrop-filter: blur(12px) saturate(110%);
+  cursor: default;
+}
+
+.sm-hero__chip-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-ember);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sm-hero__chip-dot {
+    animation: sm-hero-pip 2.4s 2s ease-in-out infinite;
+  }
+}
+
+.sm-hero__chip-text {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.155em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  opacity: 0.9;
+}
+
+/* ━━━ Scroll cue ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__scroll-cue {
+  position: absolute;
+  bottom: clamp(1.25rem, 3.5vh, 2.25rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  opacity: 0;
+  animation: sm-hero-fade 0.6s 1.2s ease both;
+}
+
+.sm-hero__scroll-track {
+  display: block;
+  width: 1px;
+  height: 2.75rem;
+  background: rgba(251,249,244,0.18);
+  overflow: hidden;
+  position: relative;
+}
+
+.sm-hero__scroll-bead {
+  display: block;
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(251,249,244,0.7) 50%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sm-hero__scroll-bead {
+    animation: sm-hero-bead 1.9s 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes sm-hero-bead {
+  0%   { transform: translateY(0%);    opacity: 0;   }
+  15%  { opacity: 1; }
+  80%  { opacity: 0.9; }
+  100% { transform: translateY(200%);  opacity: 0;   }
+}
+
+/* ━━━ Shared keyframes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@keyframes sm-hero-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes sm-hero-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ━━━ Reduced-motion overrides ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (prefers-reduced-motion: reduce) {
+  .sm-hero__eyebrow,
+  .sm-hero__heading,
+  .sm-hero__sub,
+  .sm-hero__ctas,
+  .sm-hero__countdown,
+  .sm-hero__chip-wrap,
+  .sm-hero__scroll-cue {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  .sm-hero__sub {
+    opacity: 0.72 !important;
+  }
+  .sm-hero__img {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* ━━━ Mobile (<768px) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 767px) {
+  .sm-hero__root {
+    min-height: clamp(580px, 92vh, 820px);
+  }
+
+  .sm-hero__stage {
+    align-items: flex-end;
+    padding-bottom: clamp(5rem, 12vh, 7rem);
+  }
+
+  .sm-hero__content {
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .sm-hero__eyebrow {
+    justify-content: center;
+  }
+
+  .sm-hero__heading {
+    align-items: center;
+    font-size: clamp(2.25rem, 9.5vw, 3.25rem);
+  }
+
+  .sm-hero__sub {
+    text-align: center;
+    max-width: 38ch;
+  }
+
+  .sm-hero__ctas {
+    justify-content: center;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .sm-hero__countdown {
+    align-items: center;
+  }
+
+  /* On mobile, scrim shifts to bottom-weighted for vertical scroll */
+  .sm-hero__scrim {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(22,19,15,0.20) 0%,
+        rgba(22,19,15,0.40) 35%,
+        rgba(22,19,15,0.78) 65%,
+        rgba(22,19,15,0.92) 100%
+      );
+  }
+  .sm-hero__scrim::after {
+    display: none;
+  }
+
+  .sm-hero__chip-wrap {
+    bottom: auto;
+    top: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .sm-hero__scroll-cue {
+    display: none;
+  }
+}
+
+/* ━━━ Tablet (768–1023px) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sm-hero__content {
+    max-width: 580px;
+  }
+
+  .sm-hero__heading {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+  }
+}
+
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  /**
+   * Pad a number to 2 digits.
+   * @param {number} n
+   * @returns {string}
+   */
+  function pad(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  /**
+   * Initialise a single countdown element.
+   * @param {HTMLElement} el
+   */
+  function initCountdown(el) {
+    var raw = (el.getAttribute('data-sm-countdown') || '').trim();
+    if (!raw) return;
+
+    // Replace the first space with 'T' so all browsers parse it as ISO 8601.
+    var isoStr = raw.replace(' ', 'T');
+    var target  = new Date(isoStr);
+
+    // Bail if the date string is invalid.
+    if (isNaN(target.getTime())) return;
+
+    var dEl    = el.querySelector('[data-sm-d]');
+    var hEl    = el.querySelector('[data-sm-h]');
+    var mEl    = el.querySelector('[data-sm-m]');
+    var sEl    = el.querySelector('[data-sm-s]');
+    var srEl   = el.querySelector('.sm-hero__countdown-sr');
+    var labelEl = el.querySelector('.sm-hero__countdown-label');
+
+    if (!dEl || !hEl || !mEl || !sEl) return;
+
+    var rafHandle = null;
+
+    function tick() {
+      var diff = target.getTime() - Date.now();
+
+      if (diff <= 0) {
+        dEl.textContent = '00';
+        hEl.textContent = '00';
+        mEl.textContent = '00';
+        sEl.textContent = '00';
+        if (srEl) srEl.textContent = 'Drop is live now!';
+        el.setAttribute('aria-label', 'Drop is live now!');
+        return; // stop ticking
+      }
+
+      var totalSec = Math.floor(diff / 1000);
+      var d = Math.floor(totalSec / 86400);
+      var h = Math.floor((totalSec % 86400) / 3600);
+      var m = Math.floor((totalSec % 3600)  / 60);
+      var s = totalSec % 60;
+
+      dEl.textContent = pad(d);
+      hEl.textContent = pad(h);
+      mEl.textContent = pad(m);
+      sEl.textContent = pad(s);
+
+      // Update screen-reader text every minute to reduce verbosity.
+      if (s === 0 && srEl) {
+        var labelText = labelEl ? labelEl.textContent.replace(/\s+/g, ' ').trim() : '';
+        srEl.textContent =
+          labelText + ': ' +
+          d + ' day' + (d !== 1 ? 's' : '') + ', ' +
+          h + ' hour' + (h !== 1 ? 's' : '') + ', ' +
+          m + ' minute' + (m !== 1 ? 's' : '');
+      }
+
+      // Schedule next tick aligned to the next whole second.
+      var msToNextSec = diff % 1000 || 1000;
+      rafHandle = setTimeout(tick, msToNextSec);
+    }
+
+    tick();
+  }
+
+  function init() {
+    var countdowns = document.querySelectorAll('[data-sm-countdown]');
+    for (var i = 0; i < countdowns.length; i++) {
+      initCountdown(countdowns[i]);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Hero",
+  "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Weekly Drops · Est. Boston" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "You don't dress for the occasion." },
-    { "type": "text", "id": "heading_accent", "label": "Heading accent (italic)", "default": "You dress for the mood." },
-    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Minimal pieces that elevate your wardrobe instantly. New drop every Sunday." },
-    { "type": "text", "id": "cta_label", "label": "Primary CTA label", "default": "Shop the drop" },
-    { "type": "url", "id": "cta_url", "label": "Primary CTA link" },
-    { "type": "text", "id": "cta2_label", "label": "Secondary CTA label", "default": "Find your mood" },
-    { "type": "url", "id": "cta2_url", "label": "Secondary CTA link" },
-    { "type": "header", "content": "Hero image" },
-    { "type": "image_picker", "id": "image1", "label": "Image" },
-    { "type": "text", "id": "collage_caption", "label": "Image caption", "default": "Drop 01" },
-    { "type": "header", "content": "Drop countdown" },
-    { "type": "checkbox", "id": "countdown_enabled", "label": "Show countdown", "default": true },
-    { "type": "text", "id": "countdown_label", "label": "Countdown label", "default": "Next drop in" },
-    { "type": "text", "id": "drop_date", "label": "Drop date (YYYY-MM-DD HH:MM)", "info": "e.g. 2026-06-07 13:00", "default": "2026-06-07 13:00" }
+    {
+      "type": "header",
+      "content": "Editorial copy"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Weekly Drops · Est. Boston"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Headline — first line",
+      "default": "You don't dress for the occasion."
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Headline accent — italic ember, second line",
+      "default": "You dress for the mood."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Minimal pieces that elevate your wardrobe instantly. New drop every Sunday."
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Primary CTA label",
+      "default": "Shop the drop"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Primary CTA link"
+    },
+    {
+      "type": "text",
+      "id": "cta2_label",
+      "label": "Secondary CTA label",
+      "default": "Find your mood"
+    },
+    {
+      "type": "url",
+      "id": "cta2_url",
+      "label": "Secondary CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Hero image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image1",
+      "label": "Full-bleed hero image"
+    },
+    {
+      "type": "text",
+      "id": "collage_caption",
+      "label": "Live drop chip text",
+      "default": "Drop 01 · Live now"
+    },
+    {
+      "type": "header",
+      "content": "Drop countdown"
+    },
+    {
+      "type": "checkbox",
+      "id": "countdown_enabled",
+      "label": "Show countdown timer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "countdown_label",
+      "label": "Countdown label",
+      "default": "Next drop in"
+    },
+    {
+      "type": "text",
+      "id": "drop_date",
+      "label": "Drop date & time",
+      "info": "Format: YYYY-MM-DD HH:MM (24-hour, store local time). Example: 2026-06-07 13:00",
+      "default": "2026-06-07 13:00"
+    }
   ],
-  "presets": [{ "name": "Hero" }]
+  "presets": [
+    {
+      "name": "Hero",
+      "settings": {
+        "eyebrow": "Weekly Drops · Est. Boston",
+        "heading": "You don't dress for the occasion.",
+        "heading_accent": "You dress for the mood.",
+        "subheading": "Minimal pieces that elevate your wardrobe instantly. New drop every Sunday.",
+        "cta_label": "Shop the drop",
+        "cta2_label": "Find your mood",
+        "collage_caption": "Drop 01 · Live now",
+        "countdown_enabled": true,
+        "countdown_label": "Next drop in",
+        "drop_date": "2026-06-07 13:00"
+      }
+    }
+  ]
 }
 {% endschema %}

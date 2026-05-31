@@ -1,55 +1,461 @@
-{%- assign collection = collections[section.settings.collection] -%}
-<section id="drop" class="container section">
-  <div class="section__head reveal">
-    <div>
-      <span class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</span>
-      <h2 class="section__title">{{ section.settings.heading }}</h2>
-    </div>
-    <div class="section__head-meta">
-      {%- if collection != blank and section.settings.show_count -%}
-        <p class="card__cat">{{ collection.products_count }} pieces in this drop</p>
-      {%- endif -%}
-      {%- if section.settings.note != blank -%}
-        <p class="card__cat"><span class="text-ember">●</span> {{ section.settings.note }}</p>
-      {%- endif -%}
-    </div>
-  </div>
+{%- assign col = collections[section.settings.collection] -%}
+{%- assign products_to_show = section.settings.products_to_show -%}
 
-  <div class="product-grid product-grid--4">
-    {%- if collection != blank and collection.products.size > 0 -%}
-      {%- for product in collection.products limit: section.settings.products_to_show -%}
-        {% render 'product-card', product: product %}
-      {%- endfor -%}
-    {%- else -%}
-      {%- for i in (1..section.settings.products_to_show) -%}
-        <div class="card">
-          <div class="card__media"><div class="card__ph"><span>{{ shop.name }}</span></div></div>
-          <div class="card__info"><div class="card__text"><span class="card__name">Connect a collection</span><span class="card__cat">Editor → Featured drop</span></div></div>
+<section
+  class="sm-drop"
+  style="
+    --sm-drop-eyebrow: {{ section.settings.eyebrow | json }};
+  "
+  aria-labelledby="sm-drop-heading-{{ section.id }}"
+>
+  <div class="container">
+
+    {%- comment -%} ── HEADER ── {%- endcomment -%}
+    <header class="sm-drop__header sm-drop__header--reveal" id="sm-drop-header-{{ section.id }}">
+
+      <div class="sm-drop__header-top">
+        <div class="sm-drop__eyebrow-row">
+          <span class="sm-drop__eyebrow" aria-label="{{ section.settings.eyebrow }}">
+            {{- section.settings.eyebrow -}}
+          </span>
+          <span class="sm-drop__eyebrow-rule" aria-hidden="true"></span>
         </div>
-      {%- endfor -%}
-    {%- endif -%}
-  </div>
 
-  {%- if section.settings.link_url != blank -%}
-    <div class="center mt-12">
-      <a href="{{ section.settings.link_url }}" class="btn btn--outline">{{ section.settings.link_label }} →</a>
-    </div>
-  {%- endif -%}
+        <h2
+          class="sm-drop__heading"
+          id="sm-drop-heading-{{ section.id }}"
+        >
+          {{- section.settings.heading -}}
+        </h2>
+      </div>
+
+      <div class="sm-drop__meta">
+        {%- if col != blank and section.settings.show_count -%}
+          <p class="sm-drop__count">
+            <strong>{{ col.products_count }}</strong>
+            {%- if col.products_count == 1 -%}
+              &nbsp;piece in this drop
+            {%- else -%}
+              &nbsp;pieces in this drop
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.note != blank -%}
+          <p class="sm-drop__note" aria-label="{{ section.settings.note }}">
+            <span class="sm-drop__note-dot" aria-hidden="true">●</span>
+            {{- section.settings.note -}}
+          </p>
+        {%- endif -%}
+      </div>
+
+    </header>
+
+    {%- comment -%} ── GRID ── {%- endcomment -%}
+    {%- if col != blank and col.products.size > 0 -%}
+
+      <div
+        class="sm-drop__grid"
+        role="list"
+        aria-label="{{ section.settings.heading }} products"
+      >
+        {%- for product in col.products limit: products_to_show -%}
+          <div class="sm-drop__grid-item" role="listitem">
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+    {%- else -%}
+
+      <div class="sm-drop__empty" role="status" aria-live="polite">
+        <div class="sm-drop__empty-inner">
+          <span class="sm-drop__empty-eyebrow">No collection selected</span>
+          <p class="sm-drop__empty-headline">Your next drop lives here.</p>
+          <p class="sm-drop__empty-body">
+            Open the theme editor, navigate to <em>Featured drop</em>, and connect a collection to showcase this week's edit.
+          </p>
+        </div>
+      </div>
+
+    {%- endif -%}
+
+    {%- comment -%} ── CTA ── {%- endcomment -%}
+    {%- if section.settings.link_url != blank -%}
+      <div class="sm-drop__cta">
+        <a
+          href="{{ section.settings.link_url }}"
+          class="sm-drop__btn"
+          aria-label="{{ section.settings.link_label }} — {{ section.settings.heading }}"
+        >
+          <span>{{ section.settings.link_label }}</span>
+          <span class="sm-drop__btn-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
 </section>
+
+{% stylesheet %}
+
+/* ─────────────────────────────────────────
+   sm-drop  |  Featured Drop section shell
+   All sizing/spacing uses the global design
+   system vars; no card internals touched.
+───────────────────────────────────────── */
+
+.sm-drop {
+  background-color: var(--color-cream);
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+/* ── Header ── */
+.sm-drop__header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-block-end: clamp(2rem, 4vw, 3.5rem);
+}
+
+.sm-drop__eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-block-end: 0.75rem;
+}
+
+.sm-drop__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sm-drop__eyebrow-rule {
+  display: block;
+  flex: 1;
+  height: 1px;
+  background: var(--color-ember);
+  opacity: 0.35;
+  max-width: 12rem;
+}
+
+.sm-drop__heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5.5vw, 4.25rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* Meta row: count + note */
+.sm-drop__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 2rem;
+}
+
+.sm-drop__count {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: var(--color-stone);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.sm-drop__count strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.sm-drop__note {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--color-stone);
+  margin: 0;
+}
+
+.sm-drop__note-dot {
+  color: var(--color-ember);
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+/* ── Scroll-reveal ── */
+.sm-drop__header--reveal {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sm-drop__header--reveal.sm-drop--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-drop__header--reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ── Product Grid ── */
+.sm-drop__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+@media screen and (min-width: 768px) {
+  .sm-drop__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .sm-drop__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.sm-drop__grid-item {
+  min-width: 0;
+}
+
+/* ── Empty state ── */
+.sm-drop__empty {
+  border: 1px solid var(--color-line);
+  background-color: var(--color-bone);
+  padding: clamp(3rem, 8vw, 6rem) 2rem;
+  text-align: center;
+}
+
+.sm-drop__empty-inner {
+  max-width: 28rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sm-drop__empty-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+}
+
+.sm-drop__empty-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 300;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.sm-drop__empty-body {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-stone);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.sm-drop__empty-body em {
+  font-style: italic;
+  color: var(--color-ink);
+}
+
+/* ── CTA ── */
+.sm-drop__cta {
+  display: flex;
+  justify-content: center;
+  margin-block-start: clamp(2.5rem, 5vw, 4rem);
+}
+
+.sm-drop__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+  padding: 0.875em 2em;
+  position: relative;
+  overflow: hidden;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.sm-drop__btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
+}
+
+.sm-drop__btn:hover::before,
+.sm-drop__btn:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.sm-drop__btn:hover,
+.sm-drop__btn:focus-visible {
+  color: var(--color-cream);
+}
+
+.sm-drop__btn span {
+  position: relative;
+  z-index: 1;
+}
+
+.sm-drop__btn-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.sm-drop__btn:hover .sm-drop__btn-arrow,
+.sm-drop__btn:focus-visible .sm-drop__btn-arrow {
+  transform: translateX(0.3em);
+}
+
+.sm-drop__btn:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-drop__btn::before,
+  .sm-drop__btn-arrow {
+    transition: none;
+  }
+}
+
+{% endstylesheet %}
+
+{% javascript %}
+
+(function () {
+  'use strict';
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+
+  function revealHeader(entries, observer) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('sm-drop--visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(revealHeader, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -60px 0px'
+    });
+
+    document.querySelectorAll('.sm-drop__header--reveal').forEach(function (el) {
+      observer.observe(el);
+    });
+  } else {
+    /* Fallback: show immediately if IntersectionObserver unavailable */
+    document.querySelectorAll('.sm-drop__header--reveal').forEach(function (el) {
+      el.classList.add('sm-drop--visible');
+    });
+  }
+})();
+
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Featured drop",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Drop 01" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "This week's drop" },
-    { "type": "text", "id": "note", "label": "Note (scarcity)", "default": "Restocks are rare" },
-    { "type": "checkbox", "id": "show_count", "label": "Show product count", "default": true },
-    { "type": "collection", "id": "collection", "label": "Collection" },
-    { "type": "range", "id": "products_to_show", "min": 4, "max": 16, "step": 4, "label": "Products to show", "default": 8 },
-    { "type": "text", "id": "link_label", "label": "Link label", "default": "View full drop" },
-    { "type": "url", "id": "link_url", "label": "Link" }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Drop 01"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "This week's drop"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note (scarcity line)",
+      "default": "Restocks are rare"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show product count",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 16,
+      "step": 4,
+      "label": "Products to show",
+      "default": 8
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "View full drop"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    }
   ],
-  "presets": [{ "name": "Featured drop" }]
+  "presets": [
+    {
+      "name": "Featured drop"
+    }
+  ]
 }
 {% endschema %}

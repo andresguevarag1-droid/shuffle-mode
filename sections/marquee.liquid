@@ -1,0 +1,243 @@
+{% comment %} Marquee strip — Shuffle Mode {% endcomment %}
+
+{%- liquid
+  assign dark      = section.settings.dark
+  assign speed     = section.settings.speed
+  assign size      = section.settings.size
+-%}
+
+<div
+  class="sm-marquee{% if dark %} sm-marquee--dark{% endif %}"
+  style="
+    --sm-speed: {{ speed }}s;
+    --sm-fs: {% if size == 'small' %}clamp(0.75rem, 2vw, 1rem){% elsif size == 'large' %}clamp(1.25rem, 4vw, 2.25rem){% else %}clamp(1rem, 3vw, 1.625rem){% endif %};
+  "
+  aria-label="Marquee banner"
+  aria-hidden="true"
+>
+  <div class="sm-marquee__track" id="sm-marquee-track-{{ section.id }}">
+
+    {%- comment %} First copy {% endcomment %}
+    <span class="sm-marquee__run" aria-hidden="true">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'phrase' -%}
+          <span class="sm-marquee__phrase" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</span>
+          <span class="sm-marquee__sep" aria-hidden="true">✦</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </span>
+
+    {%- comment %} Duplicate — seamless loop {% endcomment %}
+    <span class="sm-marquee__run sm-marquee__run--clone" aria-hidden="true">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'phrase' -%}
+          <span class="sm-marquee__phrase">{{ block.settings.text | escape }}</span>
+          <span class="sm-marquee__sep" aria-hidden="true">✦</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </span>
+
+  </div>
+</div>
+
+{% stylesheet %}
+/* ── Marquee strip ───────────────────────────────────────── */
+.sm-marquee {
+  --sm-bg:    var(--color-bone, #f6f2ea);
+  --sm-text:  var(--color-ink,  #16130f);
+  --sm-sep:   var(--color-ember, #c2502e);
+  --sm-bdr:   var(--color-line, rgba(22,19,15,.1));
+
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: var(--sm-bg);
+  border-top:    1px solid var(--sm-bdr);
+  border-bottom: 1px solid var(--sm-bdr);
+  padding-block: 0.75em;
+  cursor: default;
+}
+
+.sm-marquee--dark {
+  --sm-bg:   var(--color-ink,   #16130f);
+  --sm-text: var(--color-cream, #fbf9f4);
+  --sm-bdr:  rgba(251,249,244,.12);
+}
+
+/* Fade edges */
+.sm-marquee::before,
+.sm-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4rem;
+  z-index: 2;
+  pointer-events: none;
+}
+.sm-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--sm-bg), transparent);
+}
+.sm-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--sm-bg), transparent);
+}
+
+/* Track */
+.sm-marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: sm-scroll var(--sm-speed, 30s) linear infinite;
+}
+
+.sm-marquee:hover .sm-marquee__track {
+  animation-play-state: paused;
+}
+
+/* Each copy of the phrase list */
+.sm-marquee__run {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  padding-inline: 1.5em;
+}
+
+/* Phrase */
+.sm-marquee__phrase {
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-size: var(--sm-fs, clamp(1rem, 3vw, 1.625rem));
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sm-text);
+  line-height: 1;
+}
+
+/* Separator glyph */
+.sm-marquee__sep {
+  display: inline-block;
+  color: var(--sm-sep);
+  font-size: calc(var(--sm-fs, clamp(1rem, 3vw, 1.625rem)) * 0.65);
+  margin-inline: 0.9em;
+  line-height: 1;
+  vertical-align: middle;
+  transition: transform 0.3s ease;
+}
+
+/* Keyframe — scrolls exactly one copy-width to the left,
+   then snaps back invisibly (duplicate makes it seamless) */
+@keyframes sm-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Reduced-motion: freeze, show all phrases stacked */
+@media (prefers-reduced-motion: reduce) {
+  .sm-marquee__track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+  .sm-marquee__run--clone {
+    display: none;
+  }
+  .sm-marquee__run {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-block: 0.25em;
+  }
+  .sm-marquee__phrase {
+    white-space: normal;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  // Nothing to initialise — pure CSS animation.
+  // Guard: if IntersectionObserver available, pause when off-screen for perf.
+  var track = document.getElementById('sm-marquee-track-{{ section.id }}');
+  if (!track || !window.IntersectionObserver) return;
+
+  var strip = track.closest('.sm-marquee');
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      track.style.animationPlayState = entry.isIntersecting ? '' : 'paused';
+    });
+  }, { threshold: 0 });
+
+  observer.observe(strip);
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Marquee Strip",
+  "tag": "section",
+  "class": "sm-marquee-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark mode (ink background)",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed (seconds per loop)",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "default": 30,
+      "unit": "s"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Text size",
+      "options": [
+        { "value": "small",  "label": "Small"  },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large",  "label": "Large"  }
+      ],
+      "default": "medium"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "phrase",
+      "name": "Phrase",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Phrase",
+          "default": "NEW DROP EVERY SUNDAY"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Strip",
+      "settings": {
+        "dark": false,
+        "speed": 30,
+        "size": "medium"
+      },
+      "blocks": [
+        { "type": "phrase", "settings": { "text": "NEW DROP EVERY SUNDAY"     } },
+        { "type": "phrase", "settings": { "text": "WHEN IT'S GONE, IT'S GONE" } },
+        { "type": "phrase", "settings": { "text": "DRESS FOR THE MOOD"        } },
+        { "type": "phrase", "settings": { "text": "MADE IN SMALL BATCHES"     } },
+        { "type": "phrase", "settings": { "text": "FREE SHIPPING OVER $150"   } }
+      ]
+    }
+  ]
+}
+{% endschema %}

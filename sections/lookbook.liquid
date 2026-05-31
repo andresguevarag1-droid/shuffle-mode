@@ -1,66 +1,553 @@
 {%- liquid
-  assign collection = collections[section.settings.collection]
+  assign col = collections[section.settings.collection]
+
   assign image_blocks = 0
   for block in section.blocks
     if block.settings.image != blank
       assign image_blocks = image_blocks | plus: 1
     endif
   endfor
+
+  assign fallback_products = nil
+  if image_blocks == 0 and col != blank
+    assign fallback_products = col.products | limit: 6
+  endif
+
+  assign has_content = false
+  if image_blocks > 0
+    assign has_content = true
+  elsif fallback_products != nil and fallback_products.size > 0
+    assign has_content = true
+  endif
 -%}
 
-{%- if image_blocks > 0 or collection != blank -%}
-  <section id="lookbook" class="container section">
-    <div class="section__head reveal">
-      <div>
-        <span class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</span>
-        <h2 class="section__title">{{ section.settings.heading }}</h2>
-      </div>
-      {%- if section.settings.link_url != blank -%}
-        <a href="{{ section.settings.link_url }}" class="card__cat link-arrow">{{ section.settings.link_label }} →</a>
-      {%- endif -%}
-    </div>
+{%- if has_content -%}
+<section
+  class="sm-look"
+  style="
+    --sm-look-bone: var(--color-bone, #f6f2ea);
+    --sm-look-ink: var(--color-ink, #16130f);
+    --sm-look-cream: var(--color-cream, #fbf9f4);
+    --sm-look-sand: var(--color-sand, #eadfcd);
+    --sm-look-ember: var(--color-ember, #c2502e);
+    --sm-look-stone: var(--color-stone, #6f675d);
+    --sm-look-line: var(--color-line, rgba(22,19,15,.1));
+  "
+>
+  <div class="container">
 
-    <div class="lookbook">
-      {%- if image_blocks > 0 -%}
+    <header class="sm-look__header sm-look__reveal">
+      <div class="sm-look__header-text">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="sm-look__eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="sm-look__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.link_url != blank and section.settings.link_label != blank -%}
+        <a href="{{ section.settings.link_url }}" class="sm-look__journal-link" aria-label="{{ section.settings.link_label }}">
+          <span class="sm-look__journal-link-text">{{ section.settings.link_label }}</span>
+          <span class="sm-look__journal-link-arrow" aria-hidden="true">
+            <svg width="28" height="12" viewBox="0 0 28 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" y1="6" x2="24" y2="6" stroke="currentColor" stroke-width="1"/>
+              <path d="M21 1L27 6L21 11" stroke="currentColor" stroke-width="1" fill="none"/>
+            </svg>
+          </span>
+        </a>
+      {%- endif -%}
+    </header>
+
+    {%- if image_blocks > 0 -%}
+
+      <div class="sm-look__grid sm-look__grid--editorial">
+        {%- assign tile_index = 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.settings.image != blank -%}
-            <figure class="lookbook__shot" {{ block.shopify_attributes }}>
-              {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', sizes: '(min-width:768px) 25vw, 50vw', widths: '400,700' }}
-              {%- if block.settings.caption != blank -%}<figcaption>{{ block.settings.caption }}</figcaption>{%- endif -%}
+            {%- assign tile_index = tile_index | plus: 1 -%}
+            {%- assign mod4 = tile_index | modulo: 7 -%}
+
+            {%- if mod4 == 1 -%}
+              {%- assign size_class = 'sm-look__tile--tall' -%}
+            {%- elsif mod4 == 2 -%}
+              {%- assign size_class = 'sm-look__tile--wide' -%}
+            {%- elsif mod4 == 4 -%}
+              {%- assign size_class = 'sm-look__tile--tall' -%}
+            {%- elsif mod4 == 6 -%}
+              {%- assign size_class = 'sm-look__tile--wide' -%}
+            {%- else -%}
+              {%- assign size_class = '' -%}
+            {%- endif -%}
+
+            <figure
+              class="sm-look__tile {{ size_class }} sm-look__reveal"
+              style="--sm-look-tile-delay: {{ tile_index | times: 80 }}ms"
+              {{ block.shopify_attributes }}
+            >
+              <div class="sm-look__tile-media">
+                {{
+                  block.settings.image
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'sm-look__tile-img',
+                    sizes: '(min-width: 1200px) 40vw, (min-width: 768px) 50vw, 90vw',
+                    widths: '400,600,800,1000,1200'
+                }}
+                <div class="sm-look__tile-overlay" aria-hidden="true"></div>
+              </div>
+              {%- if block.settings.caption != blank -%}
+                <figcaption class="sm-look__tile-caption">
+                  <span class="sm-look__tile-caption-inner">{{ block.settings.caption }}</span>
+                </figcaption>
+              {%- endif -%}
             </figure>
+
           {%- endif -%}
         {%- endfor -%}
-      {%- else -%}
-        {%- for product in collection.products limit: 4 -%}
-          <a href="{{ product.url }}" class="lookbook__shot">
-            {%- if product.featured_image -%}
-              <img src="{{ product.featured_image | image_url: width: 700 }}" alt="{{ product.title | escape }}" loading="lazy">
+      </div>
+
+    {%- elsif fallback_products != nil -%}
+
+      <div class="sm-look__grid sm-look__grid--shoppable">
+        {%- assign p_index = 0 -%}
+        {%- for product in fallback_products -%}
+          {%- if product.featured_image != blank -%}
+            {%- assign p_index = p_index | plus: 1 -%}
+            {%- assign pmod = p_index | modulo: 7 -%}
+
+            {%- if pmod == 1 -%}
+              {%- assign p_size = 'sm-look__tile--tall' -%}
+            {%- elsif pmod == 2 -%}
+              {%- assign p_size = 'sm-look__tile--wide' -%}
+            {%- elsif pmod == 4 -%}
+              {%- assign p_size = 'sm-look__tile--tall' -%}
+            {%- else -%}
+              {%- assign p_size = '' -%}
             {%- endif -%}
-            <figcaption>{{ product.title }}</figcaption>
-          </a>
+
+            <a
+              href="{{ product.url }}"
+              class="sm-look__tile sm-look__tile--linked {{ p_size }} sm-look__reveal"
+              style="--sm-look-tile-delay: {{ p_index | times: 80 }}ms"
+              aria-label="{{ product.title | escape }}"
+            >
+              <div class="sm-look__tile-media">
+                {{
+                  product.featured_image
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'sm-look__tile-img',
+                    alt: product.title,
+                    sizes: '(min-width: 1200px) 40vw, (min-width: 768px) 50vw, 90vw',
+                    widths: '400,600,800,1000,1200'
+                }}
+                <div class="sm-look__tile-overlay" aria-hidden="true"></div>
+              </div>
+              <span class="sm-look__tile-caption">
+                <span class="sm-look__tile-caption-inner">
+                  <span class="sm-look__tile-product-title">{{ product.title }}</span>
+                  <span class="sm-look__tile-product-price">{{ product.price | money }}</span>
+                </span>
+              </span>
+            </a>
+
+          {%- endif -%}
         {%- endfor -%}
-      {%- endif -%}
-    </div>
-  </section>
+      </div>
+
+    {%- endif -%}
+
+  </div>
+</section>
 {%- endif -%}
+
+{% stylesheet %}
+/* ─── Lookbook section ─────────────────────────────────────────────────────── */
+.sm-look {
+  background: var(--sm-look-bone);
+  padding: 5rem 0 6rem;
+  overflow: hidden;
+}
+
+/* Header */
+.sm-look__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 3.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--sm-look-line);
+  flex-wrap: wrap;
+}
+
+.sm-look__eyebrow {
+  display: block;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sm-look-stone);
+  margin-bottom: 0.75rem;
+}
+
+.sm-look__heading {
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--sm-look-ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sm-look__journal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sm-look-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  padding-bottom: 0.125rem;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.3s ease, gap 0.3s ease;
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.sm-look__journal-link:hover {
+  color: var(--sm-look-ember);
+  gap: 1.25rem;
+}
+
+.sm-look__journal-link-arrow {
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.sm-look__journal-link:hover .sm-look__journal-link-arrow {
+  transform: translateX(4px);
+}
+
+/* ─── Asymmetric grid ────────────────────────────────────────────────────── */
+.sm-look__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 56vw;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .sm-look__grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 38vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sm-look__grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 28vw;
+    gap: 0.625rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .sm-look__grid {
+    grid-auto-rows: 400px;
+  }
+}
+
+/* Tile base */
+.sm-look__tile {
+  position: relative;
+  overflow: hidden;
+  background: var(--sm-look-sand);
+  display: block;
+  text-decoration: none;
+  cursor: default;
+}
+
+.sm-look__tile--linked {
+  cursor: pointer;
+}
+
+/* Size variants */
+.sm-look__tile--tall {
+  grid-row: span 2;
+}
+
+.sm-look__tile--wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 639px) {
+  .sm-look__tile--wide {
+    grid-column: span 1;
+  }
+}
+
+/* Media container */
+.sm-look__tile-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.sm-look__tile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.1, 1);
+  will-change: transform;
+}
+
+.sm-look__tile:hover .sm-look__tile-img {
+  transform: scale(1.06);
+}
+
+/* Gradient overlay */
+.sm-look__tile-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(22, 19, 15, 0.72) 0%,
+    rgba(22, 19, 15, 0.18) 40%,
+    rgba(22, 19, 15, 0) 65%
+  );
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+.sm-look__tile:hover .sm-look__tile-overlay {
+  opacity: 1;
+}
+
+/* Caption */
+.sm-look__tile-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 1.25rem 1.25rem;
+  display: flex;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.sm-look__tile-caption-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transform: translateY(0.75rem);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+  transition-delay: 0.05s;
+}
+
+.sm-look__tile:hover .sm-look__tile-caption-inner {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--sm-look-bone);
+  text-transform: uppercase;
+}
+
+.sm-look__tile-product-title {
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-size: 1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--sm-look-bone);
+  line-height: 1.2;
+}
+
+.sm-look__tile-product-price {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(246, 242, 234, 0.7);
+  text-transform: uppercase;
+}
+
+/* Shoppable tile — underline effect on title */
+.sm-look__tile--linked .sm-look__tile-product-title {
+  display: inline;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s ease 0.15s;
+}
+
+.sm-look__tile--linked:hover .sm-look__tile-product-title {
+  background-size: 100% 1px;
+}
+
+/* ─── Scroll reveal ─────────────────────────────────────────────────────── */
+.sm-look__reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity 0.7s ease var(--sm-look-tile-delay, 0ms),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--sm-look-tile-delay, 0ms);
+}
+
+.sm-look__reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sm-look__reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .sm-look__tile-img {
+    transition: none;
+  }
+
+  .sm-look__tile-caption-inner {
+    transform: translateY(0);
+    opacity: 1;
+    transition: none;
+  }
+
+  .sm-look__tile-overlay {
+    opacity: 0.5;
+    transition: none;
+  }
+
+  .sm-look__journal-link {
+    transition: none;
+  }
+
+  .sm-look__journal-link-arrow {
+    transition: none;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function revealItems() {
+    var items = document.querySelectorAll('.sm-look__reveal:not(.is-visible)');
+    if (!items.length) return;
+
+    if (prefersReduced) {
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.add('is-visible');
+      }
+      return;
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+      );
+
+      for (var j = 0; j < items.length; j++) {
+        io.observe(items[j]);
+      }
+    } else {
+      for (var k = 0; k < items.length; k++) {
+        items[k].classList.add('is-visible');
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', revealItems);
+  } else {
+    revealItems();
+  }
+})();
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Lookbook",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Editorial" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "The Lookbook" },
-    { "type": "text", "id": "link_label", "label": "Link label", "default": "Read the journal" },
-    { "type": "url", "id": "link_url", "label": "Link" },
-    { "type": "collection", "id": "collection", "label": "Fallback collection", "info": "Used when no shot images are added" }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Editorial"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Lookbook"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Read the journal"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Fallback collection",
+      "info": "When no shot images are set, the first products' images become shoppable tiles."
+    }
   ],
   "blocks": [
     {
       "type": "shot",
       "name": "Shot",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "caption", "label": "Caption", "default": "Morning, unbothered" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        }
       ]
     }
   ],
@@ -74,6 +561,7 @@
         { "type": "shot", "settings": { "caption": "04 — After hours" } }
       ]
     }
-  ]
+  ],
+  "max_blocks": 12
 }
 {% endschema %}

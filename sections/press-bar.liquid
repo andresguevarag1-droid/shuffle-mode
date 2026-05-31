@@ -1,0 +1,603 @@
+{% assign bg_color = section.settings.background == 'sand' ? 'var(--color-sand)' : 'var(--color-bone)' %}
+
+<section
+  class="sm-proof"
+  style="--sm-proof-bg: {{ bg_color }};"
+  data-section-id="{{ section.id }}"
+  aria-labelledby="sm-proof-heading-{{ section.id }}"
+>
+  <div class="container sm-proof__inner">
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="sm-proof__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="sm-proof__heading" id="sm-proof-heading-{{ section.id }}">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    {%- assign stat_blocks = section.blocks | where: 'type', 'stat' -%}
+    {%- if stat_blocks.size > 0 -%}
+      <div
+        class="sm-proof__stats"
+        role="list"
+        aria-label="Key statistics"
+        data-stat-group
+      >
+        {%- for block in stat_blocks -%}
+          <div
+            class="sm-proof__stat"
+            role="listitem"
+            {{ block.shopify_attributes }}
+          >
+            <div class="sm-proof__stat-number" aria-live="polite">
+              {%- if block.settings.prefix != blank -%}
+                <span class="sm-proof__stat-prefix">{{ block.settings.prefix }}</span>
+              {%- endif -%}
+              <span
+                class="sm-proof__stat-value"
+                data-target="{{ block.settings.value | strip }}"
+                data-prefix="{{ block.settings.prefix }}"
+                data-suffix="{{ block.settings.suffix }}"
+                aria-label="{{ block.settings.prefix }}{{ block.settings.value }}{{ block.settings.suffix }}"
+              >{{ block.settings.value }}</span>
+              {%- if block.settings.suffix != blank -%}
+                <span class="sm-proof__stat-suffix">{{ block.settings.suffix }}</span>
+              {%- endif -%}
+            </div>
+            {%- if block.settings.label != blank -%}
+              <p class="sm-proof__stat-label">{{ block.settings.label }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- assign press_blocks = section.blocks | where: 'type', 'press' -%}
+    {%- if press_blocks.size > 0 -%}
+      <div class="sm-proof__press-wrap">
+        {%- if section.settings.press_eyebrow != blank -%}
+          <p class="sm-proof__press-label">{{ section.settings.press_eyebrow }}</p>
+        {%- endif -%}
+        <div
+          class="sm-proof__press-row"
+          role="list"
+          aria-label="As seen in"
+        >
+          {%- for block in press_blocks -%}
+            <div
+              class="sm-proof__press-item"
+              role="listitem"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.logo != blank -%}
+                <div class="sm-proof__press-logo-wrap">
+                  {{
+                    block.settings.logo
+                    | image_url: width: 240
+                    | image_tag:
+                      class: 'sm-proof__press-logo',
+                      alt: block.settings.name | escape,
+                      loading: 'lazy',
+                      widths: '120, 160, 240'
+                  }}
+                </div>
+              {%- else -%}
+                <span
+                  class="sm-proof__press-wordmark"
+                  aria-label="{{ block.settings.name | escape }}"
+                >{{ block.settings.name }}</span>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% stylesheet %}
+.sm-proof {
+  background-color: var(--sm-proof-bg, var(--color-bone));
+  padding: 72px 0 80px;
+  overflow: hidden;
+}
+
+.sm-proof__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Eyebrow ── */
+.sm-proof__eyebrow {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+/* ── Heading ── */
+.sm-proof__heading {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink);
+  text-align: center;
+  margin: 0 0 56px;
+  max-width: 560px;
+  line-height: 1.25;
+}
+
+/* ── Stat grid ── */
+.sm-proof__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 64px;
+}
+
+@media (min-width: 640px) {
+  .sm-proof__stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+}
+
+.sm-proof__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  text-align: center;
+  position: relative;
+}
+
+.sm-proof__stat + .sm-proof__stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 48px;
+  background-color: var(--color-line);
+}
+
+@media (max-width: 639px) {
+  .sm-proof__stat:nth-child(even)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 48px;
+    background-color: var(--color-line);
+  }
+  .sm-proof__stat:nth-child(odd)::before {
+    content: none;
+  }
+}
+
+.sm-proof__stat-number {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 300;
+  color: var(--color-ember);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.sm-proof__stat-prefix {
+  font-size: 0.45em;
+  font-weight: 400;
+  align-self: flex-start;
+  margin-top: 0.2em;
+  color: var(--color-ember);
+}
+
+.sm-proof__stat-suffix {
+  font-size: 0.5em;
+  font-weight: 400;
+  align-self: flex-start;
+  margin-top: 0.15em;
+  color: var(--color-ember);
+}
+
+.sm-proof__stat-value {
+  display: inline-block;
+}
+
+.sm-proof__stat-label {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin: 0;
+  line-height: 1.4;
+  max-width: 100px;
+  text-align: center;
+}
+
+/* ── Press divider ── */
+.sm-proof__press-wrap {
+  width: 100%;
+  border-top: 1px solid var(--color-line);
+  padding-top: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.sm-proof__press-label {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  opacity: 0.6;
+  margin: 0;
+  text-align: center;
+}
+
+.sm-proof__press-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 32px 48px;
+  width: 100%;
+  max-width: 900px;
+}
+
+@media (min-width: 768px) {
+  .sm-proof__press-row {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0;
+  }
+}
+
+.sm-proof__press-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+  flex: 0 0 auto;
+}
+
+@media (hover: hover) {
+  .sm-proof__press-item:hover {
+    opacity: 0.65;
+  }
+}
+
+.sm-proof__press-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+}
+
+.sm-proof__press-logo {
+  height: 28px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  display: block;
+  filter: grayscale(1) contrast(1.2);
+}
+
+.sm-proof__press-wordmark {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  white-space: nowrap;
+  display: block;
+}
+
+/* ── Count-up animation state ── */
+.sm-proof__stat[data-counted="false"] .sm-proof__stat-value {
+  opacity: 0;
+}
+
+.sm-proof__stat[data-counted="true"] .sm-proof__stat-value {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  function parseNumeric(str) {
+    return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
+  }
+
+  function isFloat(str) {
+    return /\./.test(str.replace(/[^0-9.]/g, ''));
+  }
+
+  function formatValue(current, targetStr) {
+    var hasDecimal = isFloat(targetStr);
+    if (hasDecimal) {
+      return current.toFixed(1);
+    }
+    return Math.round(current).toLocaleString();
+  }
+
+  function animateStat(el, duration) {
+    var target = parseNumeric(el.dataset.target);
+    var start = null;
+    var startVal = 0;
+
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      var progress = Math.min((timestamp - start) / duration, 1);
+      // ease-out cubic
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = startVal + (target - startVal) * eased;
+      el.textContent = formatValue(current, el.dataset.target);
+      el.parentElement.parentElement.dataset.counted = 'true';
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = formatValue(target, el.dataset.target);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  function initCounters(sectionEl) {
+    var prefersReduced = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var statEls = sectionEl.querySelectorAll('.sm-proof__stat-value[data-target]');
+    if (!statEls.length) return;
+
+    // Mark all as not yet counted
+    statEls.forEach(function (el) {
+      el.parentElement.parentElement.dataset.counted = 'false';
+    });
+
+    if (prefersReduced) {
+      statEls.forEach(function (el) {
+        var target = parseNumeric(el.dataset.target);
+        el.textContent = formatValue(target, el.dataset.target);
+        el.parentElement.parentElement.dataset.counted = 'true';
+      });
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: just show values
+      statEls.forEach(function (el) {
+        var target = parseNumeric(el.dataset.target);
+        el.textContent = formatValue(target, el.dataset.target);
+        el.parentElement.parentElement.dataset.counted = 'true';
+      });
+      return;
+    }
+
+    var observed = new Set();
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            if (!observed.has(el)) {
+              observed.add(el);
+              animateStat(el, 1800);
+              observer.unobserve(el);
+            }
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    statEls.forEach(function (el) {
+      observer.observe(el);
+    });
+  }
+
+  function init() {
+    var sections = document.querySelectorAll('.sm-proof[data-section-id]');
+    sections.forEach(function (sec) {
+      initCounters(sec);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // Shopify theme editor re-init on section load
+  document.addEventListener('shopify:section:load', function (e) {
+    var sec = e.target.querySelector('.sm-proof[data-section-id]');
+    if (sec) initCounters(sec);
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Press Bar",
+  "tag": "section",
+  "class": "sm-proof-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Loved, worn, talked about"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join thousands who dress for the mood"
+    },
+    {
+      "type": "text",
+      "id": "press_eyebrow",
+      "label": "Press row label",
+      "default": "As seen in"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "bone", "label": "Bone" },
+        { "value": "sand", "label": "Sand" }
+      ],
+      "default": "bone"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Number value",
+          "default": "10000",
+          "info": "Digits only (e.g. 50000, 4.9, 48). Formatted automatically."
+        },
+        {
+          "type": "text",
+          "id": "prefix",
+          "label": "Prefix (optional)",
+          "placeholder": "$"
+        },
+        {
+          "type": "text",
+          "id": "suffix",
+          "label": "Suffix (optional)",
+          "placeholder": "+ or ★ or h"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "happy customers"
+        }
+      ]
+    },
+    {
+      "type": "press",
+      "name": "Press feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Publication name",
+          "default": "VOGUE",
+          "info": "Shown as a styled wordmark if no logo is uploaded."
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo image (optional)",
+          "info": "Upload a grayscale SVG or PNG with transparent background. Recommended height: 40px."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Press Bar",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "value": "50000",
+            "suffix": "+",
+            "label": "mood-dressers"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "4.9",
+            "suffix": "★",
+            "label": "avg rating"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "48",
+            "suffix": "h",
+            "label": "sold out in"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "12",
+            "suffix": "+",
+            "label": "drops & counting"
+          }
+        },
+        {
+          "type": "press",
+          "settings": {
+            "name": "VOGUE"
+          }
+        },
+        {
+          "type": "press",
+          "settings": {
+            "name": "ELLE"
+          }
+        },
+        {
+          "type": "press",
+          "settings": {
+            "name": "REFINERY29"
+          }
+        },
+        {
+          "type": "press",
+          "settings": {
+            "name": "WHO WHAT WEAR"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

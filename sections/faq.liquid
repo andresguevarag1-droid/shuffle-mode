@@ -1,0 +1,559 @@
+{% stylesheet %}
+  .sm-faq {
+    background-color: var(--color-cream);
+    padding: var(--sm-faq-padding-y, 80px) 0;
+  }
+
+  .sm-faq__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  /* ── LEFT COLUMN ── */
+  .sm-faq__lead {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .sm-faq__eyebrow {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+  }
+
+  .sm-faq__heading {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .sm-faq__subheading {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--color-stone);
+    max-width: 34ch;
+    margin: 0;
+  }
+
+  .sm-faq__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--color-ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-ink);
+    padding-bottom: 2px;
+    width: fit-content;
+    margin-top: 4px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .sm-faq__cta:hover {
+    color: var(--color-ember);
+    border-color: var(--color-ember);
+  }
+
+  .sm-faq__cta-arrow {
+    display: inline-block;
+    font-size: 16px;
+    transition: transform 0.2s ease;
+  }
+
+  .sm-faq__cta:hover .sm-faq__cta-arrow {
+    transform: translateX(3px);
+  }
+
+  /* ── RIGHT COLUMN / ACCORDION ── */
+  .sm-faq__list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .sm-faq__item {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .sm-faq__summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-ink);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .sm-faq__summary::-webkit-details-marker,
+  .sm-faq__summary::marker {
+    display: none;
+    content: '';
+  }
+
+  .sm-faq__summary:focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .sm-faq__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    color: var(--color-stone);
+    transition: color 0.2s ease;
+  }
+
+  .sm-faq__icon::before,
+  .sm-faq__icon::after {
+    content: '';
+    position: absolute;
+    background-color: currentColor;
+    border-radius: 1px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .sm-faq__icon::before {
+    width: 14px;
+    height: 1.5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .sm-faq__icon::after {
+    width: 1.5px;
+    height: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .sm-faq__item[open] .sm-faq__icon {
+    color: var(--color-ember);
+  }
+
+  .sm-faq__item[open] .sm-faq__icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    opacity: 0;
+  }
+
+  /* Answer body */
+  .sm-faq__body {
+    overflow: hidden;
+  }
+
+  .sm-faq__body-inner {
+    padding: 0 0 24px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--color-stone);
+  }
+
+  .sm-faq__body-inner p {
+    margin: 0 0 12px;
+  }
+
+  .sm-faq__body-inner p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sm-faq__body-inner a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sm-faq__body-inner a:hover {
+    color: var(--color-ember);
+  }
+
+  .sm-faq__body-inner strong {
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+
+  /* Smooth animation — JS-driven */
+  .sm-faq__body[data-animating] {
+    transition: height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sm-faq__body[data-animating] {
+      transition: none;
+    }
+
+    .sm-faq__icon::before,
+    .sm-faq__icon::after,
+    .sm-faq__cta-arrow,
+    .sm-faq__cta {
+      transition: none;
+    }
+
+    .sm-faq__item[open] .sm-faq__icon::after {
+      transition: none;
+    }
+  }
+
+  /* ── DESKTOP ── */
+  @media (min-width: 900px) {
+    .sm-faq {
+      padding: var(--sm-faq-padding-y-desk, 120px) 0;
+    }
+
+    .sm-faq__inner {
+      grid-template-columns: 1fr 1.55fr;
+      gap: 80px;
+    }
+
+    .sm-faq__lead {
+      position: sticky;
+      top: 120px;
+    }
+
+    .sm-faq__summary {
+      font-size: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{%- liquid
+  assign section_bg    = section.settings.background_color
+  assign eyebrow       = section.settings.eyebrow
+  assign heading       = section.settings.heading
+  assign subheading    = section.settings.subheading
+  assign cta_label     = section.settings.cta_label
+  assign cta_url       = section.settings.cta_url
+  assign padding_y     = section.settings.padding_y
+  assign padding_y_d   = section.settings.padding_y_desktop
+-%}
+
+<section
+  class="sm-faq"
+  id="sm-faq-{{ section.id }}"
+  style="
+    --sm-faq-padding-y: {{ padding_y }}px;
+    --sm-faq-padding-y-desk: {{ padding_y_d }}px;
+    background-color: {{ section_bg }};
+  "
+  aria-label="{{ heading | escape }}"
+>
+  <div class="container">
+    <div class="sm-faq__inner">
+
+      {%- comment -%} LEFT: sticky lead column {%- endcomment -%}
+      <div class="sm-faq__lead">
+        {%- if eyebrow != blank -%}
+          <p class="sm-faq__eyebrow" aria-hidden="true">{{ eyebrow | escape }}</p>
+        {%- endif -%}
+
+        <h2 class="sm-faq__heading">{{ heading | escape }}</h2>
+
+        {%- if subheading != blank -%}
+          <p class="sm-faq__subheading">{{ subheading | escape }}</p>
+        {%- endif -%}
+
+        {%- if cta_label != blank and cta_url != blank -%}
+          <a class="sm-faq__cta" href="{{ cta_url | escape }}">
+            {{- cta_label | escape -}}
+            <span class="sm-faq__cta-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} RIGHT: accordion list {%- endcomment -%}
+      <div class="sm-faq__list" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'item' -%}
+            <details
+              class="sm-faq__item"
+              role="listitem"
+              {{ block.shopify_attributes }}
+            >
+              <summary class="sm-faq__summary">
+                <span>{{ block.settings.question | escape }}</span>
+                <span class="sm-faq__icon" aria-hidden="true"></span>
+              </summary>
+              <div class="sm-faq__body" hidden>
+                <div class="sm-faq__body-inner">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% javascript %}
+  (function () {
+    'use strict';
+
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function initFAQ(sectionEl) {
+      var items = Array.prototype.slice.call(
+        sectionEl.querySelectorAll('.sm-faq__item')
+      );
+
+      items.forEach(function (details) {
+        var summary = details.querySelector('.sm-faq__summary');
+        var body    = details.querySelector('.sm-faq__body');
+
+        /* Sync hidden attr with open state on first paint */
+        if (details.open) {
+          body.removeAttribute('hidden');
+        }
+
+        summary.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          if (details.open) {
+            collapse(details, body);
+          } else {
+            /* Single-open: close all siblings first */
+            items.forEach(function (sibling) {
+              if (sibling !== details && sibling.open) {
+                collapse(sibling, sibling.querySelector('.sm-faq__body'));
+              }
+            });
+            expand(details, body);
+          }
+        });
+      });
+    }
+
+    function expand(details, body) {
+      body.removeAttribute('hidden');
+      var targetH = body.scrollHeight;
+
+      if (prefersReduced) {
+        details.setAttribute('open', '');
+        body.style.height = '';
+        return;
+      }
+
+      body.style.height = '0px';
+      body.setAttribute('data-animating', '');
+      details.setAttribute('open', '');
+
+      /* rAF ensures height:0 is painted before transition starts */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          body.style.height = targetH + 'px';
+        });
+      });
+
+      body.addEventListener('transitionend', function onEnd() {
+        body.removeAttribute('data-animating');
+        body.style.height = '';
+        body.removeEventListener('transitionend', onEnd);
+      });
+    }
+
+    function collapse(details, body) {
+      if (prefersReduced) {
+        details.removeAttribute('open');
+        body.setAttribute('hidden', '');
+        body.style.height = '';
+        return;
+      }
+
+      body.style.height = body.scrollHeight + 'px';
+      body.setAttribute('data-animating', '');
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          body.style.height = '0px';
+        });
+      });
+
+      body.addEventListener('transitionend', function onEnd() {
+        details.removeAttribute('open');
+        body.setAttribute('hidden', '');
+        body.removeAttribute('data-animating');
+        body.style.height = '';
+        body.removeEventListener('transitionend', onEnd);
+      });
+    }
+
+    /* Init on page load */
+    document.querySelectorAll('[id^="sm-faq-"]').forEach(initFAQ);
+
+    /* Re-init on Shopify section:load (theme editor) */
+    document.addEventListener('shopify:section:load', function (e) {
+      var el = e.target.querySelector('[id^="sm-faq-"]');
+      if (el) initFAQ(el);
+    });
+
+    /* Re-init on block:select (theme editor highlight) */
+    document.addEventListener('shopify:block:select', function (e) {
+      var block = e.target;
+      if (!block.classList.contains('sm-faq__item')) return;
+      var sectionEl = block.closest('[id^="sm-faq-"]');
+      if (sectionEl) {
+        var body = block.querySelector('.sm-faq__body');
+        if (!block.open) expand(block, body);
+      }
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "sm-faq-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Good to know"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everything you need to know"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Supporting line",
+      "default": "We keep things simple, transparent, and yours."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Contact CTA label",
+      "default": "Still have questions? Reach us"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Contact CTA URL"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fbf9f4"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Section padding (mobile)",
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_y_desktop",
+      "label": "Section padding (desktop)",
+      "min": 60,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Your question here"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Your answer here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "question": "How does sizing and fit run?",
+            "answer": "<p>Our pieces are designed with an intentional, relaxed silhouette — we generally recommend sizing down if you prefer a more fitted look. Each product page includes a detailed size guide with exact measurements, plus notes from the designer on how that specific garment is cut.</p><p>Still unsure? Our fit notes are written by real humans who've worn the pieces. If you're between sizes, reach out — we're happy to help you choose.</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "question": "When do new drops launch?",
+            "answer": "<p>New collections drop every <strong>Thursday at 10 AM EST</strong> — small, intentional, and gone when they're gone. Sign up for our SMS or email list to get early access 24 hours before the public drop goes live.</p><p>Each drop is announced with full editorial imagery and styling notes so you can decide with confidence before it sells out.</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "question": "Do you restock sold-out pieces?",
+            "answer": "<p>Rarely — and that's intentional. Shuffle Mode runs on limited quantities to keep things special. Once a piece sells out, it typically doesn't return in the same form.</p><p>That said, we do occasionally revisit archive favourites in new colourways or fabrics. Join the waitlist on a sold-out product page and you'll be the first to know if it makes a comeback.</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "question": "What are your shipping options?",
+            "answer": "<p>Standard shipping is <strong>free on orders over $150</strong>. Orders under that ship at a flat rate of $8. Express options are available at checkout.</p><p>Orders placed before 12 PM EST on weekdays typically ship the same day. You'll receive a tracking link as soon as your order leaves our hands — usually within 24 hours.</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "question": "What is your return and exchange policy?",
+            "answer": "<p>We offer <strong>free returns and exchanges within 30 days</strong> of delivery — no questions asked, no restocking fees. Items must be unworn, unwashed, and in original condition with tags attached.</p><p>To start a return or swap for a different size, visit our returns portal or email us directly. Exchanges ship out within 1–2 business days of us receiving your original item.</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "question": "What materials do you use, and how should I care for them?",
+            "answer": "<p>We work with natural and low-impact fabrics — linen, Tencel, deadstock cotton, and responsibly sourced silk blends. Every fibre choice is deliberate: breathable, beautiful, and made to last.</p><p>Care instructions are printed inside each garment and listed on every product page. Most pieces do best with a <strong>cold gentle machine wash or hand wash</strong> and a low-heat or air dry. Treat them well and they'll only get better with time.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
