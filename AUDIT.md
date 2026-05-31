@@ -98,6 +98,12 @@ replacing `.editorial-frame` blocks with `next/image`.
 
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4.
 - **Now mock-data driven** (`src/lib/content.ts`) so it runs with no backend.
+- **Routes (implemented):** `/` (homepage), `/shop` (full drop catalog), and
+  `/product/[slug]` (statically generated per piece via `generateStaticParams`,
+  with per-product `generateMetadata` and a styled `not-found`). The shared
+  chrome (announcement, header, footer) now lives in the root `layout`, and the
+  catalog card is a reusable `ProductCard`. Every CTA points at a real route
+  instead of a placeholder anchor.
 
 Recommended follow-ups, in order:
 1. Pull the real 19 products + photography from the existing Shopify store
@@ -105,6 +111,8 @@ Recommended follow-ups, in order:
 2. Decide the path: **(a)** reskin Shopify with this design as a custom theme to
    keep the existing checkout/admin, or **(b)** run this Next.js front end
    headless against the Shopify Storefront API.
-3. Wire a real email provider for the drop list.
-4. Add `/shop`, `/product/[slug]`, `/journal/[slug]` routes (dynamic segments).
+3. Wire a real email provider for the drop list, and a real cart/checkout
+   behind the (currently mock) "Add to bag" flow on `/product/[slug]`.
+4. Add the `/journal/[slug]` route (the remaining dynamic segment) once
+   editorial content exists.
 5. Analytics + A/B test the hero CTA and the Shuffle interaction.

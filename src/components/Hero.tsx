@@ -1,3 +1,4 @@
+import Link from "next/link";
 import DropCountdown from "./DropCountdown";
 
 export default function Hero() {
@@ -20,12 +21,12 @@ export default function Hero() {
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <a
-              href="#shop"
+            <Link
+              href="/shop"
               className="inline-flex items-center justify-center rounded-full bg-ink px-7 py-3.5 text-cream hover:bg-ember transition-colors"
             >
               Shop the drop
-            </a>
+            </Link>
             <a
               href="#shuffle"
               className="inline-flex items-center gap-2 px-2 py-3.5 text-ink/80 hover:text-ink transition-colors"
