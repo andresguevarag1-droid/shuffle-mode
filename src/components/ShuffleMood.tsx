@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MOODS, PRODUCTS, formatPrice, productHref } from "@/lib/content";
+import { MOODS, formatPrice, productHref, type Product } from "@/lib/content";
 
-export default function ShuffleMood() {
+export default function ShuffleMood({ products }: { products: Product[] }) {
   const [index, setIndex] = useState(0);
   const [spinning, setSpinning] = useState(false);
 
   const mood = MOODS[index];
-  const look = PRODUCTS.filter((p) => p.mood === mood.id).slice(0, 2);
+  const look = products.filter((p) => p.mood === mood.id).slice(0, 2);
   // Fall back so every mood always shows two pieces.
-  const pieces = look.length >= 2 ? look : [...look, ...PRODUCTS].slice(0, 2);
+  const pieces = look.length >= 2 ? look : [...look, ...products].slice(0, 2);
 
   const shuffle = () => {
     if (spinning) return;
@@ -112,7 +112,7 @@ export default function ShuffleMood() {
                     }}
                   />
                   <p className="text-sm font-medium leading-tight">{p.name}</p>
-                  <p className="text-cream/70 text-sm">{formatPrice(p.price)}</p>
+                  <p className="text-cream/70 text-sm">{formatPrice(p.price, p.currencyCode)}</p>
                 </Link>
               ))}
             </div>

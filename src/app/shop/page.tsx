@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { PRODUCTS, DROP } from "@/lib/content";
+import { DROP } from "@/lib/content";
+import { getProducts } from "@/lib/shopify";
 import ProductCard from "@/components/ProductCard";
 
 export const metadata: Metadata = {
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     "Every piece in this week's Shuffle Mode drop. Limited quantities, no restocks — when it's gone, it's gone.",
 };
 
-export default function ShopPage() {
+export default async function ShopPage() {
+  const products = await getProducts();
+
   return (
     <section className="py-16 md:py-24">
       <div className="container-x">
@@ -34,7 +37,7 @@ export default function ShopPage() {
         </header>
 
         <div className="mt-12 grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
-          {PRODUCTS.map((p) => (
+          {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>

@@ -8,15 +8,20 @@ export type Mood = {
   palette: [string, string]; // gradient stops for the look card
 };
 
+export type ProductImage = { url: string; alt: string };
+
 export type Product = {
   id: string;
-  slug: string; // URL segment for /product/[slug]
+  slug: string; // URL segment for /product/[slug] (Shopify handle)
   name: string;
   category: string;
   price: number;
+  currencyCode?: string; // e.g. "USD" — defaults to USD for mock data
   mood: string; // references Mood.id
   badge?: string;
-  swatch: [string, string]; // placeholder gradient
+  swatch: [string, string]; // placeholder gradient (fallback when no image)
+  image?: ProductImage; // real product photo (Shopify), optional
+  images?: ProductImage[]; // gallery
   description: string; // editorial detail-page copy
   details: string[]; // fabric / fit / care bullets
   sizes: string[];
@@ -272,4 +277,12 @@ export const NAV = [
   { label: "About", href: "/#about" },
 ];
 
-export const formatPrice = (cents: number) => `$${cents}`;
+export const formatPrice = (amount: number, currencyCode = "USD") =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currencyCode,
+    // Whole-dollar prices render without trailing ".00"; anything with cents
+    // keeps two decimals.
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(amount);

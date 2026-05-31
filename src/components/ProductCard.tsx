@@ -1,18 +1,31 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Product, formatPrice, productHref } from "@/lib/content";
 
 // Shared catalog card used on the homepage drop grid and the /shop page.
-// The whole card is a link to the product detail route.
+// The whole card is a link to the product detail route. Renders the real
+// product photo when available (Shopify), falling back to the editorial
+// gradient placeholder used by the mock data.
 export default function ProductCard({ product: p }: { product: Product }) {
   return (
     <Link href={productHref(p)} className="group block">
-      <div className="editorial-frame relative aspect-[4/5] rounded-2xl">
-        <div
-          className="absolute inset-0 rounded-2xl opacity-90 transition-transform duration-500 group-hover:scale-[1.02]"
-          style={{
-            background: `linear-gradient(150deg, ${p.swatch[0]}, ${p.swatch[1]})`,
-          }}
-        />
+      <div className="editorial-frame relative aspect-[4/5] rounded-2xl overflow-hidden">
+        {p.image ? (
+          <Image
+            src={p.image.url}
+            alt={p.image.alt}
+            fill
+            sizes="(min-width: 1024px) 33vw, 50vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div
+            className="absolute inset-0 opacity-90 transition-transform duration-500 group-hover:scale-[1.02]"
+            style={{
+              background: `linear-gradient(150deg, ${p.swatch[0]}, ${p.swatch[1]})`,
+            }}
+          />
+        )}
         {p.badge && (
           <span className="absolute left-3 top-3 rounded-full bg-cream/90 px-3 py-1 text-[11px] uppercase tracking-wider text-ink">
             {p.badge}
@@ -29,7 +42,7 @@ export default function ProductCard({ product: p }: { product: Product }) {
           </h3>
           <p className="text-sm text-stone">{p.category}</p>
         </div>
-        <span className="font-display">{formatPrice(p.price)}</span>
+        <span className="font-display">{formatPrice(p.price, p.currencyCode)}</span>
       </div>
     </Link>
   );

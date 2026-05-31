@@ -7,9 +7,11 @@ import { formatPrice } from "@/lib/content";
 // surfaces the size requirement and confirms the (fake) add.
 export default function ProductPurchase({
   price,
+  currencyCode,
   sizes,
 }: {
   price: number;
+  currencyCode?: string;
   sizes: string[];
 }) {
   const [size, setSize] = useState<string | null>(null);
@@ -67,7 +69,7 @@ export default function ProductPurchase({
       >
         {added
           ? "Added to bag ✦"
-          : `Add to bag — ${formatPrice(price)}`}
+          : `Add to bag — ${formatPrice(price, currencyCode)}`}
       </button>
 
       <p className="mt-3 text-center text-sm text-stone">

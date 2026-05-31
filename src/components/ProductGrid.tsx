@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { PRODUCTS, DROP } from "@/lib/content";
+import { DROP, type Product } from "@/lib/content";
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid() {
+export default function ProductGrid({ products }: { products: Product[] }) {
   return (
     <section id="drop" className="py-20 md:py-28">
       <div className="container-x">
@@ -22,7 +22,7 @@ export default function ProductGrid() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
-          {PRODUCTS.map((p) => (
+          {products.slice(0, 6).map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
