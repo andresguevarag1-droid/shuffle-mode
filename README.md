@@ -71,8 +71,21 @@ fallback when a product has no image). Moods come from a matching product **tag*
 so the "Shuffle" feature keeps working. The Storefront response is revalidated
 hourly — see `next: { revalidate }` in `shopify.ts`.
 
-## Next steps
+## Production readiness
 
-Wire the remaining commerce pieces once the catalog is connected: a real cart /
-checkout behind the (currently mock) "Add to bag" flow, an email provider for
-the drop list, and move journal posts to a CMS. See `AUDIT.md` §5.
+Wired and ready (graceful fallback when env vars are unset):
+
+- **Checkout** — on a connected store, picking a size and "Add to bag" sends the
+  shopper to Shopify's hosted checkout via a cart permalink (real variants, with
+  sold-out states). Mock data keeps the demo confirmation.
+- **On-demand revalidation** — point a Shopify `products/*` webhook at
+  `POST /api/revalidate?secret=…` to refresh the cached catalog (`SHOPIFY_REVALIDATION_SECRET`).
+- **Newsletter** — the form posts to `POST /api/subscribe`, which validates and,
+  if `NEWSLETTER_WEBHOOK_URL` is set, forwards to your provider.
+- **SEO** — dynamic `sitemap.xml` (products + journal) and `robots.txt`, plus
+  `Product` and `Organization` JSON-LD. Set `NEXT_PUBLIC_SITE_URL`.
+- **Resilience & a11y** — `loading` / `error` / `global-error` boundaries,
+  keyboard skip-link, visible focus, `prefers-reduced-motion` support.
+
+Remaining follow-ups: a native multi-item cart (vs. the permalink hand-off),
+and moving journal posts to a CMS. See `AUDIT.md` §5.

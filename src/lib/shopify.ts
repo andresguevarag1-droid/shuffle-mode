@@ -10,6 +10,7 @@ import {
   MOODS,
   type Product,
   type ProductImage,
+  type ProductVariant,
 } from "./content";
 
 const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN;
@@ -32,8 +33,23 @@ const PRODUCT_FRAGMENT = /* GraphQL */ `
     images(first: 6) { nodes { url altText } }
     priceRange { minVariantPrice { amount currencyCode } }
     options { name values }
+    variants(first: 50) {
+      nodes {
+        id
+        title
+        availableForSale
+        selectedOptions { name value }
+      }
+    }
   }
 `;
+
+type ShopifyVariant = {
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  selectedOptions: { name: string; value: string }[];
+};
 
 type ShopifyProduct = {
   id: string;
@@ -46,6 +62,7 @@ type ShopifyProduct = {
   images: { nodes: { url: string; altText: string | null }[] };
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
   options: { name: string; values: string[] }[];
+  variants: { nodes: ShopifyVariant[] };
 };
 
 async function shopifyFetch<T>(
@@ -61,8 +78,8 @@ async function shopifyFetch<T>(
         "X-Shopify-Storefront-Access-Token": TOKEN as string,
       },
       body: JSON.stringify({ query, variables }),
-      // Revalidate the catalog hourly; tune or swap for on-demand revalidation.
-      next: { revalidate: 3600 },
+      // Revalidate hourly, or on-demand by tag via /api/revalidate (Shopify webhook).
+      next: { revalidate: 3600, tags: ["shopify-products"] },
     }
   );
 
@@ -101,9 +118,25 @@ function swatchFor(p: ShopifyProduct): [string, string] {
   return [`hsl(${h} 24% 78%)`, `hsl(${h} 22% 56%)`];
 }
 
-function sizesFor(p: ShopifyProduct): string[] {
-  const sizeOption = p.options.find((o) => /size/i.test(o.name));
-  return sizeOption?.values.length ? sizeOption.values : ["One size"];
+function sizeOf(v: ShopifyVariant): string {
+  const opt = v.selectedOptions.find((o) => /size/i.test(o.name));
+  return opt?.value || v.title;
+}
+
+// Shopify cart permalink — adds the variant to the cart and lands on the
+// hosted checkout. `gid://shopify/ProductVariant/123` → numeric id `123`.
+function buyUrl(variantGid: string): string {
+  const numericId = variantGid.split("/").pop();
+  return `https://${DOMAIN}/cart/${numericId}:1`;
+}
+
+function variantsFor(p: ShopifyProduct): ProductVariant[] {
+  return p.variants.nodes.map((v) => ({
+    id: v.id,
+    size: sizeOf(v),
+    available: v.availableForSale,
+    url: buyUrl(v.id),
+  }));
 }
 
 function img(node: { url: string; altText: string | null } | null, alt: string): ProductImage | undefined {
@@ -113,6 +146,8 @@ function img(node: { url: string; altText: string | null } | null, alt: string):
 function mapProduct(p: ShopifyProduct): Product {
   const featured = img(p.featuredImage, p.title);
   const gallery = p.images.nodes.map((n) => img(n, p.title)!).filter(Boolean);
+  const variants = variantsFor(p);
+  const sizes = variants.map((v) => v.size);
   return {
     id: p.id,
     slug: p.handle,
@@ -127,7 +162,8 @@ function mapProduct(p: ShopifyProduct): Product {
     images: gallery.length ? gallery : featured ? [featured] : undefined,
     description: p.description,
     details: [],
-    sizes: sizesFor(p),
+    sizes: sizes.length ? sizes : ["One size"],
+    variants,
   };
 }
 

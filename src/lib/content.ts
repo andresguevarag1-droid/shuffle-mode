@@ -10,6 +10,15 @@ export type Mood = {
 
 export type ProductImage = { url: string; alt: string };
 
+// A purchasable variant (Shopify). `url` is a ready-to-use Shopify cart/checkout
+// link for that variant — present only when the store is connected.
+export type ProductVariant = {
+  id: string;
+  size: string;
+  available: boolean;
+  url: string;
+};
+
 export type Product = {
   id: string;
   slug: string; // URL segment for /product/[slug] (Shopify handle)
@@ -25,6 +34,7 @@ export type Product = {
   description: string; // editorial detail-page copy
   details: string[]; // fabric / fit / care bullets
   sizes: string[];
+  variants?: ProductVariant[]; // purchasable variants (Shopify only)
 };
 
 // Every drop piece carries the same size run unless noted.

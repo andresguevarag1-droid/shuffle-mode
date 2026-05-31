@@ -61,6 +61,20 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bone text-ink">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Shuffle Mode",
+              url: siteUrl,
+              description:
+                "Limited weekly drops of elevated womenswear — dress for the mood, not the occasion.",
+              slogan: "Dress for the mood, not the occasion.",
+            }),
+          }}
+        />
         <a href="#main" className="skip-link">
           Skip to content
         </a>

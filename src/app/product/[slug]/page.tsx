@@ -45,8 +45,29 @@ export default async function ProductPage({ params }: Params) {
     .slice(0, 3);
   const gallery = product.images ?? (product.image ? [product.image] : []);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: gallery.map((g) => g.url),
+    category: product.category,
+    brand: { "@type": "Brand", name: "Shuffle Mode" },
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: product.currencyCode ?? "USD",
+      availability: "https://schema.org/InStock",
+      url: `https://shufflemode.us/product/${product.slug}`,
+    },
+  };
+
   return (
     <div className="py-10 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="container-x">
         <nav className="text-sm text-stone" aria-label="Breadcrumb">
           <Link href="/shop" className="hover:text-ink transition-colors">
@@ -124,6 +145,7 @@ export default async function ProductPage({ params }: Params) {
               price={product.price}
               currencyCode={product.currencyCode}
               sizes={product.sizes}
+              variants={product.variants}
             />
 
             {product.details.length > 0 && (
