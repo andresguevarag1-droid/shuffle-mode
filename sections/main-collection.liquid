@@ -8,26 +8,73 @@
   </header>
 
   {%- paginate collection.products by section.settings.products_per_page -%}
-    <div class="collection__toolbar">
-      <span class="card__cat">{{ collection.products_count }} pieces</span>
-      <form class="collection__sort" method="get">
+    <form class="collection__toolbar" data-filter-form>
+      <div class="collection__filters">
+        {%- if collection.filters.size > 0 -%}
+          {%- for filter in collection.filters -%}
+            <details class="facet">
+              <summary class="facet__summary">{{ filter.label }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</summary>
+              <div class="facet__panel">
+                {%- case filter.type -%}
+                  {%- when 'price_range' -%}
+                    <div class="facet__price">
+                      <label>Min <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | round }}"></label>
+                      <label>Max <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="{{ filter.range_max | money_without_currency | round }}" min="0" max="{{ filter.range_max | money_without_currency | round }}"></label>
+                    </div>
+                  {%- else -%}
+                    <ul class="facet__list">
+                      {%- for value in filter.values -%}
+                        <li>
+                          <label class="facet__opt{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                            <span>{{ value.label }} <em>({{ value.count }})</em></span>
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                {%- endcase -%}
+              </div>
+            </details>
+          {%- endfor -%}
+          <noscript><button type="submit" class="btn btn--outline input--sm">Apply</button></noscript>
+        {%- endif -%}
+      </div>
+
+      <div class="collection__controls">
+        <span class="card__cat">{{ collection.products_count }} pieces</span>
         <label class="visually-hidden" for="sort">Sort</label>
-        <select id="sort" name="sort_by" class="input input--sm" onchange="this.form.submit()">
-          {%- assign sort = collection.sort_by | default: collection.default_sort_by -%}
+        {%- assign sort = collection.sort_by | default: collection.default_sort_by -%}
+        <select id="sort" name="sort_by" class="input input--sm" data-auto-submit>
           <option value="manual" {% if sort == 'manual' %}selected{% endif %}>Featured</option>
           <option value="best-selling" {% if sort == 'best-selling' %}selected{% endif %}>Best selling</option>
           <option value="created-descending" {% if sort == 'created-descending' %}selected{% endif %}>Newest</option>
           <option value="price-ascending" {% if sort == 'price-ascending' %}selected{% endif %}>Price, low to high</option>
           <option value="price-descending" {% if sort == 'price-descending' %}selected{% endif %}>Price, high to low</option>
         </select>
-      </form>
-    </div>
+      </div>
+    </form>
+
+    {%- assign has_active = false -%}
+    {%- for filter in collection.filters -%}{%- if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value -%}{%- assign has_active = true -%}{%- endif -%}{%- endfor -%}
+    {%- if has_active -%}
+      <div class="active-filters">
+        {%- for filter in collection.filters -%}
+          {%- for value in filter.active_values -%}
+            <a class="chip-remove" href="{{ value.url_to_remove }}">{{ value.label }} ✕</a>
+          {%- endfor -%}
+          {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}
+            <a class="chip-remove" href="{{ filter.url_to_remove }}">{{ filter.label }} ✕</a>
+          {%- endif -%}
+        {%- endfor -%}
+        <a class="chip-remove chip-remove--clear" href="{{ collection.url }}">Clear all</a>
+      </div>
+    {%- endif -%}
 
     <div class="product-grid product-grid--4">
       {%- for product in collection.products -%}
         {% render 'product-card', product: product %}
       {%- else -%}
-        <p>No products in this collection yet.</p>
+        <p class="collection__empty">No pieces match these filters. <a href="{{ collection.url }}">Clear filters</a></p>
       {%- endfor -%}
     </div>
 

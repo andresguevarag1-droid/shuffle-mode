@@ -7,34 +7,39 @@
     {%- if section.settings.menu != blank -%}
       <ul class="header__nav">
         {%- for link in section.settings.menu.links -%}
-          <li>
-            <a href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>{{ link.title }}</a>
-          </li>
+          <li><a href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>{{ link.title }}</a></li>
         {%- endfor -%}
       </ul>
     {%- endif -%}
 
     <div class="header__actions">
+      <button class="icon-btn" data-search-toggle aria-expanded="false" aria-label="Search">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+
       {%- if section.settings.cta_url != blank -%}
-        <a href="{{ section.settings.cta_url }}" class="btn btn--primary" style="padding:0.5rem 1.25rem;font-size:0.85rem;">
-          {{ section.settings.cta_label | default: 'Get on the list' }}
-        </a>
+        <a href="{{ section.settings.cta_url }}" class="btn btn--primary header__cta">{{ section.settings.cta_label | default: 'Get on the list' }}</a>
       {%- endif -%}
 
-      <a href="{{ routes.cart_url }}" class="icon-btn cart-count" aria-label="Cart">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M6 7h12l-1 13H7L6 7Z" /><path d="M9 7a3 3 0 0 1 6 0" />
-        </svg>
-        <span class="cart-count__badge" data-cart-count>{{ cart.item_count }}</span>
+      <a href="{{ routes.cart_url }}" class="icon-btn cart-count" data-cart-toggle aria-label="Cart ({{ cart.item_count }} items)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="cart-count__badge" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
 
       <button class="icon-btn header__menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
   </nav>
+
+  {%- comment -%} Search panel {%- endcomment -%}
+  <div class="header__search" data-search-panel hidden>
+    <form class="container" action="{{ routes.search_url }}" method="get" role="search">
+      <input type="search" name="q" value="{{ search.terms | escape }}" class="input header__search-input"
+        placeholder="{{ 'general.search.placeholder' | t }}" aria-label="Search" data-search-input>
+      <button type="submit" class="btn btn--primary">Search</button>
+    </form>
+  </div>
 
   {%- if section.settings.menu != blank -%}
     <div class="header__menu" data-menu hidden>

@@ -38,6 +38,10 @@
         {{ current_variant.price | money }}
       </p>
 
+      <p class="product__stock" data-stock {% unless current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 %}hidden{% endunless %}>
+        {%- if current_variant.inventory_quantity > 0 -%}Only {{ current_variant.inventory_quantity }} left{%- endif -%}
+      </p>
+
       {%- if product.description != blank -%}
         <div class="rte product__desc">{{ product.description }}</div>
       {%- endif -%}
@@ -66,10 +70,17 @@
 
         <p class="option__error" data-unavailable hidden>That combination is unavailable.</p>
 
-        <button type="submit" name="add" class="btn btn--primary btn--block btn--lg" data-add
-          {% unless current_variant.available %}disabled{% endunless %}>
-          <span data-add-text>{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}</span>
-        </button>
+        <div class="purchase-row">
+          <div class="qty" data-qty>
+            <button type="button" class="qty__btn" data-qty-minus aria-label="Decrease quantity">−</button>
+            <input class="qty__input" type="number" name="quantity" value="1" min="1" inputmode="numeric" aria-label="Quantity">
+            <button type="button" class="qty__btn" data-qty-plus aria-label="Increase quantity">+</button>
+          </div>
+          <button type="submit" name="add" class="btn btn--primary btn--lg purchase-row__add" data-add
+            {% unless current_variant.available %}disabled{% endunless %}>
+            <span data-add-text>{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}</span>
+          </button>
+        </div>
       {% endform %}
 
       <ul class="product__assurances">
@@ -82,7 +93,7 @@
         [
           {%- for v in product.variants -%}
             {%- if v.featured_image -%}{%- assign vimg = v.featured_image | image_url: width: 1100 -%}{%- elsif product.featured_image -%}{%- assign vimg = product.featured_image | image_url: width: 1100 -%}{%- else -%}{%- assign vimg = '' -%}{%- endif -%}
-            { "id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available }}, "price": {{ v.price | money | json }}, "image": {{ vimg | json }} }{%- unless forloop.last -%},{%- endunless -%}
+            { "id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available }}, "price": {{ v.price | money | json }}, "image": {{ vimg | json }}, "tracked": {{ v.inventory_management == 'shopify' }}, "inventory": {{ v.inventory_quantity | default: 0 }} }{%- unless forloop.last -%},{%- endunless -%}
           {%- endfor -%}
         ]
       </script>
@@ -109,6 +120,37 @@
     </section>
   {%- endif -%}
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 400 | json }},
+  "image": [{% for image in product.images limit: 8 %}"https:{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}{% endfor %}],
+  "sku": {{ current_variant.sku | default: product.id | json }},
+  "brand": { "@type": "Brand", "name": {{ product.vendor | default: shop.name | json }} },
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": {{ shop.currency | json }},
+    "lowPrice": {{ product.price_min | divided_by: 100.0 }},
+    "highPrice": {{ product.price_max | divided_by: 100.0 }},
+    "offerCount": {{ product.variants.size }},
+    "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "url": "{{ shop.url }}{{ product.url }}"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Shop", "item": "{{ shop.url }}{{ routes.all_products_collection_url }}" },
+    { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}" }
+  ]
+}
+</script>
 
 {% schema %}
 { "name": "Product", "settings": [] }

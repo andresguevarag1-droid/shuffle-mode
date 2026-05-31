@@ -16,9 +16,58 @@
       {{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &middot; {{ shop.name }}{% endunless %}
     </title>
 
-    {% if page_description %}
-      <meta name="description" content="{{ page_description | escape }}">
-    {% endif %}
+    {%- liquid
+      assign meta_desc = page_description | default: shop.description | default: shop.name
+      if template contains 'product'
+        assign share_image = product.featured_image
+      elsif template contains 'collection' and collection.featured_image
+        assign share_image = collection.featured_image
+      elsif template contains 'article' and article.image
+        assign share_image = article.image
+      endif
+      assign share_image = share_image | default: settings.share_image
+    -%}
+    <meta name="description" content="{{ meta_desc | escape }}">
+
+    {%- comment -%} Open Graph / Twitter (social share cards) {%- endcomment -%}
+    <meta property="og:site_name" content="{{ shop.name }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:title" content="{{ page_title | escape }}">
+    <meta property="og:type" content="{% if template contains 'product' %}product{% elsif template contains 'article' %}article{% else %}website{% endif %}">
+    <meta property="og:description" content="{{ meta_desc | escape }}">
+    {%- if share_image -%}
+      <meta property="og:image" content="https:{{ share_image | image_url: width: 1200 }}">
+      <meta property="og:image:width" content="1200">
+    {%- endif -%}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title | escape }}">
+    <meta name="twitter:description" content="{{ meta_desc | escape }}">
+    {%- if share_image -%}<meta name="twitter:image" content="https:{{ share_image | image_url: width: 1200 }}">{%- endif -%}
+
+    {%- comment -%} Sitewide structured data {%- endcomment -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": {{ shop.name | json }},
+        "url": {{ shop.url | append: '/' | json }},
+        "description": {{ shop.description | default: shop.name | json }}
+        {%- if settings.share_image %}, "logo": "https:{{ settings.share_image | image_url: width: 400 }}"{% endif -%}
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": {{ shop.name | json }},
+        "url": {{ shop.url | append: '/' | json }},
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {{ shop.url | append: '/search?q={search_term_string}' | json }},
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
 
     {{ content_for_header }}
 
@@ -50,6 +99,8 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {% render 'cart-drawer' %}
 
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
   </body>

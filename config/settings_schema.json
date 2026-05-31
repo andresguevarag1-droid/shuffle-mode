@@ -84,5 +84,33 @@
         "default": 1280
       }
     ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "free_shipping_bar",
+        "label": "Show free-shipping progress bar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold (in your currency, e.g. 150)",
+        "default": 150
+      }
+    ]
+  },
+  {
+    "name": "Social & SEO",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default social share image",
+        "info": "Used for link previews and as the Organization logo. 1200×630 recommended."
+      }
+    ]
   }
 ]
