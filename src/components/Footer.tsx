@@ -1,15 +1,36 @@
-const columns = [
+import Link from "next/link";
+
+type FooterLink = { label: string; href: string };
+
+const columns: { title: string; links: FooterLink[] }[] = [
   {
     title: "Shop",
-    links: ["This drop", "New arrivals", "Outerwear", "Knitwear", "Gift cards"],
+    links: [
+      { label: "This drop", href: "/#drop" },
+      { label: "Shop all", href: "/shop" },
+      { label: "Shuffle my mood", href: "/#shuffle" },
+      { label: "Lookbook", href: "/#lookbook" },
+      { label: "Gift cards", href: "#" },
+    ],
   },
   {
     title: "Help",
-    links: ["Shipping", "Returns", "Size guide", "Contact", "FAQ"],
+    links: [
+      { label: "Shipping", href: "#" },
+      { label: "Returns", href: "#" },
+      { label: "Size guide", href: "#" },
+      { label: "Contact", href: "#" },
+      { label: "FAQ", href: "#" },
+    ],
   },
   {
     title: "Shuffle Mode",
-    links: ["Our story", "Journal", "Sustainability", "Careers"],
+    links: [
+      { label: "Our story", href: "/#about" },
+      { label: "Journal", href: "/journal" },
+      { label: "Sustainability", href: "#" },
+      { label: "Careers", href: "#" },
+    ],
   },
 ];
 
@@ -43,10 +64,22 @@ export default function Footer() {
                 </h3>
                 <ul className="mt-4 space-y-2.5">
                   {col.links.map((l) => (
-                    <li key={l}>
-                      <a href="#" className="text-cream/80 hover:text-cream transition-colors">
-                        {l}
-                      </a>
+                    <li key={l.label}>
+                      {l.href.startsWith("/") ? (
+                        <Link
+                          href={l.href}
+                          className="text-cream/80 hover:text-cream transition-colors"
+                        >
+                          {l.label}
+                        </Link>
+                      ) : (
+                        <a
+                          href={l.href}
+                          className="text-cream/80 hover:text-cream transition-colors"
+                        >
+                          {l.label}
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>

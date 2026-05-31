@@ -1,19 +1,20 @@
+import Link from "next/link";
 import { LOOKBOOK } from "@/lib/content";
 
 export default function Lookbook() {
   return (
-    <section id="journal" className="py-20 md:py-28">
+    <section id="lookbook" className="py-20 md:py-28">
       <div className="container-x">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+        <div className="reveal flex flex-wrap items-end justify-between gap-4 mb-10">
           <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-tight">
             The Lookbook
           </h2>
-          <a
-            href="#journal"
+          <Link
+            href="/journal"
             className="text-sm text-stone hover:text-ink transition-colors"
           >
             Read the journal →
-          </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">

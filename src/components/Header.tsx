@@ -1,11 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/content";
+
+// Route links (not homepage hash anchors) get an active state on their page.
+function isActive(href: string, pathname: string) {
+  const route = href.split("#")[0];
+  if (!route || route === "/") return false;
+  return pathname === route || pathname.startsWith(route + "/");
+}
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -23,33 +33,41 @@ export default function Header() {
       }`}
     >
       <nav className="container-x flex items-center justify-between h-16 md:h-20">
-        <a
-          href="#top"
+        <Link
+          href="/"
           className="font-display text-lg md:text-xl font-semibold uppercase tracking-[0.22em]"
         >
           Shuffle Mode<span className="text-ember">.</span>
-        </a>
+        </Link>
 
         <ul className="hidden md:flex items-center gap-8 text-sm tracking-wide">
-          {NAV.map((item) => (
-            <li key={item.href}>
-              <a
-                href={item.href}
-                className="relative py-1 text-ink/80 hover:text-ink transition-colors after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-ember after:transition-all hover:after:w-full"
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
+          {NAV.map((item) => {
+            const active = isActive(item.href, pathname);
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`relative py-1 transition-colors after:absolute after:left-0 after:-bottom-0.5 after:h-px after:bg-ember after:transition-all hover:after:w-full ${
+                    active
+                      ? "text-ink after:w-full"
+                      : "text-ink/80 hover:text-ink after:w-0"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex items-center gap-4">
-          <a
-            href="#newsletter"
+          <Link
+            href="/#newsletter"
             className="hidden sm:inline-flex items-center rounded-full bg-ink px-5 py-2 text-sm text-cream hover:bg-ember transition-colors"
           >
             Get on the list
-          </a>
+          </Link>
           <button
             aria-label="Cart"
             className="relative text-ink/80 hover:text-ink transition-colors"
@@ -80,13 +98,13 @@ export default function Header() {
           <ul className="container-x flex flex-col py-4">
             {NAV.map((item) => (
               <li key={item.href}>
-                <a
+                <Link
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className="block py-3 text-lg font-display"
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

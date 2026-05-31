@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import Announcement from "@/components/Announcement";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -58,7 +61,29 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bone text-ink">
-        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Shuffle Mode",
+              url: siteUrl,
+              description:
+                "Limited weekly drops of elevated womenswear — dress for the mood, not the occasion.",
+              slogan: "Dress for the mood, not the occasion.",
+            }),
+          }}
+        />
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        <Announcement />
+        <Header />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

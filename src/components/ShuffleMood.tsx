@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { MOODS, PRODUCTS, formatPrice } from "@/lib/content";
+import Link from "next/link";
+import { MOODS, formatPrice, productHref, type Product } from "@/lib/content";
 
-export default function ShuffleMood() {
+export default function ShuffleMood({ products }: { products: Product[] }) {
   const [index, setIndex] = useState(0);
   const [spinning, setSpinning] = useState(false);
 
   const mood = MOODS[index];
-  const look = PRODUCTS.filter((p) => p.mood === mood.id).slice(0, 2);
+  const look = products.filter((p) => p.mood === mood.id).slice(0, 2);
   // Fall back so every mood always shows two pieces.
-  const pieces = look.length >= 2 ? look : [...look, ...PRODUCTS].slice(0, 2);
+  const pieces = look.length >= 2 ? look : [...look, ...products].slice(0, 2);
 
   const shuffle = () => {
     if (spinning) return;
@@ -27,9 +28,9 @@ export default function ShuffleMood() {
   };
 
   return (
-    <section id="shuffle" className="py-20 md:py-28 bg-cream">
+    <section id="shuffle" className="py-20 md:py-28 bg-sand">
       <div className="container-x grid lg:grid-cols-2 gap-12 items-center">
-        <div>
+        <div className="reveal">
           <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-stone">
             <span className="h-px w-8 bg-ember" /> Shuffle Mode
           </span>
@@ -99,9 +100,10 @@ export default function ShuffleMood() {
 
             <div className="mt-8 grid grid-cols-2 gap-4">
               {pieces.map((p) => (
-                <div
+                <Link
                   key={p.id}
-                  className="rounded-xl bg-cream/10 backdrop-blur-sm p-4 ring-1 ring-cream/15"
+                  href={productHref(p)}
+                  className="group/piece rounded-xl bg-cream/10 backdrop-blur-sm p-4 ring-1 ring-cream/15 transition-colors hover:bg-cream/20"
                 >
                   <div
                     className="h-24 rounded-lg mb-3"
@@ -110,17 +112,17 @@ export default function ShuffleMood() {
                     }}
                   />
                   <p className="text-sm font-medium leading-tight">{p.name}</p>
-                  <p className="text-cream/70 text-sm">{formatPrice(p.price)}</p>
-                </div>
+                  <p className="text-cream/70 text-sm">{formatPrice(p.price, p.currencyCode)}</p>
+                </Link>
               ))}
             </div>
 
-            <a
-              href="#shop"
+            <Link
+              href="/shop"
               className="mt-7 inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-ink text-sm hover:bg-bone transition-colors"
             >
               Shop this look <span aria-hidden>→</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

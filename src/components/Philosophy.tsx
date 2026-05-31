@@ -8,7 +8,7 @@ export default function Philosophy() {
   return (
     <section id="about" className="py-20 md:py-28 bg-ink text-cream">
       <div className="container-x grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-7">
+        <div className="reveal lg:col-span-7">
           <span className="text-xs uppercase tracking-[0.22em] text-ember-soft">
             The philosophy
           </span>
