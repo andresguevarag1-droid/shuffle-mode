@@ -1,0 +1,28 @@
+{%- comment -%} Renders a catalog card. Expects: product {%- endcomment -%}
+<a href="{{ product.url }}" class="card">
+  <div class="card__media editorial-frame">
+    {%- if product.featured_image -%}
+      <img
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        srcset="{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 800 }} 800w"
+        sizes="(min-width: 1024px) 33vw, 50vw"
+        alt="{{ product.featured_image.alt | escape | default: product.title }}"
+        width="400" height="500" loading="lazy">
+    {%- endif -%}
+
+    {%- if product.tags contains 'new' -%}
+      <span class="card__badge">New</span>
+    {%- elsif product.available == false -%}
+      <span class="card__badge">Sold out</span>
+    {%- endif -%}
+
+    <span class="card__cta">View piece</span>
+  </div>
+  <div class="card__info">
+    <div>
+      <div class="card__name">{{ product.title }}</div>
+      {%- if product.type != blank -%}<div class="card__cat">{{ product.type }}</div>{%- endif -%}
+    </div>
+    <span class="card__price">{% render 'price', product: product %}</span>
+  </div>
+</a>

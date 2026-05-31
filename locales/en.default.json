@@ -1,0 +1,43 @@
+{
+  "general": {
+    "newsletter_label": "Email address",
+    "newsletter_button": "Join",
+    "search": {
+      "placeholder": "Search the drop",
+      "results": "Results"
+    },
+    "404": {
+      "title": "This one shuffled off.",
+      "body": "The piece you're after may have sold through, or the link wandered.",
+      "link": "Shop the drop"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to bag",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "size": "Size",
+      "regular_price": "Price"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Your bag",
+      "empty": "Your bag is empty.",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "remove": "Remove",
+      "continue": "Continue shopping"
+    }
+  },
+  "blogs": {
+    "article": {
+      "read_more": "Read it"
+    }
+  }
+}

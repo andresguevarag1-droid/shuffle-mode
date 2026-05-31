@@ -1,0 +1,41 @@
+{%- if section.blocks.size > 0 -%}
+  <div class="announcement">
+    <div class="announcement__viewport">
+      <div class="marquee" aria-hidden="false">
+        {%- for i in (1..2) -%}
+          {%- for block in section.blocks -%}
+            <span {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+              <span class="star" aria-hidden="true">✦</span>
+            </span>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Limited weekly drops · once it's gone, it's gone" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Free shipping on orders over $150" } },
+        { "type": "message", "settings": { "text": "New drop every Sunday, 1PM ET" } },
+        { "type": "message", "settings": { "text": "Join the list for early access" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

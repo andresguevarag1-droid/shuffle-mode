@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "Weekly Drops · Est. Boston",
+        "heading": "You don't dress for the occasion.",
+        "heading_accent": "You dress for the mood.",
+        "subheading": "Minimal pieces that elevate your wardrobe instantly. New drop every Sunday.",
+        "cta_label": "Shop the drop",
+        "cta2_label": "Find your mood",
+        "cta2_url": "#shuffle",
+        "collage_caption": "Drop 01"
+      }
+    },
+    "drop": {
+      "type": "featured-drop",
+      "settings": {
+        "eyebrow": "Drop 01",
+        "heading": "This week's drop",
+        "note": "Restocks are rare",
+        "products_to_show": 6,
+        "link_label": "View full drop"
+      }
+    },
+    "shuffle": {
+      "type": "shuffle",
+      "blocks": {
+        "bold": { "type": "mood", "settings": { "label": "Bold", "line": "Walk in like you own the room — because today, you do.", "color1": "#c2502e", "color2": "#7a2618" } },
+        "soft": { "type": "mood", "settings": { "label": "Soft", "line": "Unhurried, unbothered, undeniably put-together.", "color1": "#e3c9b5", "color2": "#b98c6d" } },
+        "sharp": { "type": "mood", "settings": { "label": "Sharp", "line": "Clean lines, clear head. Nothing left to prove.", "color1": "#2c2a28", "color2": "#55504a" } },
+        "free": { "type": "mood", "settings": { "label": "Free", "line": "Loose, light, and going wherever the day takes you.", "color1": "#9aa67f", "color2": "#5f6b48" } }
+      },
+      "block_order": ["bold", "soft", "sharp", "free"]
+    },
+    "philosophy": {
+      "type": "philosophy",
+      "blocks": {
+        "s1": { "type": "stat", "settings": { "value": "Sun", "label": "New drop, every week" } },
+        "s2": { "type": "stat", "settings": { "value": "200", "label": "Pieces per drop, never more" } },
+        "s3": { "type": "stat", "settings": { "value": "0", "label": "Restocks. When it's gone, it's gone" } }
+      },
+      "block_order": ["s1", "s2", "s3"]
+    },
+    "lookbook": {
+      "type": "lookbook",
+      "blocks": {
+        "l1": { "type": "shot", "settings": { "caption": "01 — Morning, unbothered" } },
+        "l2": { "type": "shot", "settings": { "caption": "02 — The 6pm pivot" } },
+        "l3": { "type": "shot", "settings": { "caption": "03 — Weekend, off the clock" } },
+        "l4": { "type": "shot", "settings": { "caption": "04 — After hours" } }
+      },
+      "block_order": ["l1", "l2", "l3", "l4"]
+    },
+    "newsletter": {
+      "type": "newsletter"
+    }
+  },
+  "order": ["hero", "drop", "shuffle", "philosophy", "lookbook", "newsletter"]
+}

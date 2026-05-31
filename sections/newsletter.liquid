@@ -1,0 +1,36 @@
+<section id="newsletter" class="section section--sand">
+  <div class="container">
+    <div class="newsletter reveal">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="section__title" style="margin-top:1rem;">{{ section.settings.heading }}</h2>
+      <p class="hero__sub" style="margin-inline:auto;">{{ section.settings.subheading }}</p>
+
+      {% form 'customer' %}
+        {%- if form.posted_successfully? -%}
+          <p class="font-display" style="margin-top:2rem;font-size:1.25rem;color:var(--color-ember);">You're on the list. See you Sunday. ✦</p>
+        {%- else -%}
+          <input type="hidden" name="contact[tags]" value="newsletter, shuffle-drop">
+          <input type="hidden" name="contact[context]" value="newsletter">
+          <div class="newsletter">
+            <div style="display:flex;flex-direction:column;gap:0.75rem;max-width:28rem;margin:2rem auto 0;" class="newsletter-row">
+              <input type="email" name="contact[email]" class="input" placeholder="you@email.com" aria-label="{{ 'general.newsletter_label' | t }}" required>
+              <button type="submit" class="btn btn--primary">{{ 'general.newsletter_button' | t }}</button>
+            </div>
+          </div>
+        {%- endif -%}
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "First in line" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Get the drop before it's gone" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Drops sell out fast. Join the list for early access, mood guides, and the occasional note — never spam." }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

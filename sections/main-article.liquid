@@ -1,0 +1,22 @@
+<article class="container section">
+  <header class="prose" style="text-align:center;">
+    <span class="eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}{% if article.tags.size > 0 %} · {{ article.tags.first }}{% endif %}</span>
+    <h1 class="section__title" style="margin-top:1.25rem;">{{ article.title }}</h1>
+  </header>
+
+  {%- if article.image -%}
+    <div class="editorial-frame rounded-lg" style="max-width:56rem;margin:2.5rem auto 0;aspect-ratio:16/9;overflow:hidden;">
+      <img src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.image.alt | escape | default: article.title }}" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+  {%- endif -%}
+
+  <div class="prose rte" style="margin-top:3rem;">{{ article.content }}</div>
+
+  <div class="prose" style="margin-top:3rem;border-top:1px solid var(--color-line);padding-top:1.5rem;">
+    <a href="{{ blog.url }}" class="card__cat link-arrow">← All journal entries</a>
+  </div>
+</article>
+
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

@@ -1,0 +1,66 @@
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:2.5rem;">
+    <a href="{{ routes.all_products_collection_url }}">Shop</a>
+    <span style="margin-inline:0.5rem;color:rgba(22,19,15,0.3);">/</span>
+    <span style="color:rgba(22,19,15,0.7);">{{ product.type | default: 'Drop' }}</span>
+  </nav>
+
+  <div class="product">
+    {%- comment -%} Gallery {%- endcomment -%}
+    <div class="product__gallery">
+      {%- if product.featured_image -%}
+        <div class="main editorial-frame">
+          <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" width="1000" height="1250" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        {%- for image in product.images offset: 1 limit: 2 -%}
+          <div class="thumb editorial-frame">
+            <img src="{{ image | image_url: width: 500 }}" alt="{{ image.alt | escape }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="main editorial-frame"></div>
+        <div class="thumb editorial-frame"></div>
+        <div class="thumb editorial-frame"></div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Info {%- endcomment -%}
+    <div class="product__info">
+      <span class="eyebrow">{{ product.type | default: product.vendor }}</span>
+      <h1 class="product__title">{{ product.title }}</h1>
+      <p class="product__price" id="price-{{ section.id }}">{{ product.selected_or_first_available_variant.price | money }}</p>
+
+      {%- if product.description != blank -%}
+        <div class="rte" style="margin-top:1.25rem;color:var(--color-stone);">{{ product.description }}</div>
+      {%- endif -%}
+
+      {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
+        <div style="margin-top:2rem;">
+          <span class="eyebrow">{{ 'products.product.size' | t }}</span>
+          <div class="size-list">
+            <select name="id" id="variant-select-{{ section.id }}" class="input" style="max-width:16rem;">
+              {%- for variant in product.variants -%}
+                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                  {{ variant.title }}{% unless variant.available %} — {{ 'products.product.sold_out' | t }}{% endunless %} · {{ variant.price | money }}
+                </option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" name="add" class="btn btn--primary btn--block" style="margin-top:1.5rem;" {% unless product.available %}disabled{% endunless %}>
+          {%- if product.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
+        </button>
+      {% endform %}
+
+      <p class="card__cat" style="text-align:center;margin-top:0.75rem;">Free shipping over $150 · easy 30-day returns</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,20 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "shop": { "type": "column", "settings": { "heading": "Shop" } },
+        "help": { "type": "column", "settings": { "heading": "Help" } },
+        "brand": { "type": "column", "settings": { "heading": "Shuffle Mode" } }
+      },
+      "block_order": ["shop", "help", "brand"],
+      "settings": {
+        "brand": "Shuffle Mode",
+        "blurb": "Dress for the mood, not the occasion. Limited weekly drops, made in small batches."
+      }
+    }
+  },
+  "order": ["footer"]
+}

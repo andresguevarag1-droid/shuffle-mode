@@ -1,0 +1,49 @@
+<section id="drop" class="container section">
+  <div class="section__head reveal">
+    <div>
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="section__title" style="margin-top:0.5rem;">{{ section.settings.heading }}</h2>
+    </div>
+    {%- if section.settings.note != blank -%}
+      <p class="card__cat">{{ section.settings.note }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- assign collection = collections[section.settings.collection] -%}
+  <div class="product-grid">
+    {%- if collection != blank and collection.products.size > 0 -%}
+      {%- for product in collection.products limit: section.settings.products_to_show -%}
+        {% render 'product-card', product: product %}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..section.settings.products_to_show) -%}
+        <div class="card">
+          <div class="card__media editorial-frame"></div>
+          <div class="card__info"><div><div class="card__name">Drop piece</div><div class="card__cat">Coming soon</div></div></div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.link_url != blank -%}
+    <div class="center mt-12">
+      <a href="{{ section.settings.link_url }}" class="btn btn--outline">{{ section.settings.link_label }} →</a>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Featured drop",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Drop 01" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "This week's drop" },
+    { "type": "text", "id": "note", "label": "Note (scarcity)", "default": "Restocks are rare" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "min": 3, "max": 12, "step": 3, "label": "Products to show", "default": 6 },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "View full drop" },
+    { "type": "url", "id": "link_url", "label": "Link" }
+  ],
+  "presets": [{ "name": "Featured drop" }]
+}
+{% endschema %}

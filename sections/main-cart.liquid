@@ -1,0 +1,46 @@
+<section class="container section">
+  <h1 class="section__title">{{ 'cart.general.title' | t }}</h1>
+
+  {%- if cart.item_count > 0 -%}
+    {% form 'cart', cart %}
+      <div style="margin-top:2rem;">
+        {%- for item in cart.items -%}
+          <div class="cart-line">
+            <a href="{{ item.url }}" class="cart-line__media editorial-frame">
+              {%- if item.image -%}
+                <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" style="width:100%;height:100%;object-fit:cover;">
+              {%- endif -%}
+            </a>
+            <div>
+              <a href="{{ item.url }}" class="card__name">{{ item.product.title }}</a>
+              {%- unless item.variant.title contains 'Default' -%}
+                <div class="card__cat">{{ item.variant.title }}</div>
+              {%- endunless -%}
+              <div class="card__cat">
+                <label class="visually-hidden" for="qty-{{ item.index }}">Quantity</label>
+                <input id="qty-{{ item.index }}" type="number" min="0" name="updates[]" value="{{ item.quantity }}" style="width:4rem;" class="input">
+                <a href="{{ item.url_to_remove }}" style="margin-left:1rem;text-decoration:underline;">{{ 'cart.general.remove' | t }}</a>
+              </div>
+            </div>
+            <div class="card__price">{{ item.final_line_price | money }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="cart__foot">
+        <p class="product__price">{{ 'cart.general.subtotal' | t }}: {{ cart.total_price | money }}</p>
+        <div style="display:flex;gap:1rem;">
+          <button type="submit" name="update" class="btn btn--outline">Update</button>
+          <button type="submit" name="checkout" class="btn btn--primary">{{ 'cart.general.checkout' | t }}</button>
+        </div>
+      </div>
+    {% endform %}
+  {%- else -%}
+    <p style="margin-top:1.5rem;color:var(--color-stone);">{{ 'cart.general.empty' | t }}</p>
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary" style="margin-top:1.5rem;">{{ 'cart.general.continue' | t }}</a>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

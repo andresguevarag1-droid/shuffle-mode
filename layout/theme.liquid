@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_ink }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.heading_font_family contains 'Fraunces' or settings.body_font_family contains 'Inter' -%}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &middot; {{ shop.name }}{% endunless %}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {{ content_for_header }}
+
+    {%- style -%}
+      :root {
+        --color-bone: {{ settings.color_bone }};
+        --color-ink: {{ settings.color_ink }};
+        --color-cream: {{ settings.color_cream }};
+        --color-sand: {{ settings.color_sand }};
+        --color-ember: {{ settings.color_ember }};
+        --color-stone: #6f675d;
+        --color-line: rgba(22, 19, 15, 0.1);
+        --font-display: {{ settings.heading_font_family }};
+        --font-body: {{ settings.body_font_family }};
+        --page-width: {{ settings.page_width }}px;
+      }
+    {%- endstyle -%}
+
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+  </head>
+
+  <body class="template-{{ request.page_type | handle }}">
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    {% sections 'header-group' %}
+
+    <main id="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+  </body>
+</html>

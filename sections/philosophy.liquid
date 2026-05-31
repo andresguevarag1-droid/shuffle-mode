@@ -1,0 +1,55 @@
+<section id="about" class="section section--ink">
+  <div class="container philosophy__grid">
+    <div class="reveal">
+      <span class="eyebrow" style="color:#e98e6f;">{{ section.settings.eyebrow }}</span>
+      <h2 class="section__title" style="margin-top:1.25rem;font-size:clamp(2rem,5vw,3.75rem);">
+        {{ section.settings.heading }}
+        {%- if section.settings.heading_accent != blank -%}
+          <span class="accent" style="display:block;font-style:italic;color:#e98e6f;">{{ section.settings.heading_accent }}</span>
+        {%- endif -%}
+      </h2>
+      <p style="margin-top:1.75rem;max-width:36rem;font-size:1.125rem;color:rgba(251,249,244,0.75);">{{ section.settings.body }}</p>
+    </div>
+
+    <div class="stats">
+      {%- for block in section.blocks -%}
+        <div class="stat" {{ block.shopify_attributes }}>
+          <span class="stat__value">{{ block.settings.value }}</span>
+          <span class="stat__label">{{ block.settings.label }}</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Philosophy",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The philosophy" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Fewer pieces." },
+    { "type": "text", "id": "heading_accent", "label": "Heading accent", "default": "More you." },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "We don't chase seasons or trends. Each week we design a small, considered set of pieces — then we let them go. No overstock, no markdowns, no noise." }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "Sun" },
+        { "type": "text", "id": "label", "label": "Label", "default": "New drop, every week" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Philosophy",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "Sun", "label": "New drop, every week" } },
+        { "type": "stat", "settings": { "value": "200", "label": "Pieces per drop, never more" } },
+        { "type": "stat", "settings": { "value": "0", "label": "Restocks. When it's gone, it's gone" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

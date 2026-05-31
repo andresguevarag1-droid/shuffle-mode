@@ -1,0 +1,11 @@
+{%- comment -%} Expects: product (uses price_min) or price {%- endcomment -%}
+{%- liquid
+  if price != nil
+    assign value = price
+  elsif product != nil
+    assign value = product.price_min
+  else
+    assign value = 0
+  endif
+-%}
+{{ value | money }}

@@ -1,0 +1,88 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Shuffle Mode",
+    "theme_version": "1.0.0",
+    "theme_author": "Shuffle Mode",
+    "theme_documentation_url": "https://shufflemode.us",
+    "theme_support_url": "https://shufflemode.us"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_bone",
+        "label": "Page background (bone)",
+        "default": "#f6f2ea"
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "Ink (text / dark sections)",
+        "default": "#16130f"
+      },
+      {
+        "type": "color",
+        "id": "color_cream",
+        "label": "Cream (on-dark text)",
+        "default": "#fbf9f4"
+      },
+      {
+        "type": "color",
+        "id": "color_sand",
+        "label": "Sand (alt sections)",
+        "default": "#eadfcd"
+      },
+      {
+        "type": "color",
+        "id": "color_ember",
+        "label": "Ember accent",
+        "default": "#c2502e"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "select",
+        "id": "heading_font_family",
+        "label": "Display font",
+        "options": [
+          { "value": "'Fraunces', Georgia, serif", "label": "Fraunces" },
+          { "value": "Georgia, serif", "label": "Georgia" }
+        ],
+        "default": "'Fraunces', Georgia, serif"
+      },
+      {
+        "type": "select",
+        "id": "body_font_family",
+        "label": "Body font",
+        "options": [
+          {
+            "value": "'Inter', system-ui, sans-serif",
+            "label": "Inter"
+          },
+          { "value": "system-ui, sans-serif", "label": "System" }
+        ],
+        "default": "'Inter', system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1000,
+        "max": 1600,
+        "step": 40,
+        "unit": "px",
+        "label": "Maximum page width",
+        "default": 1280
+      }
+    ]
+  }
+]

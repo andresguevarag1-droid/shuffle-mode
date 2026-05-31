@@ -1,0 +1,24 @@
+{
+  "current": {
+    "color_bone": "#f6f2ea",
+    "color_ink": "#16130f",
+    "color_cream": "#fbf9f4",
+    "color_sand": "#eadfcd",
+    "color_ember": "#c2502e",
+    "heading_font_family": "'Fraunces', Georgia, serif",
+    "body_font_family": "'Inter', system-ui, sans-serif",
+    "page_width": 1280
+  },
+  "presets": {
+    "Shuffle Mode": {
+      "color_bone": "#f6f2ea",
+      "color_ink": "#16130f",
+      "color_cream": "#fbf9f4",
+      "color_sand": "#eadfcd",
+      "color_ember": "#c2502e",
+      "heading_font_family": "'Fraunces', Georgia, serif",
+      "body_font_family": "'Inter', system-ui, sans-serif",
+      "page_width": 1280
+    }
+  }
+}
