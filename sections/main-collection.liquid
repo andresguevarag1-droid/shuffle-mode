@@ -1,94 +1,1558 @@
-<section class="container section">
-  <header class="collection__head reveal">
-    <span class="eyebrow eyebrow--rule">{{ collection.title }}</span>
-    <h1 class="section__title">{{ collection.title }}</h1>
-    {%- if collection.description != blank -%}
-      <div class="rte collection__desc">{{ collection.description }}</div>
+{% stylesheet %}
+/* ─── Collection Hero ─────────────────────────────────────── */
+.col-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-ink);
+}
+
+/* With image: cinematic banner */
+.col-hero--image {
+  min-height: clamp(380px, 52vw, 680px);
+  display: flex;
+  align-items: flex-end;
+}
+
+.col-hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.col-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(22, 19, 15, 0.18) 0%,
+    rgba(22, 19, 15, 0.55) 55%,
+    rgba(22, 19, 15, 0.82) 100%
+  );
+}
+
+.col-hero__body {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 3rem 1.5rem 3.5rem;
+  color: var(--color-cream);
+}
+
+@media (min-width: 768px) {
+  .col-hero__body {
+    padding: 4rem 2.5rem 4.5rem;
+    max-width: var(--page-width);
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .col-hero__body {
+    padding-bottom: 5rem;
+  }
+}
+
+.col-hero__eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  color: rgba(251, 249, 244, 0.65);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.col-hero__eyebrow::before {
+  content: "";
+  width: 2rem;
+  height: 1px;
+  background: var(--color-ember);
+  flex-shrink: 0;
+}
+
+.col-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+  color: var(--color-cream);
+  margin: 0;
+  text-wrap: balance;
+  max-width: 22ch;
+}
+
+.col-hero__desc {
+  margin-top: 1.1rem;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  color: rgba(251, 249, 244, 0.78);
+  max-width: 38ch;
+  line-height: 1.55;
+}
+
+.col-hero__meta {
+  margin-top: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(251, 249, 244, 0.12);
+  border: 1px solid rgba(251, 249, 244, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 9999px;
+  padding: 0.38rem 1rem 0.38rem 0.55rem;
+  font-size: 0.8rem;
+  color: rgba(251, 249, 244, 0.85);
+  letter-spacing: 0.03em;
+}
+
+.col-hero__meta-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--color-ember);
+  flex-shrink: 0;
+}
+
+/* Tonal band — no image */
+.col-hero--tonal {
+  background: var(--color-sand);
+  padding: 4rem 1.5rem 4.5rem;
+}
+
+@media (min-width: 768px) {
+  .col-hero--tonal {
+    padding: 5rem 2.5rem 5.5rem;
+  }
+}
+
+.col-hero--tonal .col-hero__body {
+  color: var(--color-ink);
+  padding: 0;
+  max-width: var(--page-width);
+  margin-inline: auto;
+}
+
+.col-hero--tonal .col-hero__eyebrow {
+  color: var(--color-stone);
+}
+
+.col-hero--tonal .col-hero__eyebrow::before {
+  background: var(--color-ember);
+}
+
+.col-hero--tonal .col-hero__title {
+  color: var(--color-ink);
+}
+
+.col-hero--tonal .col-hero__desc {
+  color: var(--color-stone);
+}
+
+.col-hero--tonal .col-hero__meta {
+  background: rgba(22, 19, 15, 0.07);
+  border-color: rgba(22, 19, 15, 0.15);
+  color: var(--color-stone);
+}
+
+/* ─── Editorial Promo Band ───────────────────────────────── */
+.col-promo {
+  background: var(--color-ember);
+  color: var(--color-cream);
+  text-align: center;
+  padding: 1rem 1.5rem;
+}
+
+.col-promo__inner {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.col-promo__label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ─── Sticky Toolbar ─────────────────────────────────────── */
+.col-toolbar-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in srgb, var(--color-bone) 92%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-line);
+  transition: box-shadow 0.25s ease;
+}
+
+.col-toolbar-wrap.is-scrolled {
+  box-shadow: 0 4px 24px rgba(22, 19, 15, 0.07);
+}
+
+.col-toolbar {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .col-toolbar {
+    padding-inline: 2.5rem;
+    flex-wrap: nowrap;
+    gap: 1rem;
+  }
+}
+
+/* Mobile filter toggle */
+.col-filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid rgba(22, 19, 15, 0.2);
+  border-radius: 9999px;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: var(--color-ink);
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.col-filter-toggle:hover {
+  border-color: rgba(22, 19, 15, 0.5);
+  background: rgba(22, 19, 15, 0.04);
+}
+
+.col-filter-toggle[aria-expanded="true"] {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+.col-filter-toggle__icon {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 14px;
+}
+
+.col-filter-toggle__icon span {
+  display: block;
+  height: 1px;
+  background: currentColor;
+  border-radius: 9999px;
+  transition: width 0.2s ease;
+}
+
+.col-filter-toggle__icon span:nth-child(1) { width: 100%; }
+.col-filter-toggle__icon span:nth-child(2) { width: 65%; }
+.col-filter-toggle__icon span:nth-child(3) { width: 85%; }
+
+.col-filter-toggle__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.25rem;
+  border-radius: 9999px;
+  background: var(--color-ember);
+  color: var(--color-cream);
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.col-filter-toggle[aria-expanded="true"] .col-filter-toggle__badge {
+  background: rgba(251, 249, 244, 0.25);
+}
+
+/* Desktop facet pills inside toolbar */
+.col-facets-inline {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  flex: 1;
+}
+
+@media (min-width: 900px) {
+  .col-facets-inline {
+    display: flex;
+  }
+  .col-filter-toggle {
+    display: none;
+  }
+}
+
+.col-facet {
+  position: relative;
+}
+
+.col-facet__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(22, 19, 15, 0.18);
+  border-radius: 9999px;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: var(--color-ink);
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.col-facet__trigger:hover {
+  border-color: rgba(22, 19, 15, 0.45);
+  background: rgba(22, 19, 15, 0.03);
+}
+
+.col-facet__trigger[aria-expanded="true"] {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+.col-facet__trigger-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  padding: 0 0.2rem;
+  border-radius: 9999px;
+  background: var(--color-ember);
+  color: var(--color-cream);
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.col-facet__trigger[aria-expanded="true"] .col-facet__trigger-count {
+  background: rgba(251, 249, 244, 0.25);
+}
+
+.col-facet__chevron {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.2s ease;
+  opacity: 0.6;
+}
+
+.col-facet__trigger[aria-expanded="true"] .col-facet__chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.col-facet__panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 40;
+  min-width: 230px;
+  max-height: 340px;
+  overflow-y: auto;
+  background: var(--color-bone);
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 20px 60px rgba(22, 19, 15, 0.14), 0 4px 16px rgba(22, 19, 15, 0.06);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(22, 19, 15, 0.15) transparent;
+}
+
+.col-facet__panel[hidden] {
+  display: none;
+}
+
+.col-facet__panel-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-stone);
+  margin: 0 0 0.9rem;
+}
+
+.col-facet__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.col-facet__opt {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  line-height: 1.3;
+}
+
+.col-facet__opt:hover {
+  background: rgba(22, 19, 15, 0.05);
+}
+
+.col-facet__opt.is-disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.col-facet__opt.is-disabled:hover {
+  background: none;
+}
+
+.col-facet__opt input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid rgba(22, 19, 15, 0.3);
+  border-radius: 0.25rem;
+  accent-color: var(--color-ink);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.col-facet__opt-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--color-stone);
+  flex-shrink: 0;
+}
+
+/* Price range */
+.col-price-range {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.col-price-range__row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.col-price-range__sep {
+  color: var(--color-stone);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.col-price-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.col-price-field label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-stone);
+}
+
+.col-price-field input {
+  width: 100%;
+  border: 1px solid rgba(22, 19, 15, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  font: inherit;
+  font-size: 0.875rem;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  transition: border-color 0.15s ease;
+}
+
+.col-price-field input:focus {
+  outline: none;
+  border-color: var(--color-ink);
+}
+
+/* Controls right side */
+.col-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.col-results-count {
+  font-size: 0.78rem;
+  color: var(--color-stone);
+  white-space: nowrap;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .col-results-count {
+    display: block;
+  }
+}
+
+.col-sort-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.col-sort-label {
+  font-size: 0.78rem;
+  color: var(--color-stone);
+  margin-right: 0.4rem;
+  white-space: nowrap;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .col-sort-label {
+    display: inline;
+  }
+}
+
+.col-sort-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid rgba(22, 19, 15, 0.18);
+  border-radius: 9999px;
+  padding: 0.4rem 2rem 0.4rem 0.9rem;
+  font: inherit;
+  font-size: 0.82rem;
+  background: none;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.col-sort-select:focus {
+  outline: none;
+  border-color: var(--color-ink);
+}
+
+.col-sort-select:hover {
+  border-color: rgba(22, 19, 15, 0.4);
+  background: rgba(22, 19, 15, 0.03);
+}
+
+.col-sort-chevron {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-stone);
+  width: 10px;
+  height: 10px;
+}
+
+/* ─── Mobile Filter Drawer ───────────────────────────────── */
+.col-drawer[hidden] {
+  display: none;
+}
+
+.col-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+
+.col-drawer__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 19, 15, 0.45);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.col-drawer.is-open .col-drawer__overlay {
+  opacity: 1;
+}
+
+.col-drawer__panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 88dvh;
+  background: var(--color-bone);
+  border-radius: 1.5rem 1.5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 540px) {
+  .col-drawer__panel {
+    top: 0;
+    bottom: 0;
+    left: auto;
+    right: 0;
+    width: min(380px, 88vw);
+    max-height: none;
+    border-radius: 0;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .col-drawer.is-open .col-drawer__panel {
+    transform: translateX(0) !important;
+  }
+}
+
+.col-drawer.is-open .col-drawer__panel {
+  transform: translateY(0);
+}
+
+.col-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-line);
+  flex-shrink: 0;
+}
+
+.col-drawer__heading {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.col-drawer__close {
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid rgba(22, 19, 15, 0.2);
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+  transition: all 0.18s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.col-drawer__close:hover {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+.col-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1.5rem 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(22, 19, 15, 0.15) transparent;
+}
+
+.col-drawer__section {
+  border-bottom: 1px solid var(--color-line);
+  padding-block: 1.25rem;
+}
+
+.col-drawer__section:last-child {
+  border-bottom: none;
+}
+
+.col-drawer__section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--color-ink);
+  text-align: left;
+}
+
+.col-drawer__section-toggle-icon {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.col-drawer__section-toggle[aria-expanded="true"] .col-drawer__section-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.col-drawer__section-body {
+  margin-top: 1rem;
+}
+
+.col-drawer__section-body[hidden] {
+  display: none;
+}
+
+.col-drawer__foot {
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--color-line);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.col-drawer__apply {
+  display: block;
+  text-align: center;
+  padding: 0.85rem;
+  border-radius: 9999px;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid var(--color-ink);
+  transition: background 0.18s ease;
+}
+
+.col-drawer__apply:hover {
+  background: var(--color-ember);
+  border-color: var(--color-ember);
+}
+
+.col-drawer__clear {
+  display: block;
+  text-align: center;
+  padding: 0.85rem;
+  border-radius: 9999px;
+  background: none;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid rgba(22, 19, 15, 0.2);
+  transition: all 0.18s ease;
+  text-decoration: none;
+}
+
+.col-drawer__clear:hover {
+  border-color: rgba(22, 19, 15, 0.45);
+  background: rgba(22, 19, 15, 0.04);
+}
+
+/* Shared facet list inside drawer */
+.col-drawer .col-facet__list {
+  gap: 0.1rem;
+}
+
+.col-drawer .col-facet__opt {
+  padding: 0.5rem 0.4rem;
+}
+
+/* ─── Active Filter Chips ────────────────────────────────── */
+.col-active-filters {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  padding-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .col-active-filters {
+    padding-inline: 2.5rem;
+  }
+}
+
+.col-active-filters:empty {
+  display: none;
+}
+
+.col-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.85rem 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--color-sand);
+  color: var(--color-ink);
+  font-size: 0.78rem;
+  border: 1px solid rgba(22, 19, 15, 0.12);
+  transition: all 0.18s ease;
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+.col-chip-remove:hover {
+  background: rgba(22, 19, 15, 0.1);
+  border-color: rgba(22, 19, 15, 0.2);
+}
+
+.col-chip-remove__x {
+  width: 1rem;
+  height: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(22, 19, 15, 0.12);
+  font-size: 0.6rem;
+  font-style: normal;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.col-chip-remove--clear {
+  background: none;
+  border-color: transparent;
+  color: var(--color-stone);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.col-chip-remove--clear:hover {
+  color: var(--color-ink);
+  background: none;
+  border-color: transparent;
+}
+
+/* ─── Main Content Area ──────────────────────────────────── */
+.col-main {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  padding-block: 2rem 5rem;
+}
+
+@media (min-width: 768px) {
+  .col-main {
+    padding-inline: 2.5rem;
+    padding-block: 2.5rem 6rem;
+  }
+}
+
+/* ─── Product Grid ───────────────────────────────────────── */
+.col-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .col-grid {
+    gap: 2rem 1.5rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .col-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.25rem 1.75rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .col-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem 2rem;
+  }
+}
+
+/* ─── Empty State ────────────────────────────────────────── */
+.col-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+  gap: 1.25rem;
+}
+
+.col-empty__icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.col-empty__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.col-empty__text {
+  color: var(--color-stone);
+  margin: 0;
+  max-width: 30ch;
+}
+
+.col-empty__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 9999px;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  font-size: 0.875rem;
+  transition: background 0.18s ease;
+}
+
+.col-empty__link:hover {
+  background: var(--color-ember);
+}
+
+/* ─── Pagination ─────────────────────────────────────────── */
+.col-pagination {
+  margin-top: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.col-pagination .pagination {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.col-pagination .pagination .page,
+.col-pagination .pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  height: 2.4rem;
+  padding: 0 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  border: 1px solid transparent;
+  transition: all 0.18s ease;
+  text-decoration: none;
+  color: var(--color-ink);
+}
+
+.col-pagination .pagination .page:hover {
+  border-color: rgba(22, 19, 15, 0.25);
+  background: rgba(22, 19, 15, 0.04);
+}
+
+.col-pagination .pagination .current {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+/* ─── Reveal animation (reduced-motion safe) ─────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .col-hero__body {
+    animation: col-fade-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .col-hero__img {
+    animation: col-scale-in 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes col-fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes col-scale-in {
+    from { transform: scale(1.04); }
+    to   { transform: scale(1); }
+  }
+}
+{% endstylesheet %}
+
+{%- comment -%} ═══════════════════════════════════════════════
+  COLLECTION HERO
+═══════════════════════════════════════════════ {%- endcomment -%}
+
+{%- if collection.image -%}
+  <div class="col-hero col-hero--image">
+    <img
+      class="col-hero__img"
+      src="{{ collection.image | image_url: width: 1800 }}"
+      srcset="
+        {{ collection.image | image_url: width: 768 }} 768w,
+        {{ collection.image | image_url: width: 1200 }} 1200w,
+        {{ collection.image | image_url: width: 1800 }} 1800w,
+        {{ collection.image | image_url: width: 2400 }} 2400w
+      "
+      sizes="100vw"
+      alt="{{ collection.image.alt | escape | default: collection.title | escape }}"
+      width="{{ collection.image.width }}"
+      height="{{ collection.image.height }}"
+      fetchpriority="high"
+      decoding="async">
+    <div class="col-hero__scrim" aria-hidden="true"></div>
+    <div class="col-hero__body">
+      <p class="col-hero__eyebrow">Collection</p>
+      <h1 class="col-hero__title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="col-hero__desc">{{ collection.description | strip_html | truncate: 160 }}</div>
+      {%- endif -%}
+      <div class="col-hero__meta">
+        <span class="col-hero__meta-dot" aria-hidden="true"></span>
+        {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}
+      </div>
+    </div>
+  </div>
+{%- else -%}
+  <div class="col-hero col-hero--tonal">
+    <div class="col-hero__body">
+      <p class="col-hero__eyebrow">Collection</p>
+      <h1 class="col-hero__title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="col-hero__desc">{{ collection.description | strip_html | truncate: 160 }}</div>
+      {%- endif -%}
+      <div class="col-hero__meta">
+        <span class="col-hero__meta-dot" aria-hidden="true"></span>
+        {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{%- comment -%} Optional editorial promo band {%- endcomment -%}
+{%- if section.settings.promo_text != blank -%}
+  <div class="col-promo" role="note">
+    <div class="col-promo__inner">
+      {%- if section.settings.promo_label != blank -%}
+        <span class="col-promo__label">{{ section.settings.promo_label }}</span>
+        <span aria-hidden="true">—</span>
+      {%- endif -%}
+      <span>{{ section.settings.promo_text }}</span>
+    </div>
+  </div>
+{%- endif -%}
+
+{%- paginate collection.products by section.settings.products_per_page -%}
+
+{%- comment -%} ═══════════════════════════════════════════════
+  COUNT ACTIVE FILTERS
+═══════════════════════════════════════════════ {%- endcomment -%}
+{%- assign col_active_count = 0 -%}
+{%- assign col_has_active = false -%}
+{%- for filter in collection.filters -%}
+  {%- if filter.active_values.size > 0 -%}
+    {%- assign col_active_count = col_active_count | plus: filter.active_values.size -%}
+    {%- assign col_has_active = true -%}
+  {%- endif -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value or filter.max_value.value -%}
+      {%- assign col_active_count = col_active_count | plus: 1 -%}
+      {%- assign col_has_active = true -%}
     {%- endif -%}
-  </header>
+  {%- endif -%}
+{%- endfor -%}
 
-  {%- paginate collection.products by section.settings.products_per_page -%}
-    <form class="collection__toolbar" data-filter-form>
-      <div class="collection__filters">
-        {%- if collection.filters.size > 0 -%}
-          {%- for filter in collection.filters -%}
-            <details class="facet">
-              <summary class="facet__summary">{{ filter.label }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</summary>
-              <div class="facet__panel">
-                {%- case filter.type -%}
-                  {%- when 'price_range' -%}
-                    <div class="facet__price">
-                      <label>Min <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | round }}"></label>
-                      <label>Max <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="{{ filter.range_max | money_without_currency | round }}" min="0" max="{{ filter.range_max | money_without_currency | round }}"></label>
-                    </div>
-                  {%- else -%}
-                    <ul class="facet__list">
-                      {%- for value in filter.values -%}
-                        <li>
-                          <label class="facet__opt{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
-                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
-                            <span>{{ value.label }} <em>({{ value.count }})</em></span>
-                          </label>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                {%- endcase -%}
-              </div>
-            </details>
-          {%- endfor -%}
-          <noscript><button type="submit" class="btn btn--outline input--sm">Apply</button></noscript>
-        {%- endif -%}
-      </div>
+{%- comment -%} ═══════════════════════════════════════════════
+  STICKY TOOLBAR
+═══════════════════════════════════════════════ {%- endcomment -%}
+<div class="col-toolbar-wrap" id="col-toolbar" aria-label="Filter and sort">
+  <form class="col-toolbar" data-filter-form id="col-filter-form" aria-label="Filter products">
 
-      <div class="collection__controls">
-        <span class="card__cat">{{ collection.products_count }} pieces</span>
-        <label class="visually-hidden" for="sort">Sort</label>
-        {%- assign sort = collection.sort_by | default: collection.default_sort_by -%}
-        <select id="sort" name="sort_by" class="input input--sm" data-auto-submit>
-          <option value="manual" {% if sort == 'manual' %}selected{% endif %}>Featured</option>
-          <option value="best-selling" {% if sort == 'best-selling' %}selected{% endif %}>Best selling</option>
-          <option value="created-descending" {% if sort == 'created-descending' %}selected{% endif %}>Newest</option>
-          <option value="price-ascending" {% if sort == 'price-ascending' %}selected{% endif %}>Price, low to high</option>
-          <option value="price-descending" {% if sort == 'price-descending' %}selected{% endif %}>Price, high to low</option>
-        </select>
-      </div>
-    </form>
+    {%- comment -%} Mobile: filter drawer toggle {%- endcomment -%}
+    <button
+      type="button"
+      class="col-filter-toggle"
+      aria-controls="col-filter-drawer"
+      aria-expanded="false"
+      id="col-drawer-toggle">
+      <span class="col-filter-toggle__icon" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      Filters
+      {%- if col_active_count > 0 -%}
+        <span class="col-filter-toggle__badge" aria-label="{{ col_active_count }} active filters">{{ col_active_count }}</span>
+      {%- endif -%}
+    </button>
 
-    {%- assign has_active = false -%}
-    {%- for filter in collection.filters -%}{%- if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value -%}{%- assign has_active = true -%}{%- endif -%}{%- endfor -%}
-    {%- if has_active -%}
-      <div class="active-filters">
+    {%- comment -%} Desktop: inline facet dropdowns {%- endcomment -%}
+    {%- if collection.filters.size > 0 -%}
+      <div class="col-facets-inline" role="group" aria-label="Filters">
         {%- for filter in collection.filters -%}
-          {%- for value in filter.active_values -%}
-            <a class="chip-remove" href="{{ value.url_to_remove }}">{{ value.label }} ✕</a>
-          {%- endfor -%}
-          {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}
-            <a class="chip-remove" href="{{ filter.url_to_remove }}">{{ filter.label }} ✕</a>
-          {%- endif -%}
+          {%- assign facet_id = 'col-facet-' | append: forloop.index -%}
+          <div class="col-facet" data-col-facet>
+            <button
+              type="button"
+              class="col-facet__trigger"
+              aria-controls="{{ facet_id }}-panel"
+              aria-expanded="false"
+              id="{{ facet_id }}-btn">
+              {{ filter.label }}
+              {%- if filter.active_values.size > 0 -%}
+                <span class="col-facet__trigger-count" aria-label="{{ filter.active_values.size }} selected">{{ filter.active_values.size }}</span>
+              {%- elsif filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}
+                <span class="col-facet__trigger-count" aria-label="active">1</span>
+              {%- endif -%}
+              <svg class="col-facet__chevron" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div
+              class="col-facet__panel"
+              id="{{ facet_id }}-panel"
+              role="group"
+              aria-label="{{ filter.label }} options"
+              hidden>
+              <p class="col-facet__panel-title">{{ filter.label }}</p>
+              {%- case filter.type -%}
+                {%- when 'price_range' -%}
+                  <div class="col-price-range">
+                    <div class="col-price-range__row">
+                      <div class="col-price-field">
+                        <label for="{{ facet_id }}-min">Min</label>
+                        <input
+                          id="{{ facet_id }}-min"
+                          type="number"
+                          name="{{ filter.min_value.param_name }}"
+                          value="{{ filter.min_value.value }}"
+                          placeholder="0"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | round }}">
+                      </div>
+                      <span class="col-price-range__sep" aria-hidden="true">—</span>
+                      <div class="col-price-field">
+                        <label for="{{ facet_id }}-max">Max</label>
+                        <input
+                          id="{{ facet_id }}-max"
+                          type="number"
+                          name="{{ filter.max_value.param_name }}"
+                          value="{{ filter.max_value.value }}"
+                          placeholder="{{ filter.range_max | money_without_currency | round }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | round }}">
+                      </div>
+                    </div>
+                  </div>
+                {%- else -%}
+                  <ul class="col-facet__list" role="list">
+                    {%- for value in filter.values -%}
+                      <li role="listitem">
+                        <label class="col-facet__opt{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                          <span>{{ value.label }}</span>
+                          <span class="col-facet__opt-count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+              {%- endcase -%}
+            </div>
+          </div>
         {%- endfor -%}
-        <a class="chip-remove chip-remove--clear" href="{{ collection.url }}">Clear all</a>
       </div>
     {%- endif -%}
 
-    <div class="product-grid product-grid--4">
-      {%- for product in collection.products -%}
-        {% render 'product-card', product: product %}
-      {%- else -%}
-        <p class="collection__empty">No pieces match these filters. <a href="{{ collection.url }}">Clear filters</a></p>
-      {%- endfor -%}
+    {%- comment -%} Right: results count + sort {%- endcomment -%}
+    <div class="col-toolbar__right">
+      <span class="col-results-count" aria-live="polite">
+        {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}
+      </span>
+
+      <div class="col-sort-wrap">
+        <label class="col-sort-label" for="col-sort-select">Sort</label>
+        {%- assign col_sort = collection.sort_by | default: collection.default_sort_by -%}
+        <select
+          id="col-sort-select"
+          name="sort_by"
+          class="col-sort-select"
+          data-auto-submit
+          aria-label="Sort products">
+          <option value="manual"             {% if col_sort == 'manual'             %}selected{% endif %}>Featured</option>
+          <option value="best-selling"       {% if col_sort == 'best-selling'       %}selected{% endif %}>Best selling</option>
+          <option value="created-descending" {% if col_sort == 'created-descending' %}selected{% endif %}>Newest</option>
+          <option value="price-ascending"    {% if col_sort == 'price-ascending'    %}selected{% endif %}>Price: low → high</option>
+          <option value="price-descending"   {% if col_sort == 'price-descending'   %}selected{% endif %}>Price: high → low</option>
+        </select>
+        <svg class="col-sort-chevron" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+          <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
     </div>
 
-    {%- if paginate.pages > 1 -%}
-      <div class="center mt-12">{{ paginate | default_pagination }}</div>
-    {%- endif -%}
-  {%- endpaginate -%}
-</section>
+  </form>{%- comment -%} /data-filter-form {%- endcomment -%}
+</div>
+
+{%- comment -%} ═══════════════════════════════════════════════
+  MOBILE FILTER DRAWER
+  Note: inputs here mirror the form above; JS syncs values before submit
+═══════════════════════════════════════════════ {%- endcomment -%}
+{%- if collection.filters.size > 0 -%}
+  <div
+    class="col-drawer"
+    id="col-filter-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Filter products"
+    hidden>
+    <div class="col-drawer__overlay" data-col-drawer-overlay tabindex="-1"></div>
+    <div class="col-drawer__panel">
+      <div class="col-drawer__head">
+        <h2 class="col-drawer__heading">Filters</h2>
+        <button type="button" class="col-drawer__close" data-col-drawer-close aria-label="Close filters">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="col-drawer__body">
+        {%- for filter in collection.filters -%}
+          {%- assign drawer_section_id = 'col-drawer-section-' | append: forloop.index -%}
+          <div class="col-drawer__section">
+            <button
+              type="button"
+              class="col-drawer__section-toggle"
+              aria-controls="{{ drawer_section_id }}"
+              aria-expanded="true">
+              {{ filter.label }}
+              {%- if filter.active_values.size > 0 -%}
+                <span aria-label="{{ filter.active_values.size }} selected"> ({{ filter.active_values.size }})</span>
+              {%- endif -%}
+              <svg class="col-drawer__section-toggle-icon" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="col-drawer__section-body" id="{{ drawer_section_id }}">
+              {%- case filter.type -%}
+                {%- when 'price_range' -%}
+                  <div class="col-price-range">
+                    <div class="col-price-range__row">
+                      <div class="col-price-field">
+                        <label for="{{ drawer_section_id }}-min">Min</label>
+                        <input
+                          id="{{ drawer_section_id }}-min"
+                          type="number"
+                          data-col-drawer-input="{{ filter.min_value.param_name }}"
+                          value="{{ filter.min_value.value }}"
+                          placeholder="0"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | round }}">
+                      </div>
+                      <span class="col-price-range__sep" aria-hidden="true">—</span>
+                      <div class="col-price-field">
+                        <label for="{{ drawer_section_id }}-max">Max</label>
+                        <input
+                          id="{{ drawer_section_id }}-max"
+                          type="number"
+                          data-col-drawer-input="{{ filter.max_value.param_name }}"
+                          value="{{ filter.max_value.value }}"
+                          placeholder="{{ filter.range_max | money_without_currency | round }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | round }}">
+                      </div>
+                    </div>
+                  </div>
+                {%- else -%}
+                  <ul class="col-facet__list" role="list">
+                    {%- for value in filter.values -%}
+                      <li role="listitem">
+                        <label class="col-facet__opt{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                          <input
+                            type="checkbox"
+                            data-col-drawer-check="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                          <span>{{ value.label }}</span>
+                          <span class="col-facet__opt-count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+              {%- endcase -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="col-drawer__foot">
+        <a href="{{ collection.url }}" class="col-drawer__clear">Clear all</a>
+        <button type="button" class="col-drawer__apply" data-col-drawer-apply>Apply filters</button>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{%- comment -%} ═══════════════════════════════════════════════
+  ACTIVE FILTER CHIPS
+═══════════════════════════════════════════════ {%- endcomment -%}
+{%- if col_has_active -%}
+  <div class="col-active-filters" aria-label="Active filters">
+    {%- for filter in collection.filters -%}
+      {%- for value in filter.active_values -%}
+        <a class="col-chip-remove" href="{{ value.url_to_remove }}">
+          {{ value.label }}
+          <i class="col-chip-remove__x" aria-hidden="true">✕</i>
+          <span class="visually-hidden">Remove {{ value.label }} filter</span>
+        </a>
+      {%- endfor -%}
+      {%- if filter.type == 'price_range' -%}
+        {%- if filter.min_value.value or filter.max_value.value -%}
+          <a class="col-chip-remove" href="{{ filter.url_to_remove }}">
+            {{ filter.label }}
+            <i class="col-chip-remove__x" aria-hidden="true">✕</i>
+            <span class="visually-hidden">Remove {{ filter.label }} filter</span>
+          </a>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    <a class="col-chip-remove col-chip-remove--clear" href="{{ collection.url }}">Clear all</a>
+  </div>
+{%- endif -%}
+
+{%- comment -%} ═══════════════════════════════════════════════
+  PRODUCT GRID
+═══════════════════════════════════════════════ {%- endcomment -%}
+<div class="col-main">
+  <div class="col-grid" id="col-product-grid" aria-label="Products">
+    {%- for product in collection.products -%}
+      {% render 'product-card', product: product %}
+    {%- else -%}
+      <div class="col-empty" role="status">
+        <div class="col-empty__icon" aria-hidden="true">◇</div>
+        <p class="col-empty__title">No pieces found</p>
+        <p class="col-empty__text">Try adjusting your filters or explore the full collection.</p>
+        <a href="{{ collection.url }}" class="col-empty__link">Clear filters</a>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if paginate.pages > 1 -%}
+    <div class="col-pagination">
+      {{ paginate | default_pagination }}
+    </div>
+  {%- endif -%}
+</div>
+
+{%- endpaginate -%}
+
+{% javascript %}
+(function () {
+  "use strict";
+
+  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ─── Toolbar scroll shadow ──────────────────────────── */
+  var toolbar = document.getElementById("col-toolbar");
+  if (toolbar && "IntersectionObserver" in window) {
+    var sentinel = document.createElement("div");
+    sentinel.setAttribute("aria-hidden", "true");
+    sentinel.style.cssText = "position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;";
+    document.body.insertBefore(sentinel, document.body.firstChild);
+    new IntersectionObserver(function (entries) {
+      toolbar.classList.toggle("is-scrolled", !entries[0].isIntersecting);
+    }).observe(sentinel);
+  }
+
+  /* ─── Desktop facet dropdowns ────────────────────────── */
+  var facets = Array.prototype.slice.call(document.querySelectorAll("[data-col-facet]"));
+  function closeFacet(facet) {
+    var btn = facet.querySelector(".col-facet__trigger");
+    var panel = facet.querySelector(".col-facet__panel");
+    if (!btn || !panel) return;
+    btn.setAttribute("aria-expanded", "false");
+    panel.hidden = true;
+  }
+  function openFacet(facet) {
+    var btn = facet.querySelector(".col-facet__trigger");
+    var panel = facet.querySelector(".col-facet__panel");
+    if (!btn || !panel) return;
+    btn.setAttribute("aria-expanded", "true");
+    panel.hidden = false;
+  }
+  function closeAllFacets(except) {
+    facets.forEach(function (f) { if (f !== except) closeFacet(f); });
+  }
+
+  facets.forEach(function (facet) {
+    var btn = facet.querySelector(".col-facet__trigger");
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var isOpen = btn.getAttribute("aria-expanded") === "true";
+      closeAllFacets(facet);
+      if (isOpen) { closeFacet(facet); } else { openFacet(facet); }
+    });
+    btn.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") { closeFacet(facet); btn.focus(); }
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest("[data-col-facet]")) closeAllFacets(null);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeAllFacets(null);
+  });
+
+  /* ─── Mobile filter drawer ───────────────────────────── */
+  var drawer = document.getElementById("col-filter-drawer");
+  var drawerToggle = document.getElementById("col-drawer-toggle");
+  var filterForm = document.getElementById("col-filter-form");
+
+  function openDrawer() {
+    if (!drawer) return;
+    drawer.hidden = false;
+    document.body.style.overflow = "hidden";
+    if (!prefersReduced) {
+      requestAnimationFrame(function () { drawer.classList.add("is-open"); });
+    } else {
+      drawer.classList.add("is-open");
+    }
+    drawerToggle && drawerToggle.setAttribute("aria-expanded", "true");
+    var closeBtn = drawer.querySelector("[data-col-drawer-close]");
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove("is-open");
+    document.body.style.overflow = "";
+    drawerToggle && drawerToggle.setAttribute("aria-expanded", "false");
+    var delay = prefersReduced ? 0 : 350;
+    setTimeout(function () { drawer.hidden = true; }, delay);
+    if (drawerToggle) drawerToggle.focus();
+  }
+
+  if (drawerToggle) {
+    drawerToggle.addEventListener("click", function () {
+      var isOpen = drawerToggle.getAttribute("aria-expanded") === "true";
+      if (isOpen) { closeDrawer(); } else { openDrawer(); }
+    });
+  }
+
+  if (drawer) {
+    var overlay = drawer.querySelector("[data-col-drawer-overlay]");
+    var closeBtn = drawer.querySelector("[data-col-drawer-close]");
+    if (overlay) overlay.addEventListener("click", closeDrawer);
+    if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !drawer.hidden) closeDrawer();
+    });
+
+    /* Focus trap */
+    drawer.addEventListener("keydown", function (e) {
+      if (e.key !== "Tab") return;
+      var focusable = Array.prototype.slice.call(
+        drawer.querySelectorAll('button:not([disabled]),input:not([disabled]),a[href],[tabindex="0"]')
+      ).filter(function (el) { return !el.closest("[hidden]"); });
+      if (!focusable.length) return;
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    /* Apply: sync drawer inputs → form inputs, then submit */
+    var applyBtn = drawer.querySelector("[data-col-drawer-apply]");
+    if (applyBtn && filterForm) {
+      applyBtn.addEventListener("click", function () {
+        /* Sync checkboxes */
+        var drawerChecks = Array.prototype.slice.call(drawer.querySelectorAll("[data-col-drawer-check]"));
+        drawerChecks.forEach(function (dc) {
+          var name = dc.getAttribute("data-col-drawer-check");
+          var formInput = filterForm.querySelector('input[name="' + name + '"][value="' + dc.value + '"]');
+          if (formInput) formInput.checked = dc.checked;
+        });
+        /* Sync number inputs */
+        var drawerInputs = Array.prototype.slice.call(drawer.querySelectorAll("[data-col-drawer-input]"));
+        drawerInputs.forEach(function (di) {
+          var name = di.getAttribute("data-col-drawer-input");
+          var formInput = filterForm.querySelector('input[name="' + name + '"]');
+          if (formInput) formInput.value = di.value;
+        });
+        filterForm.submit();
+      });
+    }
+  }
+
+  /* ─── Collapsible sections inside drawer ─────────────── */
+  var sectionToggles = document.querySelectorAll(".col-drawer__section-toggle");
+  Array.prototype.forEach.call(sectionToggles, function (toggle) {
+    var bodyId = toggle.getAttribute("aria-controls");
+    var body = bodyId ? document.getElementById(bodyId) : null;
+    if (!body) return;
+    toggle.addEventListener("click", function () {
+      var isOpen = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+      body.hidden = isOpen;
+    });
+  });
+
+})();
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Collection",
   "settings": [
-    { "type": "range", "id": "products_per_page", "min": 8, "max": 24, "step": 4, "label": "Products per page", "default": 16 }
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "label": "Products per page",
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "promo_label",
+      "label": "Promo label",
+      "placeholder": "Limited drop"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Promo text",
+      "placeholder": "Free shipping on orders over $150 · Weekly drops every Friday"
+    }
   ]
 }
 {% endschema %}
