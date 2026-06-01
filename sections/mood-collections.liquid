@@ -382,12 +382,19 @@
   if block_count == 2
     assign grid_mod = ' smmc-grid--2'
   endif
+  assign mood_cols = 3
+  if block_count == 2
+    assign mood_cols = 2
+  elsif block_count == 4
+    assign mood_cols = 4
+  endif
 -%}
 
 <section
   class="smmc-root"
   id="smmc-{{ section.id }}"
   aria-labelledby="smmc-heading-{{ section.id }}"
+  style="--smmc-cols: {{ mood_cols }};"
 >
   <div class="container">
     {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}

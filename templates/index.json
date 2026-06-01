@@ -24,7 +24,8 @@
         "collage_caption": "Drop 01",
         "countdown_enabled": true,
         "countdown_label": "Next drop in",
-        "drop_date": "2026-06-07 13:00"
+        "drop_date": "2026-06-07 13:00",
+        "rating_text": "Loved by 2,000+ women"
       },
       "blocks": {
         "p1": {
@@ -534,7 +535,7 @@
           "settings": {
             "emoji": "🌸",
             "title": "SOFT MOOD",
-            "tagline": "For brunches, vacations and slow mornings.",
+            "tagline": "For coffee dates and slow mornings.",
             "collection": "maxi-silhouettes",
             "color1": "#e3c9b5",
             "color2": "#b98c6d",
@@ -546,7 +547,7 @@
           "settings": {
             "emoji": "🔥",
             "title": "BOLD MOOD",
-            "tagline": "For girls who want attention.",
+            "tagline": "For nights you want attention.",
             "collection": "maxi-silhouettes",
             "color1": "#c2502e",
             "color2": "#7a2618",
@@ -558,10 +559,22 @@
           "settings": {
             "emoji": "✨",
             "title": "FREE MOOD",
-            "tagline": "For travel and summer escapes.",
+            "tagline": "For vacations and spontaneous plans.",
             "collection": "maxi-silhouettes",
             "color1": "#9aa67f",
             "color2": "#5f6b48",
+            "link_label": "Shop the mood"
+          }
+        },
+        "sharp": {
+          "type": "mood",
+          "settings": {
+            "emoji": "◆",
+            "title": "SHARP MOOD",
+            "tagline": "For days you're taking control.",
+            "collection": "maxi-silhouettes",
+            "color1": "#2c2a28",
+            "color2": "#55504a",
             "link_label": "Shop the mood"
           }
         }
@@ -569,7 +582,8 @@
       "block_order": [
         "soft",
         "bold",
-        "free"
+        "free",
+        "sharp"
       ],
       "settings": {
         "eyebrow": "Find your vibe",

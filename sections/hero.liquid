@@ -123,6 +123,14 @@
           {%- endif -%}
         </div>
 
+        {%- comment %} — Social proof rating (instant trust on first paint) — {%- endcomment %}
+        {%- if section.settings.rating_text != blank -%}
+          <div class="sm-hero__rating">
+            <span class="sm-hero__stars" aria-hidden="true">★★★★★</span>
+            <span class="sm-hero__rating-text">{{ section.settings.rating_text }}</span>
+          </div>
+        {%- endif -%}
+
         {%- comment %} — Countdown — {%- endcomment %}
         {%- if show_countdown -%}
           <div
@@ -426,6 +434,27 @@
 .sm-hero__prop-mark { color: var(--color-ember); flex-shrink: 0; }
 @media (max-width: 480px) {
   .sm-hero__props { flex-direction: column; gap: 0.45rem; }
+}
+
+/* ━━━ Social proof rating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: clamp(1.25rem, 3vh, 1.75rem);
+  animation: sm-hero-rise-sub 0.85s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.sm-hero__stars {
+  color: var(--color-ember);
+  letter-spacing: 0.12em;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.sm-hero__rating-text {
+  font-family: var(--font-body);
+  font-size: clamp(0.8125rem, 1.3vw, 0.9375rem);
+  font-weight: 500;
+  color: var(--color-cream);
 }
 
 /* ━━━ CTAs ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -1161,6 +1190,13 @@
       "label": "Drop date & time",
       "info": "Format: YYYY-MM-DD HH:MM (24-hour, store local time). Example: 2026-06-07 13:00",
       "default": "2026-06-07 13:00"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Social proof line (★★★★★ shown automatically)",
+      "info": "Keep it honest — update as your reviews grow. Leave blank to hide.",
+      "default": "Loved by 2,000+ women"
     }
   ],
   "blocks": [
@@ -1182,7 +1218,8 @@
         "heading_accent": "you're in.",
         "subheading": "Limited fashion drops designed for every version of you.",
         "cta_label": "Shop New Drop",
-        "cta2_label": "Find your mood",
+        "cta2_label": "View Best Sellers",
+        "rating_text": "Loved by 2,000+ women",
         "collage_caption": "Drop 01 · Live now",
         "countdown_enabled": true,
         "countdown_label": "Next drop in",
