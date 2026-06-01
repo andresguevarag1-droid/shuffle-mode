@@ -405,8 +405,8 @@
 </section>
 
 {% javascript %}
-/* NOTE: Shopify bundles {% javascript %} into a global file, so Liquid like
-   {{ section.id }} is NOT processed here. We therefore operate per-instance by
+/* NOTE: Shopify bundles section JS into a global file, so Liquid such as
+   section.id is NOT processed here. We therefore operate per-instance by
    querying the DOM, never by interpolated IDs. */
 (function () {
   function initTestimonials(track) {
