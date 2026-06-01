@@ -610,6 +610,159 @@
   }
 }
 
+/* ── Small phone (≤480px) ────────────────────────────── */
+@media (max-width: 480px) {
+  /* Hero section */
+  .smwhy-hero {
+    padding: 3rem 0 2.5rem;
+  }
+
+  .smwhy-hero__headline {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+  }
+
+  /* Hero image: taller crop on small phones */
+  .smwhy-hero__image-wrap {
+    aspect-ratio: 4 / 3;
+    max-height: 70vw;
+  }
+
+  /* Stat strip: 2×2 grid */
+  .smwhy-stats {
+    padding: 2rem 0;
+  }
+
+  .smwhy-stat {
+    flex: 1 1 48%;
+    min-width: 0;
+  }
+
+  .smwhy-stat__value {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  /* Pillars header: stack label below count */
+  .smwhy-pillars__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .smwhy-pillars__count {
+    font-size: clamp(2.5rem, 10vw, 4rem);
+  }
+
+  /* Pillars: single column */
+  .smwhy-pillars__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .smwhy-pillar {
+    border-right: none !important;
+  }
+
+  .smwhy-pillar__title {
+    font-size: clamp(1.125rem, 5vw, 1.4rem);
+  }
+
+  /* Pillars section padding */
+  .smwhy-pillars {
+    padding: 3rem 0;
+  }
+
+  /* Founder section: portrait above quote */
+  .smwhy-founder {
+    padding: 3rem 0;
+  }
+
+  .smwhy-founder__inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .smwhy-founder__portrait {
+    width: clamp(100px, 32vw, 160px);
+  }
+
+  .smwhy-founder__quote {
+    font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+    white-space: normal;
+  }
+
+  /* Founder watermark: hide on tiny screens to avoid overflow */
+  .smwhy-founder::before {
+    display: none;
+  }
+
+  /* Promise row: already 2-col at 600px; below that use 1-col */
+  .smwhy-promises__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .smwhy-promises {
+    padding: 2.5rem 0;
+  }
+
+  /* CTA section */
+  .smwhy-cta-section {
+    padding: 3rem 0;
+  }
+
+  .smwhy-cta-section__headline {
+    font-size: clamp(1.5rem, 7vw, 2.25rem);
+  }
+
+  .smwhy-cta {
+    display: block;
+    text-align: center;
+    padding: 1em 2em;
+  }
+
+  /* Prevent overflow in text blocks */
+  .smwhy-hero__lead,
+  .smwhy-pillar__text,
+  .smwhy-promise__text,
+  .smwhy-founder__quote {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
+  }
+
+  .smwhy-hero__text {
+    max-width: 100%;
+  }
+}
+
+/* ── Mini phone (≤380px) ─────────────────────────────── */
+@media (max-width: 380px) {
+  .smwhy-hero__headline {
+    font-size: clamp(1.75rem, 10vw, 2.25rem);
+  }
+
+  .smwhy-stat__value {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+  }
+
+  .smwhy-stat__label {
+    font-size: 0.5625rem;
+    letter-spacing: 0.14em;
+  }
+
+  .smwhy-founder__portrait {
+    width: clamp(80px, 28vw, 120px);
+  }
+
+  .smwhy-founder__quote {
+    font-size: clamp(1rem, 5vw, 1.25rem);
+  }
+
+  /* Tight padding on pillars */
+  .smwhy-pillar {
+    padding: 1.5rem 1rem;
+  }
+}
+
 {% endstylesheet %}
 
 {%- liquid

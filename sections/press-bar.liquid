@@ -362,6 +362,92 @@
   max-width: 110px;
 }
 
+/* ─── SMALL PHONE (≤480px) ─── */
+@media (max-width: 480px) {
+  .sm-proof {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+  }
+
+  /* Stat grid: always 2×2 on small phones */
+  .sm-proof__stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    max-width: 100%;
+  }
+
+  /* Dividers: only show on even children (right column),
+     same as the existing ≤639 rule — ensure it still applies */
+  .sm-proof__stat {
+    padding: 24px 12px;
+  }
+
+  .sm-proof__stat-number {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+  }
+
+  .sm-proof__stat-label {
+    font-size: 0.5625rem;
+    max-width: 90px;
+  }
+
+  /* Press row: tighten gaps */
+  .sm-proof__press-row {
+    gap: 24px 32px;
+  }
+
+  .sm-proof__press-wrap {
+    padding-top: 36px;
+    gap: 24px;
+  }
+
+  /* Heading scales */
+  .sm-proof__heading {
+    font-size: clamp(1.25rem, 5.5vw, 1.75rem);
+    margin-bottom: 40px;
+  }
+}
+
+/* ─── TINY PHONE (≤380px — SE / mini) ─── */
+@media (max-width: 380px) {
+  .sm-proof__stat {
+    padding: 20px 8px;
+  }
+
+  .sm-proof__stat-number {
+    font-size: clamp(1.75rem, 10vw, 2.25rem);
+  }
+
+  .sm-proof__stat-label {
+    font-size: 0.5rem;
+    max-width: 80px;
+  }
+
+  /* Divider lines: keep 2×2, only right column gets divider */
+  .sm-proof__stat + .sm-proof__stat::before {
+    height: 36px;
+  }
+
+  /* Press wordmarks: allow wrapping */
+  .sm-proof__press-wordmark {
+    white-space: normal;
+    text-align: center;
+    font-size: clamp(0.75rem, 4vw, 0.875rem);
+  }
+
+  .sm-proof__press-row {
+    gap: 20px 24px;
+  }
+
+  .sm-proof__heading {
+    font-size: clamp(1.125rem, 6vw, 1.5rem);
+    margin-bottom: 32px;
+  }
+
+  .sm-proof__trust-line {
+    font-size: 0.5625rem;
+  }
+}
+
 /* ── Count-up animation state ──
    Values are visible by DEFAULT so they never disappear if JS doesn't run.
    The count-up animation only hides them once JS has explicitly opted in by

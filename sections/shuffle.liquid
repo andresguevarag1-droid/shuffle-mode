@@ -795,27 +795,196 @@
   }
 }
 
-/* ── mobile ── */
+/* ── mobile (≤860px already stacks the grid via the layout rule above) ── */
+@media (max-width: 860px) {
+  /* Stage becomes full-width when stacked */
+  .smsh-stage {
+    width: 100%;
+    /* When stacked, stage height is driven by the active panel's min-height.
+       The absolute children need a real height to anchor to — set it here. */
+    min-height: 480px;
+  }
+}
+
 @media (max-width: 580px) {
-  .smsh-panel__inner {
-    min-height: 520px;
+  /* Section vertical padding */
+  .smsh-root {
+    padding: clamp(2.5rem, 7vw, 4rem) 0;
   }
 
-  .smsh-look {
-    gap: 10px;
+  /* Copy column: prevent overflow */
+  .smsh-copy {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .smsh-heading {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .smsh-sub {
+    max-width: 100%;
+  }
+
+  /* Layout gap tighter on phone */
+  .smsh-layout {
+    gap: 36px;
+  }
+
+  /* Stage: tight height for stacked layout */
+  .smsh-stage {
+    min-height: 460px;
+  }
+
+  .smsh-panel__inner {
+    min-height: 460px;
+    padding: 24px;
   }
 
   .smsh-mood-id__name {
-    font-size: 2.4rem;
+    font-size: clamp(1.9rem, 8vw, 2.4rem);
   }
 
+  .smsh-mood-id__line {
+    font-size: clamp(.9rem, 3.5vw, 1rem);
+  }
+
+  /* Tiles: 2-up at 480–320px — keep them inside the panel */
+  .smsh-look {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .smsh-tile {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .smsh-tile__meta {
+    padding: 8px 10px 8px;
+  }
+
+  .smsh-tile__name {
+    font-size: .6875rem;
+  }
+
+  /* Pills: wrap, ensure ≥44px tap height */
+  .smsh-pills {
+    gap: 8px;
+  }
+
+  .smsh-pill {
+    padding: 12px 16px;
+    min-height: 44px;
+    font-size: .75rem;
+  }
+
+  /* Shuffle button: full-width, tappable */
   .smsh-shuffle-btn {
     width: 100%;
     justify-content: center;
+    min-height: 52px;
+  }
+}
+
+/* ── small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .smsh-heading {
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    overflow-wrap: break-word;
   }
 
-  .smsh-pills {
+  .smsh-stage {
+    min-height: 420px;
+  }
+
+  .smsh-panel__inner {
+    min-height: 420px;
+    padding: 20px;
+  }
+
+  .smsh-mood-id__name {
+    font-size: clamp(1.75rem, 9vw, 2.2rem);
+  }
+
+  .smsh-look {
     gap: 8px;
+  }
+
+  .smsh-tile__img-wrap {
+    /* Slightly squarer ratio reclaims vertical space at 480px */
+    aspect-ratio: 2/3;
+  }
+
+  /* Ensure shop CTA is tappable */
+  .smsh-shop-cta {
+    min-height: 44px;
+    align-items: center;
+  }
+}
+
+/* ── tiny phone (≤380px — iPhone SE / mini) ── */
+@media (max-width: 380px) {
+  .smsh-heading {
+    font-size: clamp(1.75rem, 9.5vw, 2.1rem);
+  }
+
+  .smsh-stage {
+    min-height: 360px;
+  }
+
+  .smsh-panel__inner {
+    min-height: 360px;
+    padding: 16px;
+  }
+
+  .smsh-mood-id__name {
+    font-size: clamp(1.5rem, 9vw, 1.9rem);
+  }
+
+  .smsh-mood-id__line {
+    font-size: clamp(.8125rem, 3.5vw, .9375rem);
+  }
+
+  /* At 320px tiles are ~134px wide — keep 2-col but tighten */
+  .smsh-look {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .smsh-tile__img-wrap {
+    aspect-ratio: 2/3;
+  }
+
+  .smsh-tile__meta {
+    padding: 6px 8px 6px;
+  }
+
+  .smsh-tile__name {
+    font-size: .625rem;
+  }
+
+  .smsh-tile__price {
+    font-size: .5625rem;
+  }
+
+  .smsh-pill {
+    padding: 10px 12px;
+    font-size: .7rem;
+    min-height: 44px;
+  }
+
+  .smsh-shuffle-btn {
+    font-size: .8rem;
+    padding: 14px 20px;
+    min-height: 52px;
+  }
+
+  /* Gradient stage ambient — reign in the blur at tiny widths */
+  .smsh-ambient {
+    inset: -10%;
   }
 }
 {% endstylesheet %}

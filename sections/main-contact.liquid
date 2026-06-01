@@ -1080,6 +1080,113 @@
   }
 }
 
+/* ── Small phone (≤480px) ────────────────────────────── */
+@media (max-width: 480px) {
+  .smc-contact {
+    padding: 3rem 0 4rem;
+  }
+
+  .smc-contact__wrap {
+    gap: 2.5rem;
+  }
+
+  .smc-contact__info {
+    gap: 1.5rem;
+  }
+
+  .smc-contact__heading {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+  }
+
+  /* Promise badge: prevent overflow */
+  .smc-contact__promise {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+  }
+
+  /* Trust strip: hide separators so items wrap cleanly */
+  .smc-contact__trust {
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+  }
+
+  .smc-contact__trust-sep {
+    display: none;
+  }
+
+  /* Form card: reduce side padding */
+  .smc-contact__form-col {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
+
+  /* Field grid always single-column on phones */
+  .smc-contact__fields {
+    grid-template-columns: 1fr;
+  }
+
+  /* 44 px touch targets for inputs */
+  .smc-contact__input {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+
+  .smc-contact__select {
+    min-height: 44px;
+    padding: 0.75rem 2.25rem 0.75rem 1rem;
+  }
+
+  /* FAQ summary tap target */
+  .smc-contact__faq-summary {
+    padding: 0.75rem 0;
+    min-height: 44px;
+  }
+
+  /* Submit button: full-width, tall enough to tap */
+  .smc-contact__submit {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  /* Prevent text overflow in detail rows and FAQ answers */
+  .smc-contact__detail-value,
+  .smc-contact__faq-body-inner {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
+  }
+
+  .smc-contact__intro {
+    max-width: 100%;
+  }
+}
+
+/* ── Mini phone (≤380px) ─────────────────────────────── */
+@media (max-width: 380px) {
+  .smc-contact__heading {
+    font-size: clamp(1.75rem, 10vw, 2.25rem);
+  }
+
+  .smc-contact__form-col {
+    padding: 1.25rem 1rem 1.5rem;
+  }
+
+  .smc-contact__input,
+  .smc-contact__select {
+    font-size: 0.875rem;
+  }
+
+  .smc-contact__social {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .smc-contact__trust-item {
+    font-size: 0.6875rem;
+  }
+}
+
 {% endstylesheet %}
 
 {% javascript %}

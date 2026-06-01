@@ -981,6 +981,124 @@
   font-size: 12px;
 }
 
+/* ── small phone (≤480px) ── */
+@media (max-width: 480px) {
+  /* Shrink header height slightly so more page shows */
+  :root {
+    --smh-h:    60px;
+    --smh-h-sm: 52px;
+  }
+
+  /* Logo: tighten to fit on narrower bars */
+  .smh-logo {
+    font-size: clamp(14px, 4vw, 17px);
+  }
+
+  /* Actions cluster: tighten gap so icons don't crowd */
+  .smh-actions {
+    gap: 0;
+  }
+
+  /* Icon buttons: increase to ≥44px touch target */
+  .smh-icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Hamburger: ensure its own hit area is 44px */
+  .smh-menu-toggle {
+    width: 44px;
+    height: 44px;
+    margin-right: 0;
+  }
+
+  /* Search panel inner: tighter horizontal padding */
+  .smh-search-panel__inner {
+    padding-block: 16px;
+    gap: 8px;
+  }
+
+  /* Search input: scale down so it doesn't overflow at 320px */
+  .smh-search-input {
+    font-size: clamp(18px, 5.5vw, 26px);
+    min-width: 0;
+  }
+
+  /* Drawer width already uses min(360px, 92vw) — fine.
+     Tighten internal padding for 320px screens. */
+  .smh-drawer__head {
+    padding: 16px 18px;
+  }
+
+  .smh-drawer__link {
+    padding: 16px 18px;
+    /* Guarantee ≥44px tap target */
+    min-height: 44px;
+  }
+
+  .smh-drawer__sublink {
+    padding-top: 13px;
+    padding-bottom: 13px;
+    padding-left: 32px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .smh-drawer__sublink:hover {
+    padding-left: 38px;
+  }
+
+  .smh-drawer__foot {
+    padding: 18px;
+  }
+
+  .smh-cta--full {
+    height: 44px;
+  }
+}
+
+/* ── extra-small phone (≤380px — iPhone SE / mini) ── */
+@media (max-width: 380px) {
+  :root {
+    --smh-h:    56px;
+    --smh-h-sm: 48px;
+    /* Narrow drawer so scrim is still visible, preventing accidental close */
+    --smh-drawer-w: min(300px, 90vw);
+  }
+
+  .smh-logo {
+    font-size: 13px;
+  }
+
+  /* Bar grid: compress left/right padding so logo stays centered */
+  .smh-bar {
+    padding-inline: 0.5rem;
+  }
+
+  .smh-drawer__head {
+    padding: 14px 16px;
+  }
+
+  .smh-drawer__link {
+    padding: 14px 16px;
+    font-size: 10.5px;
+  }
+
+  .smh-drawer__sublink {
+    padding-left: 28px;
+  }
+
+  .smh-drawer__foot {
+    padding: 16px;
+  }
+
+  /* Search: shrink further */
+  .smh-search-input {
+    font-size: clamp(16px, 5vw, 22px);
+  }
+}
+
 /* ── reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .smh-header,

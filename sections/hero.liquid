@@ -722,12 +722,12 @@
 /* ━━━ Mobile (<768px) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 @media (max-width: 767px) {
   .sm-hero__root {
-    min-height: clamp(580px, 92vh, 820px);
+    min-height: clamp(560px, 92vh, 820px);
   }
 
   .sm-hero__stage {
     align-items: flex-end;
-    padding-bottom: clamp(5rem, 12vh, 7rem);
+    padding-bottom: clamp(4.5rem, 11vh, 7rem);
   }
 
   .sm-hero__content {
@@ -738,11 +738,16 @@
 
   .sm-hero__eyebrow {
     justify-content: center;
+    gap: 0.625rem;
   }
 
   .sm-hero__heading {
     align-items: center;
-    font-size: clamp(2.25rem, 9.5vw, 3.25rem);
+    font-size: clamp(2rem, 9vw, 3.25rem);
+    /* prevent any word from creating horizontal scroll */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
   }
 
   .sm-hero__sub {
@@ -752,11 +757,33 @@
 
   .sm-hero__ctas {
     justify-content: center;
-    gap: 0.75rem 1.5rem;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  /* Stack CTAs full-width on phones, guarantee ≥44px tap target */
+  .sm-hero__btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .sm-hero__btn--ghost {
+    /* ghost button also needs a visible hit area */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .sm-hero__countdown {
     align-items: center;
+    /* prevent countdown overflow by letting it stretch to available width */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sm-hero__clock {
+    gap: 0.0625rem;
   }
 
   /* On mobile, scrim shifts to bottom-weighted for vertical scroll */
@@ -793,6 +820,111 @@
 
   .sm-hero__heading {
     font-size: clamp(2.5rem, 6vw, 4rem);
+  }
+}
+
+/* ━━━ Small phone (≤480px) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 480px) {
+  .sm-hero__root {
+    /* Avoid ultra-tall on small-phone landscape; still feels full-bleed */
+    min-height: clamp(520px, 90svh, 760px);
+  }
+
+  .sm-hero__stage {
+    /* Tighter vertical padding so content doesn't push off-screen */
+    padding-top: clamp(4.5rem, 10vh, 7rem);
+    padding-bottom: clamp(3.5rem, 9vh, 5.5rem);
+  }
+
+  /* Reduce side padding carried by .container so nothing causes h-scroll */
+  .sm-hero__container {
+    padding-inline: 1.25rem;
+  }
+
+  .sm-hero__heading {
+    font-size: clamp(1.875rem, 8.5vw, 2.75rem);
+    letter-spacing: -0.022em;
+  }
+
+  .sm-hero__sub {
+    font-size: 0.875rem;
+    max-width: 100%;
+  }
+
+  .sm-hero__eyebrow-text {
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* Countdown: shrink digits + separators so they never wrap */
+  .sm-hero__countdown {
+    padding: 0.875rem 1rem 0.75rem;
+  }
+
+  .sm-hero__digit {
+    font-size: clamp(1.25rem, 6.5vw, 1.75rem);
+  }
+
+  .sm-hero__sep {
+    font-size: clamp(0.9rem, 4.5vw, 1.25rem);
+    margin: 0 0.05rem;
+  }
+
+  .sm-hero__unit {
+    min-width: 2.25ch;
+  }
+
+  .sm-hero__unit-label {
+    font-size: 0.45rem;
+  }
+
+  /* Drop chip — keep within viewport right edge */
+  .sm-hero__chip-wrap {
+    right: 0.875rem;
+    top: 0.875rem;
+  }
+}
+
+/* ━━━ Extra-small phone (≤380px — iPhone SE / mini) ━━━━━━━━━━━━━━━ */
+@media (max-width: 380px) {
+  .sm-hero__container {
+    padding-inline: 1rem;
+  }
+
+  .sm-hero__heading {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+  }
+
+  .sm-hero__countdown {
+    padding: 0.75rem 0.875rem 0.625rem;
+  }
+
+  .sm-hero__digit {
+    font-size: clamp(1.125rem, 6vw, 1.5rem);
+  }
+
+  .sm-hero__sep {
+    font-size: clamp(0.8rem, 4vw, 1rem);
+    margin: 0;
+  }
+
+  .sm-hero__unit {
+    min-width: 2ch;
+  }
+
+  .sm-hero__clock {
+    gap: 0;
+  }
+
+  /* Primary CTA: reduce horizontal padding so label fits on 320px */
+  .sm-hero__btn--primary {
+    padding-inline: 1.25rem;
+    font-size: 0.71875rem;
+  }
+
+  .sm-hero__chip-wrap {
+    right: 0.75rem;
+    top: 0.75rem;
   }
 }
 

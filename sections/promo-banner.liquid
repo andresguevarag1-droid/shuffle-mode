@@ -259,6 +259,122 @@
   }
   .smpb-headline {
     max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Countdown row: allow wrapping without clipping */
+  .smpb-countdown {
+    gap: clamp(0.75rem, 3vw, 1.5rem);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Countdown units stay legible */
+  .smpb-countdown-unit {
+    min-width: 2.8ch;
+  }
+
+  .smpb-countdown-num {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .smpb-countdown-sep {
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
+  }
+}
+
+/* ── small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .smpb-root {
+    /* Cap height so content never gets buried on short phones */
+    --smpb-min-h: min(75vh, 640px);
+  }
+
+  .smpb-inner {
+    padding: clamp(2.5rem, 10vw, 4rem) 1.25rem;
+    gap: 0;
+  }
+
+  .smpb-headline {
+    font-size: clamp(2rem, 11vw, 2.75rem);
+    line-height: 1.06;
+    margin-bottom: 1rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .smpb-subtext {
+    font-size: clamp(0.875rem, 4vw, 0.95rem);
+    margin-bottom: 1.75rem;
+    max-width: 100%;
+  }
+
+  .smpb-eyebrow {
+    font-size: 0.625rem;
+    padding: 0.3em 0.7em;
+    margin-bottom: 1rem;
+  }
+
+  /* Countdown: force single row by tightening, fall back to wrap */
+  .smpb-countdown {
+    gap: 0.5rem 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .smpb-countdown-num {
+    font-size: clamp(1.75rem, 9vw, 2.5rem);
+  }
+
+  .smpb-countdown-sep {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .smpb-countdown-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* CTA: full-width, easily tappable */
+  .smpb-cta {
+    width: 100%;
+    justify-content: center;
+    padding: 1em 1.5em;
+    min-height: 52px;
+    text-align: center;
+  }
+}
+
+/* ── tiny phone (≤380px — SE / mini) ── */
+@media (max-width: 380px) {
+  .smpb-root {
+    --smpb-min-h: min(70vh, 580px);
+  }
+
+  .smpb-headline {
+    font-size: clamp(1.75rem, 11.5vw, 2.25rem);
+  }
+
+  .smpb-countdown {
+    gap: 0.4rem 0.6rem;
+  }
+
+  .smpb-countdown-num {
+    font-size: clamp(1.5rem, 10vw, 2rem);
+  }
+
+  .smpb-countdown-sep {
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+  }
+
+  .smpb-subtext {
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .smpb-inner {
+    padding: 2rem 1rem;
   }
 }
 {% endstylesheet %}

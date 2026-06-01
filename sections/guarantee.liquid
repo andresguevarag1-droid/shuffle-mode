@@ -229,6 +229,87 @@
   opacity: 0.7;
   white-space: nowrap;
 }
+
+/* ── Small phone (≤480px) ────────────────────────────── */
+@media (max-width: 480px) {
+  .smg-guarantee {
+    padding: 3rem 0;
+  }
+
+  /* Header text: clamp tighter */
+  .smg-guarantee__heading {
+    font-size: clamp(1.625rem, 7vw, 2.25rem);
+  }
+
+  .smg-guarantee__subcopy {
+    max-width: 100%;
+    font-size: 0.875rem;
+  }
+
+  /* Cards: 1 column on phones */
+  .smg-guarantee__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .smg-guarantee__card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Card text must not overflow */
+  .smg-guarantee__card-title,
+  .smg-guarantee__card-text {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
+  }
+
+  /* Payment row wraps, centers */
+  .smg-guarantee__payment {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .smg-guarantee__payment-divider {
+    display: none;
+  }
+
+  .smg-guarantee__payment-methods {
+    justify-content: center;
+    gap: 0.4rem 1rem;
+  }
+}
+
+/* ── Mini phone (≤380px) ─────────────────────────────── */
+@media (max-width: 380px) {
+  .smg-guarantee__heading {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+  }
+
+  .smg-guarantee__card {
+    padding: 1.25rem 1rem;
+  }
+
+  /* 2-column cards on SE if merchant has 4 blocks */
+  .smg-guarantee__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .smg-guarantee__icon-circle {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .smg-guarantee__card-title {
+    font-size: 0.9375rem;
+  }
+
+  .smg-guarantee__card-text {
+    font-size: 0.75rem;
+  }
+}
+
 {% endstylesheet %}
 
 {%- liquid

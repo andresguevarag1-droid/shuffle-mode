@@ -136,6 +136,8 @@
   z-index: 2;
   display: grid;
   gap: 0;
+  /* Prevent grid children from blowing out their column */
+  min-width: 0;
 }
 
 /* ─── WITH-IMAGE layout ─── */
@@ -153,9 +155,11 @@
   }
   .sm-manifesto--with-image .sm-manifesto__media {
     grid-area: media;
+    min-width: 0;
   }
   .sm-manifesto--with-image .sm-manifesto__content {
     grid-area: content;
+    min-width: 0;
   }
 }
 
@@ -224,6 +228,10 @@
   position: relative;
   z-index: 2;
   max-width: 680px;
+  /* Prevent the column from overflowing when heading words are very long */
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .sm-manifesto--type-only .sm-manifesto__content {
@@ -398,6 +406,108 @@
 }
 
 /* ─── LARGE SCREENS — clamp already handles this, block retained for reference ─── */
+
+/* ─── TABLET (768–1024) ─── */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .sm-manifesto__heading {
+    font-size: clamp(36px, 6vw, 64px);
+  }
+  .sm-manifesto__content {
+    max-width: 100%;
+  }
+}
+
+/* ─── MOBILE (≤767px) ─── */
+@media (max-width: 767px) {
+  .sm-manifesto {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+  }
+
+  .sm-manifesto__heading {
+    /* Never let large editorial type overflow 320px viewport */
+    font-size: clamp(2rem, 10vw, 44px);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    margin-bottom: 28px;
+  }
+
+  /* Word-reveal spans must wrap like inline text — they already are
+     inline-block; ensure no whitespace-nowrap leak */
+  .sm-manifesto__word,
+  .sm-manifesto__emphasis {
+    white-space: normal;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .sm-manifesto__content {
+    max-width: 100%;
+  }
+
+  .sm-manifesto--type-only .sm-manifesto__content {
+    text-align: center;
+  }
+
+  .sm-manifesto__eyebrow {
+    margin-bottom: 20px;
+  }
+
+  .sm-manifesto__body {
+    font-size: clamp(15px, 4vw, 17px);
+    margin-bottom: 32px;
+  }
+
+  .sm-manifesto__media {
+    margin-bottom: 32px;
+  }
+}
+
+/* ─── SMALL PHONE (≤480px) ─── */
+@media (max-width: 480px) {
+  .sm-manifesto__heading {
+    font-size: clamp(1.875rem, 11vw, 2.5rem);
+    line-height: 1.06;
+    margin-bottom: 24px;
+  }
+
+  .sm-manifesto__eyebrow {
+    font-size: 0.625rem;
+    margin-bottom: 16px;
+  }
+
+  .sm-manifesto__body {
+    font-size: clamp(14px, 4.2vw, 16px);
+    line-height: 1.7;
+  }
+
+  .sm-manifesto__cta {
+    /* Ensure tap target ≥44px */
+    min-height: 44px;
+    padding-bottom: 8px;
+  }
+}
+
+/* ─── TINY PHONE (≤380px — SE / mini) ─── */
+@media (max-width: 380px) {
+  .sm-manifesto {
+    padding: 2rem 0;
+  }
+
+  .sm-manifesto__heading {
+    font-size: clamp(1.625rem, 11.5vw, 2rem);
+    letter-spacing: -0.02em;
+  }
+
+  .sm-manifesto__body {
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  /* Background wordmark — at 320px it can cause horizontal scroll */
+  .sm-manifesto__wm-text {
+    font-size: clamp(160px, 52vw, 260px);
+  }
+}
 
 {% endstylesheet %}
 

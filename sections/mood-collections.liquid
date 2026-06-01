@@ -286,6 +286,94 @@
     aspect-ratio: 3 / 4;
   }
 }
+
+/* ── Small-phone: ≤480px ── */
+@media (max-width: 480px) {
+  .smmc-root {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+  }
+
+  /* Header: tighter */
+  .smmc-header {
+    margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  .smmc-heading {
+    font-size: clamp(1.75rem, 8.5vw, 2.5rem);
+  }
+
+  /* Single-column stack; moderate padding */
+  .smmc-grid,
+  .smmc-grid--2 {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+    gap: 0.75rem;
+  }
+
+  /* Sane card height — not absurdly tall at 480px */
+  .smmc-card {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* Body padding tighter */
+  .smmc-card__body {
+    padding: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  /* Title scales down */
+  .smmc-card__title {
+    font-size: clamp(1.375rem, 6.5vw, 2rem);
+    margin-bottom: 0.4rem;
+  }
+
+  .smmc-card__tagline {
+    font-size: 0.8125rem;
+    margin-bottom: 1rem;
+    /* Always visible on touch (no hover) */
+    opacity: 0.82;
+    transform: none;
+  }
+
+  /* CTA: always visible on touch, ≥44px tap target */
+  .smmc-card__cta {
+    opacity: 1;
+    transform: none;
+    padding-block: 0.5rem;
+    min-height: 44px;
+    align-items: center;
+  }
+}
+
+/* ── Extra-small phone: ≤380px ── */
+@media (max-width: 380px) {
+  .smmc-grid,
+  .smmc-grid--2 {
+    padding: 0 0.75rem;
+    gap: 0.625rem;
+  }
+
+  /* Not too tall at 320px — keep ratio manageable */
+  .smmc-card {
+    aspect-ratio: 3 / 4;
+  }
+
+  .smmc-card__title {
+    font-size: clamp(1.25rem, 7.5vw, 1.75rem);
+  }
+
+  .smmc-card__tagline {
+    font-size: 0.75rem;
+  }
+
+  .smmc-heading {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+  }
+
+  .smmc-eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.15em;
+  }
+}
 {% endstylesheet %}
 
 {%- liquid

@@ -200,6 +200,51 @@
     display: none;
   }
 }
+
+/* ── Small phone (≤480px) ────────────────────────────── */
+@media (max-width: 480px) {
+  /* Slightly taller bar so text is never clipped */
+  .smttb {
+    height: auto;
+    min-height: 36px;
+    padding: 0;
+  }
+
+  /* Marquee items: tighter padding to fit more on-screen */
+  .smttb__item--marquee {
+    padding: 0 0.875rem;
+  }
+
+  .smttb__label {
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+  }
+
+  .smttb__icon {
+    font-size: 0.75rem;
+  }
+}
+
+/* ── Mini phone (≤380px) ─────────────────────────────── */
+@media (max-width: 380px) {
+  .smttb {
+    min-height: 34px;
+  }
+
+  .smttb__item--marquee {
+    padding: 0 0.75rem;
+  }
+
+  .smttb__label {
+    font-size: 0.5625rem;
+    letter-spacing: 0.06em;
+  }
+
+  .smttb__sep {
+    margin-left: 0.75rem;
+  }
+}
+
 {% endstylesheet %}
 
 {% javascript %}

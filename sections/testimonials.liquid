@@ -342,6 +342,127 @@
   }
 }
 
+/* ── small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .smt-section {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+  }
+
+  .smt-head {
+    margin-bottom: 40px;
+  }
+
+  .smt-heading {
+    font-size: clamp(1.625rem, 7vw, 2rem);
+  }
+
+  /* Carousel: cards show one cleanly with tight side gutters */
+  .smt-track-outer {
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+
+  .smt-track {
+    padding: 0 16px 4px;
+    gap: 12px;
+  }
+
+  /* Card: fill nearly full width so no half-clipped neighbour */
+  .smt-card {
+    flex: 0 0 min(88vw, 320px);
+    padding: 28px 22px 24px;
+    gap: 20px;
+  }
+
+  .smt-quote {
+    font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+    line-height: 1.55;
+  }
+
+  /* Author row: prevent overflow */
+  .smt-footer {
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .smt-meta {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .smt-author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .smt-detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Aggregate rating pill: allow it to flex-wrap on small screen */
+  .smt-aggregate {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 14px;
+  }
+
+  .smt-aggregate__text {
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* Mark (decorative quote) — scale down */
+  .smt-mark {
+    font-size: 52px;
+  }
+}
+
+/* ── tiny phone (≤380px — SE / mini) ── */
+@media (max-width: 380px) {
+  .smt-track-outer {
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+
+  .smt-track {
+    padding: 0 12px 4px;
+    gap: 10px;
+  }
+
+  .smt-card {
+    flex: 0 0 min(91vw, 300px);
+    padding: 22px 18px 20px;
+    gap: 16px;
+  }
+
+  .smt-quote {
+    font-size: clamp(0.875rem, 4vw, 1rem);
+  }
+
+  .smt-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .smt-author {
+    font-size: 12px;
+  }
+
+  .smt-heading {
+    font-size: clamp(1.5rem, 8vw, 1.875rem);
+  }
+
+  .smt-mark {
+    font-size: 44px;
+  }
+}
+
 /* ── reveal animation ── */
 .smt-card {
   opacity: 0;
