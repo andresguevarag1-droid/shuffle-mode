@@ -276,4 +276,68 @@
   /* ============ Collection filters: auto-submit ============ */
   var filterForm = $("[data-filter-form]");
   if (filterForm) filterForm.addEventListener("change", function () { filterForm.submit(); });
+
+  /* ============ Collection filters end ============ */
+})();
+
+/* ============ Global reveal safety net (independent IIFE) ============
+   Many sections start their content at opacity:0 and rely on a per-section
+   IntersectionObserver to reveal it. If any of those observers fail to fire
+   (already in viewport on load, a JS error elsewhere, an old browser, etc.)
+   the content would stay invisible. This runs in its OWN try/catch IIFE so it
+   executes even if the main script above throws. Purely additive: it only ever
+   reveals content, never hides. */
+(function revealSafetyNet() {
+  try {
+    var all = function (sel) {
+      return Array.prototype.slice.call(document.querySelectorAll(sel));
+    };
+    // [hidden element selector, class the section adds to reveal it]
+    var pairs = [
+      [".smt-card", "smt-visible"],
+      [".sm-drop__header--reveal", "sm-drop--visible"],
+      [".sm-look__reveal", "is-visible"],
+      [".smph-reveal", "smph-reveal--visible"],
+      [".smes-reveal", "smes-visible"],
+      [".sm-manifesto__eyebrow", "is-revealed"],
+      [".sm-manifesto__heading", "is-revealed"],
+      [".sm-manifesto__body", "is-revealed"],
+      ["[data-reveal]", "is-revealed"]
+    ];
+
+    function revealNow(onlyInView) {
+      pairs.forEach(function (pair) {
+        all(pair[0]).forEach(function (el) {
+          if (el.classList.contains(pair[1])) return;
+          if (onlyInView) {
+            var r = el.getBoundingClientRect();
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            if (r.top > vh || r.bottom < 0) return; // off-screen: its own observer handles it
+          }
+          el.classList.add(pair[1]);
+        });
+      });
+      // Press/Stats: show the numbers even if the count-up never ran
+      all(".sm-proof__stat").forEach(function (s) {
+        if (s.getAttribute("data-counted") !== "true") s.setAttribute("data-counted", "true");
+      });
+    }
+
+    function start() {
+      revealNow(true); // reveal what's already on screen right away
+      setTimeout(function () { revealNow(false); }, 1500); // hard fallback for the rest
+    }
+
+    if (document.readyState === "complete") {
+      start();
+    } else {
+      window.addEventListener("load", start);
+      // also run once on DOMContentLoaded for above-the-fold content
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () { revealNow(true); });
+      } else {
+        revealNow(true);
+      }
+    }
+  } catch (e) { /* never let the safety net itself break the page */ }
 })();
