@@ -1,0 +1,851 @@
+{% stylesheet %}
+
+/* ============================================================
+   WHY SHUFFLE MODE — Brand Story Section
+   Prefix: smwhy-
+   ============================================================ */
+
+/* ── Root ─────────────────────────────────────────────────── */
+.smwhy-root {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  overflow: hidden;
+}
+
+/* ── HERO INTRO ───────────────────────────────────────────── */
+.smwhy-hero {
+  position: relative;
+  padding: clamp(5rem, 10vw, 9rem) 0 clamp(4rem, 7vw, 7rem);
+}
+
+.smwhy-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem, 6vw, 5rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .smwhy-hero__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(4rem, 8vw, 8rem);
+  }
+}
+
+/* Text side */
+.smwhy-hero__text {
+  max-width: 600px;
+}
+
+@media (min-width: 900px) {
+  .smwhy-hero__text {
+    max-width: none;
+  }
+}
+
+.smwhy-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  margin: 0 0 1.5rem;
+  display: block;
+}
+
+.smwhy-hero__headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-style: italic;
+  margin: 0 0 2rem;
+  color: var(--color-ink);
+}
+
+.smwhy-divider {
+  width: 2.5rem;
+  height: 1px;
+  background: rgba(22,19,15,.18);
+  margin: 0 0 2rem;
+}
+
+.smwhy-hero__lead {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.78;
+  color: var(--color-stone);
+  margin: 0;
+}
+.smwhy-hero__lead p { margin: 0 0 1em; }
+.smwhy-hero__lead p:last-child { margin-bottom: 0; }
+
+/* Image side */
+.smwhy-hero__image-wrap {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-sand);
+}
+
+@media (max-width: 899px) {
+  .smwhy-hero__image-wrap {
+    aspect-ratio: 3 / 2;
+    max-height: 60vw;
+  }
+}
+
+.smwhy-hero__image-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Fallback when no founder image */
+.smwhy-img-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  background: var(--color-sand);
+}
+
+.smwhy-img-fallback__wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(22,19,15,.22);
+  line-height: 1;
+  user-select: none;
+}
+
+.smwhy-img-fallback__label {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(22,19,15,.32);
+  text-align: center;
+}
+
+/* ── PILLARS SECTION ──────────────────────────────────────── */
+.smwhy-pillars {
+  padding: clamp(4rem, 7vw, 7rem) 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.smwhy-pillars__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: clamp(3rem, 5vw, 4.5rem);
+}
+
+.smwhy-pillars__count {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(22,19,15,.06);
+  line-height: 1;
+  user-select: none;
+}
+
+.smwhy-pillars__label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smwhy-pillars__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 700px) {
+  .smwhy-pillars__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1100px) {
+  .smwhy-pillars__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Individual pillar */
+.smwhy-pillar {
+  padding: clamp(2rem, 3.5vw, 2.75rem) clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--color-line);
+  position: relative;
+}
+
+@media (min-width: 700px) {
+  .smwhy-pillar:nth-child(odd) {
+    border-right: 1px solid var(--color-line);
+  }
+}
+
+@media (min-width: 1100px) {
+  .smwhy-pillar {
+    border-right: 1px solid var(--color-line);
+  }
+  .smwhy-pillar:last-child {
+    border-right: none;
+  }
+}
+
+.smwhy-pillar__index {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ember);
+  margin-bottom: 1.5rem;
+  display: block;
+  opacity: 0.7;
+}
+
+.smwhy-pillar__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0 0 1rem;
+  color: var(--color-ink);
+}
+
+.smwhy-pillar__text {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.72;
+  color: var(--color-stone);
+  margin: 0;
+}
+.smwhy-pillar__text p { margin: 0 0 0.75em; }
+.smwhy-pillar__text p:last-child { margin-bottom: 0; }
+
+/* ── FOUNDER NOTE ─────────────────────────────────────────── */
+.smwhy-founder {
+  padding: clamp(4rem, 7vw, 7rem) 0;
+  background: var(--color-ink);
+  color: var(--color-bone);
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle tonal watermark */
+.smwhy-founder::before {
+  content: 'SM';
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(220px, 30vw, 420px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(246,242,234,.06);
+  pointer-events: none;
+  user-select: none;
+}
+
+.smwhy-founder__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem, 5vw, 5rem);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .smwhy-founder__inner {
+    grid-template-columns: auto 1fr;
+    gap: clamp(4rem, 7vw, 7rem);
+    align-items: center;
+  }
+}
+
+/* Founder portrait */
+.smwhy-founder__portrait {
+  width: clamp(140px, 22vw, 220px);
+  flex-shrink: 0;
+}
+
+.smwhy-founder__portrait-frame {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--color-stone);
+  position: relative;
+}
+
+.smwhy-founder__portrait-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Fallback portrait */
+.smwhy-portrait-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: rgba(111,103,93,.45);
+}
+
+.smwhy-portrait-fallback__monogram {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(246,242,234,.35);
+  line-height: 1;
+  user-select: none;
+}
+
+.smwhy-portrait-fallback__hint {
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246,242,234,.3);
+  text-align: center;
+}
+
+/* Quote area */
+.smwhy-founder__quote-area {
+  position: relative;
+}
+
+.smwhy-founder__open-quote {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 0.6;
+  color: var(--color-ember);
+  display: block;
+  margin-bottom: 1.25rem;
+  user-select: none;
+  aria-hidden: true;
+}
+
+.smwhy-founder__quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.8vw, 2rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--color-bone);
+  margin: 0 0 2.5rem;
+  white-space: pre-line;
+}
+
+.smwhy-founder__attribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.smwhy-founder__name {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-bone);
+  margin: 0;
+}
+
+.smwhy-founder__role {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(246,242,234,.45);
+  margin: 0;
+}
+
+/* ── CLOSING CTA ──────────────────────────────────────────── */
+.smwhy-cta-section {
+  padding: clamp(4rem, 7vw, 7rem) 0;
+  border-top: 1px solid var(--color-line);
+  text-align: center;
+}
+
+.smwhy-cta-section__inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.smwhy-cta-section__headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--color-ink);
+  margin: 0 0 0.75rem;
+}
+
+.smwhy-cta-section__sub {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-stone);
+  line-height: 1.65;
+  margin: 0 0 2.5rem;
+}
+
+.smwhy-cta {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-cream);
+  background: var(--color-ink);
+  border: 1px solid var(--color-ink);
+  padding: 1em 2.5em;
+  transition: background 0.24s ease, color 0.24s ease, border-color 0.24s ease;
+}
+
+.smwhy-cta:hover,
+.smwhy-cta:focus-visible {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.smwhy-cta:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+}
+
+/* ── SCROLL REVEAL ────────────────────────────────────────── */
+.smwhy-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(.22,.6,.36,1),
+              transform 0.7s cubic-bezier(.22,.6,.36,1);
+}
+
+.smwhy-reveal.smwhy-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.smwhy-reveal[data-delay="1"] { transition-delay: 0.08s; }
+.smwhy-reveal[data-delay="2"] { transition-delay: 0.18s; }
+.smwhy-reveal[data-delay="3"] { transition-delay: 0.3s;  }
+.smwhy-reveal[data-delay="4"] { transition-delay: 0.42s; }
+.smwhy-reveal[data-delay="5"] { transition-delay: 0.56s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .smwhy-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+{% endstylesheet %}
+
+{%- liquid
+  assign eyebrow       = section.settings.eyebrow
+  assign headline      = section.settings.headline
+  assign lead          = section.settings.lead
+  assign founder_image = section.settings.founder_image
+  assign founder_quote = section.settings.founder_quote
+  assign founder_name  = section.settings.founder_name
+  assign founder_role  = section.settings.founder_role
+  assign f_img         = section.settings.founder_portrait
+  assign cta_label     = section.settings.cta_label
+  assign cta_url       = section.settings.cta_url
+  assign cta_sub       = section.settings.cta_sub
+  assign pillars       = section.blocks | where: "type", "pillar"
+-%}
+
+<article class="smwhy-root" aria-labelledby="smwhy-headline-{{ section.id }}">
+
+  <!-- ══ HERO INTRO ══════════════════════════════════════════ -->
+  <div class="smwhy-hero">
+    <div class="container">
+      <div class="smwhy-hero__inner">
+
+        <!-- Text -->
+        <div class="smwhy-hero__text">
+          {%- if eyebrow != blank -%}
+            <span class="smwhy-eyebrow smwhy-reveal" data-delay="1">{{ eyebrow | escape }}</span>
+          {%- endif -%}
+
+          {%- if headline != blank -%}
+            <h1 class="smwhy-hero__headline smwhy-reveal" data-delay="2" id="smwhy-headline-{{ section.id }}">
+              {{ headline | escape }}
+            </h1>
+          {%- endif -%}
+
+          <div class="smwhy-divider smwhy-reveal" data-delay="3" role="presentation"></div>
+
+          {%- if lead != blank -%}
+            <div class="smwhy-hero__lead smwhy-reveal" data-delay="4">{{ lead }}</div>
+          {%- endif -%}
+        </div>
+
+        <!-- Founder / hero image -->
+        <div class="smwhy-hero__image-wrap smwhy-reveal" data-delay="2">
+          {%- if founder_image != blank -%}
+            {{
+              founder_image
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'lazy',
+                widths: '500, 800, 1200',
+                sizes: '(max-width: 899px) 100vw, 50vw',
+                alt: founder_image.alt | default: 'Shuffle Mode founder' | escape
+            }}
+          {%- else -%}
+            <div class="smwhy-img-fallback" role="img" aria-label="Founder photo — coming soon">
+              <span class="smwhy-img-fallback__wordmark" aria-hidden="true">SM</span>
+              <span class="smwhy-img-fallback__label" aria-hidden="true">Photo coming soon</span>
+            </div>
+          {%- endif -%}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PILLARS ═════════════════════════════════════════════ -->
+  {%- if pillars.size > 0 -%}
+  <div class="smwhy-pillars">
+    <div class="container">
+
+      <div class="smwhy-pillars__header smwhy-reveal">
+        <span class="smwhy-pillars__count" aria-hidden="true">0{{ pillars.size }}</span>
+        <span class="smwhy-pillars__label">What drives us</span>
+      </div>
+
+      <div class="smwhy-pillars__grid" role="list">
+        {%- for block in pillars -%}
+          <div class="smwhy-pillar smwhy-reveal" data-delay="{{ forloop.index }}" role="listitem" {{ block.shopify_attributes }}>
+            <span class="smwhy-pillar__index" aria-hidden="true">0{{ forloop.index }}</span>
+            {%- if block.settings.title != blank -%}
+              <h2 class="smwhy-pillar__title">{{ block.settings.title | escape }}</h2>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="smwhy-pillar__text">{{ block.settings.text }}</div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+  {%- endif -%}
+
+  <!-- ══ FOUNDER NOTE ════════════════════════════════════════ -->
+  {%- if founder_quote != blank -%}
+  <div class="smwhy-founder">
+    <div class="container">
+      <div class="smwhy-founder__inner">
+
+        <!-- Portrait -->
+        <div class="smwhy-founder__portrait smwhy-reveal" data-delay="1">
+          <div class="smwhy-founder__portrait-frame">
+            {%- if f_img != blank -%}
+              {{
+                f_img
+                | image_url: width: 600
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '240, 440, 600',
+                  sizes: '(max-width: 899px) 140px, 220px',
+                  alt: f_img.alt | default: founder_name | default: 'Founder portrait' | escape
+              }}
+            {%- else -%}
+              <div class="smwhy-portrait-fallback" role="img" aria-label="Founder portrait — coming soon">
+                <span class="smwhy-portrait-fallback__monogram" aria-hidden="true">SM</span>
+                <span class="smwhy-portrait-fallback__hint" aria-hidden="true">Photo soon</span>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <!-- Quote -->
+        <blockquote class="smwhy-founder__quote-area smwhy-reveal" data-delay="2">
+          <span class="smwhy-founder__open-quote" aria-hidden="true">&ldquo;</span>
+          <p class="smwhy-founder__quote">{{ founder_quote | escape }}</p>
+          <footer class="smwhy-founder__attribution">
+            {%- if founder_name != blank -%}
+              <cite class="smwhy-founder__name">{{ founder_name | escape }}</cite>
+            {%- endif -%}
+            {%- if founder_role != blank -%}
+              <span class="smwhy-founder__role">{{ founder_role | escape }}</span>
+            {%- endif -%}
+          </footer>
+        </blockquote>
+
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <!-- ══ CLOSING CTA ═════════════════════════════════════════ -->
+  {%- if cta_label != blank -%}
+  <div class="smwhy-cta-section">
+    <div class="container">
+      <div class="smwhy-cta-section__inner">
+        <p class="smwhy-cta-section__headline smwhy-reveal" data-delay="1">
+          Every drop is a new mood.
+        </p>
+        {%- if cta_sub != blank -%}
+          <p class="smwhy-cta-section__sub smwhy-reveal" data-delay="2">{{ cta_sub | escape }}</p>
+        {%- endif -%}
+        <div class="smwhy-reveal" data-delay="3">
+          <a
+            href="{{ cta_url | default: '#' }}"
+            class="smwhy-cta"
+            {%- if cta_url == blank %} aria-disabled="true"{%- endif %}
+          >
+            {{ cta_label | escape }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+</article>
+
+{% javascript %}
+(function () {
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function revealAll(root) {
+    root.querySelectorAll('.smwhy-reveal').forEach(function (el) {
+      el.classList.add('smwhy-visible');
+    });
+  }
+
+  function initReveal(root) {
+    if (prefersReduced) {
+      revealAll(root);
+      return;
+    }
+
+    var items = root.querySelectorAll('.smwhy-reveal');
+    if (!('IntersectionObserver' in window)) {
+      revealAll(root);
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('smwhy-visible');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+
+    items.forEach(function (el) { io.observe(el); });
+  }
+
+  function init() {
+    document.querySelectorAll('.smwhy-root').forEach(initReveal);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  document.addEventListener('shopify:section:load', function (evt) {
+    var root = evt.target.querySelector('.smwhy-root');
+    if (root) initReveal(root);
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Why Shuffle Mode",
+  "tag": "section",
+  "class": "smwhy-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero intro"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our story"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Why Shuffle Mode exists"
+    },
+    {
+      "type": "richtext",
+      "id": "lead",
+      "label": "Lead paragraph",
+      "default": "<p>We started Shuffle Mode because fashion had stopped listening. Every store carried the same things, every season reset the same clock, and getting dressed started to feel like homework. We believed it could feel like something else — something personal, something alive.</p><p>So we built a different kind of brand. One drop a week. Small batches. No restocks. No trend chasing. Just pieces that show up when your mood calls for them — and disappear before they lose their meaning.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "founder_image",
+      "label": "Hero image",
+      "info": "Portrait orientation (4:5) works best. A founder photo or editorial shot — real photos will be added later."
+    },
+    {
+      "type": "header",
+      "content": "Founder note"
+    },
+    {
+      "type": "textarea",
+      "id": "founder_quote",
+      "label": "Founder quote",
+      "default": "I never wanted to build a brand. I wanted to build a ritual — the Sunday morning feeling of opening something that was made just for you, in a quantity small enough to mean something. That's what every drop is. A love letter to the woman who dresses for herself.",
+      "info": "A personal statement from the founder. Will appear as a blockquote."
+    },
+    {
+      "type": "text",
+      "id": "founder_name",
+      "label": "Founder name",
+      "default": "— The Founder"
+    },
+    {
+      "type": "text",
+      "id": "founder_role",
+      "label": "Founder title",
+      "default": "Founder, Shuffle Mode"
+    },
+    {
+      "type": "image_picker",
+      "id": "founder_portrait",
+      "label": "Founder portrait",
+      "info": "Small portrait (3:4). Shows beside the quote. Leave empty for an elegant tonal placeholder."
+    },
+    {
+      "type": "header",
+      "content": "Closing call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Shop the current drop"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_sub",
+      "label": "Subline below headline",
+      "default": "New pieces every week. No restocks. Designed in Boston — gone when they're gone.",
+      "info": "Optional supporting line above the button."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pillar",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Why we exist"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Body",
+          "default": "<p>Because getting dressed should feel like an act of self-expression, not an obligation. We exist for the woman who already knows who she is — she just needs the right piece to prove it.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Shuffle Mode",
+      "settings": {
+        "eyebrow": "Our story",
+        "headline": "Why Shuffle Mode exists",
+        "lead": "<p>We started Shuffle Mode because fashion had stopped listening. Every store carried the same things, every season reset the same clock, and getting dressed started to feel like homework. We believed it could feel like something else — something personal, something alive.</p><p>So we built a different kind of brand. One drop a week. Small batches. No restocks. No trend chasing. Just pieces that show up when your mood calls for them — and disappear before they lose their meaning.</p>",
+        "founder_quote": "I never wanted to build a brand. I wanted to build a ritual — the Sunday morning feeling of opening something that was made just for you, in a quantity small enough to mean something. That's what every drop is. A love letter to the woman who dresses for herself.",
+        "founder_name": "— The Founder",
+        "founder_role": "Founder, Shuffle Mode",
+        "cta_label": "Shop the current drop",
+        "cta_sub": "New pieces every week. No restocks. Designed in Boston — gone when they're gone."
+      },
+      "blocks": [
+        {
+          "type": "pillar",
+          "settings": {
+            "title": "Why we exist",
+            "text": "<p>Because getting dressed should feel like an act of self-expression, not an obligation. We exist for the woman who already knows who she is — she just needs the right piece to prove it. Fashion convinced us we needed more. We're here to convince you that less, chosen carefully, is everything.</p>"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "title": "What makes us different",
+            "text": "<p>We don't do seasons. We don't do markdowns. We don't restock. Every piece is released once, in a number small enough to feel intentional. You wear it knowing it was made for a specific moment — and that moment belongs to you.</p>"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "title": "The drop philosophy",
+            "text": "<p>One drop per week. Every Sunday. A small edit of pieces built around a mood, not a trend. The scarcity is the point — not as a marketing trick, but as a commitment to quality over volume. When the run is done, it's done. That's what makes it mean something.</p>"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "title": "Made in small batches",
+            "text": "<p>Small-batch production means every garment gets the attention it deserves. We work with makers who care about the craft. No shortcuts, no excess inventory, no waste. Just pieces worth keeping — and worth remembering.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

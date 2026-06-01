@@ -139,6 +139,27 @@
             {%- endfor -%}
           {%- endunless -%}
 
+          {%- comment -%} ── MODEL INFO + FIT ──
+            Per-product via metafields (custom.model_info, custom.fit), with
+            section-setting defaults so every product shows it. {%- endcomment -%}
+          {%- liquid
+            assign model_info = product.metafields.custom.model_info | default: section.settings.default_model_info
+            assign fit_note = product.metafields.custom.fit | default: section.settings.default_fit
+          -%}
+          {%- if model_info != blank or fit_note != blank -%}
+            <div class="pdp-modelfit">
+              {%- if model_info != blank -%}
+                <p class="pdp-modelfit__model">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="5" r="2.6" stroke="currentColor" stroke-width="1.2"/><path d="M3 14c0-2.5 2.2-4.2 5-4.2s5 1.7 5 4.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  <span>{{ model_info }}</span>
+                </p>
+              {%- endif -%}
+              {%- if fit_note != blank -%}
+                <p class="pdp-modelfit__fit"><span class="pdp-modelfit__fit-dot" aria-hidden="true"></span>{{ fit_note }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
           <p class="option__error pdp-option-error" data-unavailable hidden>
             That combination is unavailable — try another size or colour.
           </p>
@@ -180,23 +201,23 @@
 
         {% endform %}
 
-        {%- comment -%} Trust / shipping micro-line ── {%- endcomment -%}
-        <ul class="pdp-assurances product__assurances" aria-label="Shipping and returns">
+        {%- comment -%} Trust / policy block directly under Add to Cart ── {%- endcomment -%}
+        <ul class="pdp-assurances product__assurances" aria-label="Checkout assurances">
           <li class="pdp-assurance">
-            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Ships in 2–4 days
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7.5 3.5 10 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Secure Checkout
           </li>
           <li class="pdp-assurance">
-            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Free over $150
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7.5 3.5 10 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Easy Returns
           </li>
           <li class="pdp-assurance">
-            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            30-day returns
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7.5 3.5 10 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Ships From USA
           </li>
           <li class="pdp-assurance">
-            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 9.5 3.5 12 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Limited drop · no restocks
+            <svg class="pdp-assurance__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7.5 3.5 10 13 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tracking Included
           </li>
         </ul>
 
@@ -1125,6 +1146,35 @@
   color: var(--color-ink, #16130f);
   text-underline-offset: 3px;
 }
+
+/* ── Model info + fit ── */
+.pdp-modelfit {
+  margin: 1.25rem 0 0.25rem;
+  padding: 0.9rem 1rem;
+  background: var(--color-sand, #eadfcd);
+  border-radius: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.pdp-modelfit__model,
+.pdp-modelfit__fit {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.8125rem;
+  color: var(--color-ink, #16130f);
+  line-height: 1.3;
+}
+.pdp-modelfit__model svg { flex-shrink: 0; color: var(--color-stone, #6f675d); }
+.pdp-modelfit__fit { font-weight: 600; letter-spacing: 0.01em; }
+.pdp-modelfit__fit-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--color-ember, #c2502e);
+  flex-shrink: 0;
+}
 {% endstylesheet %}
 
 {% javascript %}
@@ -1216,6 +1266,28 @@
 {
   "name": "Product",
   "settings": [
+    {
+      "type": "header",
+      "content": "Model & fit"
+    },
+    {
+      "type": "text",
+      "id": "default_model_info",
+      "label": "Default model info",
+      "info": "Shown on products without a custom.model_info metafield.",
+      "default": "Model is 5'8\" (173cm), wearing size Small"
+    },
+    {
+      "type": "select",
+      "id": "default_fit",
+      "label": "Default fit",
+      "options": [
+        { "value": "True to size", "label": "True to size" },
+        { "value": "Runs small — size up", "label": "Runs small" },
+        { "value": "Oversized fit", "label": "Oversized fit" }
+      ],
+      "default": "True to size"
+    },
     {
       "type": "richtext",
       "id": "size_fit",

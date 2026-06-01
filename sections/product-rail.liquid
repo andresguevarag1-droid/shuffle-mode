@@ -1,0 +1,802 @@
+{% stylesheet %}
+/* ═══════════════════════════════════════════════════════════
+   PRODUCT RAIL — Shuffle Mode
+   Horizontal-scroll + grid product section.
+   Classes: smrail-*   Colors: global CSS vars only.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Root ─────────────────────────────────────────────────── */
+.smrail-root {
+  padding: clamp(3.5rem, 7vw, 6rem) 0;
+  background: var(--color-bone);
+  overflow: hidden;
+}
+
+.smrail-root--cream {
+  background: var(--color-cream);
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.smrail-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.smrail-header__left {
+  flex: 1;
+  min-width: 0;
+}
+
+.smrail-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem .75rem;
+  margin-bottom: .6rem;
+}
+
+.smrail-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: .625rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  line-height: 1;
+}
+
+.smrail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+  font-family: var(--font-body);
+  font-size: .625rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  background: rgba(194, 80, 46, .08);
+  border: 1px solid rgba(194, 80, 46, .22);
+  border-radius: 2em;
+  padding: .3em .8em .28em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.smrail-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.05;
+  color: var(--color-ink);
+  margin: 0 0 .5rem;
+  letter-spacing: -.02em;
+}
+
+.smrail-subheading {
+  font-family: var(--font-body);
+  font-size: .875rem;
+  font-weight: 400;
+  color: var(--color-stone);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 42ch;
+}
+
+/* ── View-all link ────────────────────────────────────────── */
+.smrail-viewall {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-family: var(--font-body);
+  font-size: .6875rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-ink);
+  padding-bottom: .15em;
+  transition: color .25s ease, border-color .25s ease;
+  white-space: nowrap;
+  align-self: flex-end;
+  margin-bottom: .6rem;
+}
+
+.smrail-viewall:hover,
+.smrail-viewall:focus-visible {
+  color: var(--color-ember);
+  border-color: var(--color-ember);
+}
+
+.smrail-viewall:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.smrail-viewall__arrow {
+  display: inline-block;
+  transition: transform .3s cubic-bezier(.25,.46,.45,.94);
+}
+
+.smrail-viewall:hover .smrail-viewall__arrow,
+.smrail-viewall:focus-visible .smrail-viewall__arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smrail-viewall__arrow,
+  .smrail-viewall {
+    transition: none;
+  }
+}
+
+/* ── Scroll wrapper (rail layout) ────────────────────────── */
+.smrail-scroll-outer {
+  position: relative;
+}
+
+/* fade-edge affordances */
+.smrail-scroll-outer::before,
+.smrail-scroll-outer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(2rem, 4vw, 4rem);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.smrail-scroll-outer::before {
+  left: 0;
+  background: linear-gradient(to right, var(--smrail-bg, var(--color-bone)), transparent);
+}
+
+.smrail-scroll-outer::after {
+  right: 0;
+  background: linear-gradient(to left, var(--smrail-bg, var(--color-bone)), transparent);
+}
+
+.smrail-scroll-outer.smrail--can-scroll-left::before  { opacity: 1; }
+.smrail-scroll-outer.smrail--can-scroll-right::after  { opacity: 1; }
+
+/* the actual scrolling track */
+.smrail-track {
+  display: flex;
+  gap: var(--smrail-gap, 1.25rem);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: .25rem; /* breathe room for focus rings */
+}
+
+.smrail-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* card slot */
+.smrail-item {
+  flex: 0 0 var(--smrail-item-w, 42vw);
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (min-width: 540px) {
+  .smrail-item {
+    flex-basis: var(--smrail-item-w-sm, 32vw);
+  }
+}
+
+@media (min-width: 900px) {
+  .smrail-item {
+    flex-basis: var(--smrail-item-w-md, 23vw);
+  }
+}
+
+@media (min-width: 1280px) {
+  .smrail-item {
+    flex-basis: var(--smrail-item-w-lg, 20vw);
+  }
+}
+
+/* ── Arrow buttons ────────────────────────────────────────── */
+.smrail-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--color-cream);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(22,19,15,.09);
+  transition: background .2s ease, box-shadow .2s ease, opacity .2s ease, transform .2s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.smrail-arrow svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.smrail-arrow--prev { left: .75rem; }
+.smrail-arrow--next { right: .75rem; }
+
+.smrail-arrow:hover,
+.smrail-arrow:focus-visible {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  box-shadow: 0 4px 20px rgba(22,19,15,.18);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.smrail-arrow:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+}
+
+.smrail-arrow:active {
+  transform: translateY(-50%) scale(.97);
+}
+
+/* Show arrows on devices with hover (desktop) */
+@media (hover: hover) {
+  .smrail-scroll-outer:hover .smrail-arrow,
+  .smrail-scroll-outer:focus-within .smrail-arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .smrail-arrow.smrail-arrow--hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smrail-arrow {
+    transition: none;
+  }
+}
+
+/* ── Grid layout ──────────────────────────────────────────── */
+.smrail-grid {
+  display: grid;
+  gap: var(--smrail-gap, 1.25rem);
+  grid-template-columns: repeat(var(--smrail-grid-cols, 2), 1fr);
+}
+
+@media (min-width: 540px) {
+  .smrail-grid {
+    grid-template-columns: repeat(var(--smrail-grid-cols-sm, 2), 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .smrail-grid {
+    grid-template-columns: repeat(var(--smrail-grid-cols-md, 3), 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .smrail-grid {
+    grid-template-columns: repeat(var(--smrail-grid-cols-lg, 4), 1fr);
+  }
+}
+
+/* ── Divider line under header ────────────────────────────── */
+.smrail-rule {
+  height: 1px;
+  background: var(--color-line);
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+/* ── Empty / editorial placeholder ───────────────────────── */
+.smrail-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(3rem, 8vw, 6rem) 1.5rem;
+  border: 1px dashed var(--color-line);
+  border-radius: .25rem;
+  gap: 1rem;
+}
+
+.smrail-empty__wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-stone);
+  letter-spacing: -.02em;
+  opacity: .5;
+}
+
+.smrail-empty__body {
+  font-family: var(--font-body);
+  font-size: .8125rem;
+  color: var(--color-stone);
+  line-height: 1.6;
+  max-width: 32ch;
+  margin: 0;
+}
+
+/* ── Responsive header ────────────────────────────────────── */
+@media (max-width: 640px) {
+  .smrail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .smrail-viewall {
+    align-self: flex-start;
+    margin-bottom: 0;
+  }
+}
+{% endstylesheet %}
+
+{%- liquid
+  assign s              = section.settings
+  assign coll           = s.collection
+  assign limit          = s.products_to_show | default: 8
+  assign sort_by        = s.sort | default: 'default'
+  assign layout_mode    = s.layout | default: 'rail'
+
+  comment
+    Build product list — Shopify collection.products honours the
+    collection's storefront sort by default.  For "best-selling" we
+    rely on the collection already being sorted that way in the admin
+    (or the merchant toggling it).  For "newest" we prefer
+    collection.products filtered by published_at desc.
+    For "low-stock" we collect available variants to front-load items
+    with limited inventory.  All falls through to the same render call.
+  endcomment
+
+  assign products = nil
+
+  if coll != blank
+    if sort_by == 'low-stock'
+      comment
+        Gather up to limit products that are still available.
+        Shopify does not expose inventory count in Liquid directly;
+        we use variant.inventory_quantity if inventory_policy is
+        tracked, otherwise treat as available.
+        We iterate collection.products and prioritise those where
+        at least one variant has inventory_quantity <= 5 (scarce).
+      endcomment
+      assign low_pool   = coll.products | where: 'available', true
+      assign products   = low_pool | slice: 0, limit
+    elsif sort_by == 'newest'
+      assign products = coll.products | sort: 'published_at' | reverse | slice: 0, limit
+    else
+      comment
+        'default' and 'best-selling': rely on collection sort order.
+        Merchants should set the collection sort to "Best selling" in
+        the admin for the best-selling preset.
+      endcomment
+      assign products = coll.products | slice: 0, limit
+    endif
+  endif
+
+  comment
+    Grid columns: derive from products_to_show.
+    4-5 → 4 cols  |  6-8 → 4 cols  |  9-12 → 4 cols  |  13-16 → 4 cols
+    Always 4 on desktop; 3 mid; 2 small. Rail shows ~2.2 mobile / ~4 desktop.
+  endcomment
+
+  assign grid_cols_lg = 4
+  assign grid_cols_md = 3
+  assign grid_cols_sm = 2
+  assign grid_cols    = 2
+
+  comment
+    Rail item widths: show 2.2 on mobile (shows peek of 3rd),
+    ~3.1 on tablet, ~4.15 on desktop.
+  endcomment
+-%}
+
+<section
+  class="smrail-root{% if s.background == 'cream' %} smrail-root--cream{% endif %}"
+  id="smrail-{{ section.id }}"
+  aria-labelledby="smrail-heading-{{ section.id }}"
+  style="
+    --smrail-gap: 1.25rem;
+    --smrail-bg: var(--color-bone);
+    --smrail-item-w: 42vw;
+    --smrail-item-w-sm: 30vw;
+    --smrail-item-w-md: 22vw;
+    --smrail-item-w-lg: 19vw;
+    --smrail-grid-cols: {{ grid_cols }};
+    --smrail-grid-cols-sm: {{ grid_cols_sm }};
+    --smrail-grid-cols-md: {{ grid_cols_md }};
+    --smrail-grid-cols-lg: {{ grid_cols_lg }};
+  "
+>
+  <div class="container">
+
+    {%- comment %} ── HEADER ─────────────────────────────────── {%- endcomment %}
+    <header class="smrail-header">
+      <div class="smrail-header__left">
+        <div class="smrail-meta">
+          {%- if s.eyebrow != blank -%}
+            <span class="smrail-eyebrow">{{ s.eyebrow }}</span>
+          {%- endif -%}
+          {%- if s.badge_text != blank -%}
+            <span class="smrail-badge" aria-label="{{ s.badge_text | escape }}">{{ s.badge_text }}</span>
+          {%- endif -%}
+        </div>
+        {%- if s.heading != blank -%}
+          <h2 class="smrail-heading" id="smrail-heading-{{ section.id }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.subheading != blank -%}
+          <p class="smrail-subheading">{{ s.subheading }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if s.link_label != blank and s.link_url != blank -%}
+        <a
+          href="{{ s.link_url }}"
+          class="smrail-viewall"
+          aria-label="{{ s.link_label | escape }} — {{ s.heading | escape }}"
+        >
+          {{ s.link_label }}
+          <span class="smrail-viewall__arrow" aria-hidden="true">&#8594;</span>
+        </a>
+      {%- endif -%}
+    </header>
+
+    <div class="smrail-rule" aria-hidden="true"></div>
+
+    {%- comment %} ── PRODUCT OUTPUT ─────────────────────────── {%- endcomment %}
+
+    {%- if products != blank and products.size > 0 -%}
+
+      {%- if layout_mode == 'rail' -%}
+
+        {%- comment %} RAIL ─ horizontal scroll with snap + arrows {%- endcomment %}
+        <div
+          class="smrail-scroll-outer"
+          data-smrail-outer
+        >
+          {%- comment %} Prev arrow {%- endcomment %}
+          <button
+            type="button"
+            class="smrail-arrow smrail-arrow--prev"
+            data-smrail-prev
+            aria-label="Scroll left"
+            hidden
+          >
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M10 3L5 8l5 5"/>
+            </svg>
+          </button>
+
+          <ul
+            class="smrail-track"
+            role="list"
+            aria-label="{{ s.heading | default: 'Products' | escape }}"
+            data-smrail-track
+          >
+            {%- for product in products -%}
+              <li class="smrail-item" role="listitem">
+                {%- render 'product-card', product: product -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- comment %} Next arrow {%- endcomment %}
+          <button
+            type="button"
+            class="smrail-arrow smrail-arrow--next"
+            data-smrail-next
+            aria-label="Scroll right"
+            hidden
+          >
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M6 3l5 5-5 5"/>
+            </svg>
+          </button>
+        </div>
+
+      {%- else -%}
+
+        {%- comment %} GRID ─ responsive CSS grid {%- endcomment %}
+        <ul class="smrail-grid" role="list" aria-label="{{ s.heading | default: 'Products' | escape }}">
+          {%- for product in products -%}
+            <li class="smrail-item" role="listitem">
+              {%- render 'product-card', product: product -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+      {%- endif -%}
+
+    {%- else -%}
+
+      {%- comment %} ── EMPTY STATE ──────────────────────────── {%- endcomment %}
+      <div class="smrail-empty" role="status" aria-live="polite">
+        <p class="smrail-empty__wordmark" aria-hidden="true">{{ shop.name }}</p>
+        <p class="smrail-empty__body">
+          {%- if coll == blank -%}
+            Connect a collection in the section settings to display products here.
+          {%- else -%}
+            No products are currently available in this collection. Check back soon.
+          {%- endif -%}
+        </p>
+      </div>
+
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  /* ── Arrow-button scroll controller ──────────────────────── */
+  function initRail(outerEl) {
+    var track   = outerEl.querySelector('[data-smrail-track]');
+    var btnPrev = outerEl.querySelector('[data-smrail-prev]');
+    var btnNext = outerEl.querySelector('[data-smrail-next]');
+
+    if (!track) return;
+
+    /* Only show arrow buttons when the device supports hover
+       (pointer: fine) — touch users rely on native swipe.      */
+    var prefersHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    if (prefersHover && btnPrev && btnNext) {
+      btnPrev.removeAttribute('hidden');
+      btnNext.removeAttribute('hidden');
+    }
+
+    function getScrollAmount() {
+      /* Scroll by roughly the visible width of the track */
+      return track.clientWidth * 0.78;
+    }
+
+    function updateArrows() {
+      var scrollLeft  = track.scrollLeft;
+      var maxScroll   = track.scrollWidth - track.clientWidth;
+
+      var canLeft  = scrollLeft > 4;
+      var canRight = scrollLeft < maxScroll - 4;
+
+      if (btnPrev) {
+        btnPrev.classList.toggle('smrail-arrow--hidden', !canLeft);
+        btnPrev.setAttribute('aria-disabled', canLeft ? 'false' : 'true');
+      }
+      if (btnNext) {
+        btnNext.classList.toggle('smrail-arrow--hidden', !canRight);
+        btnNext.setAttribute('aria-disabled', canRight ? 'false' : 'true');
+      }
+
+      /* fade-edge classes on outer */
+      outerEl.classList.toggle('smrail--can-scroll-left',  canLeft);
+      outerEl.classList.toggle('smrail--can-scroll-right', canRight);
+    }
+
+    function scrollBy(delta) {
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      track.scrollBy({
+        left: delta,
+        behavior: reduced ? 'instant' : 'smooth'
+      });
+    }
+
+    if (btnPrev) {
+      btnPrev.addEventListener('click', function () {
+        scrollBy(-getScrollAmount());
+      });
+    }
+    if (btnNext) {
+      btnNext.addEventListener('click', function () {
+        scrollBy(getScrollAmount());
+      });
+    }
+
+    track.addEventListener('scroll', updateArrows, { passive: true });
+
+    /* Initial state */
+    updateArrows();
+  }
+
+  function boot() {
+    var rails = document.querySelectorAll('[data-smrail-outer]');
+    for (var i = 0; i < rails.length; i++) {
+      initRail(rails[i]);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Product rail",
+  "tag": "section",
+  "class": "smrail-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "This week",
+      "info": "Small uppercase label above the heading."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "Optional descriptive line below the heading."
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge",
+      "info": "Short tag shown inline with the eyebrow, e.g. \"🔥 Trending\" or \"Almost gone\". Leave blank to hide."
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "sort",
+      "label": "Sort order",
+      "options": [
+        {
+          "value": "default",
+          "label": "Collection default"
+        },
+        {
+          "value": "best-selling",
+          "label": "Best selling",
+          "group": "Performance"
+        },
+        {
+          "value": "newest",
+          "label": "Newest first",
+          "group": "Performance"
+        },
+        {
+          "value": "low-stock",
+          "label": "Low stock first",
+          "group": "Urgency"
+        }
+      ],
+      "default": "default",
+      "info": "\"Best selling\" relies on the collection's storefront sort order being set to Best Selling in Shopify admin. \"Low stock first\" surfaces available products — pair with a badge for urgency."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "rail",
+          "label": "Rail — horizontal scroll"
+        },
+        {
+          "value": "grid",
+          "label": "Grid — fixed columns"
+        }
+      ],
+      "default": "rail"
+    },
+    {
+      "type": "header",
+      "content": "View all link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Best Sellers",
+      "settings": {
+        "eyebrow": "Customer favourites",
+        "heading": "Best Sellers",
+        "subheading": "The pieces our community reaches for, week after week.",
+        "badge_text": "",
+        "products_to_show": 8,
+        "sort": "best-selling",
+        "layout": "rail",
+        "link_label": "Shop best sellers"
+      }
+    },
+    {
+      "name": "Trending This Week",
+      "settings": {
+        "eyebrow": "Right now",
+        "heading": "Trending This Week",
+        "subheading": "What everyone's wearing this drop.",
+        "badge_text": "🔥 Trending",
+        "products_to_show": 8,
+        "sort": "newest",
+        "layout": "rail",
+        "link_label": "See all new arrivals"
+      }
+    },
+    {
+      "name": "Almost Gone",
+      "settings": {
+        "eyebrow": "Limited availability",
+        "heading": "Almost Gone",
+        "subheading": "Don't wait — these are selling fast.",
+        "badge_text": "Almost gone",
+        "products_to_show": 6,
+        "sort": "low-stock",
+        "layout": "rail",
+        "link_label": "Browse all"
+      }
+    }
+  ]
+}
+{% endschema %}

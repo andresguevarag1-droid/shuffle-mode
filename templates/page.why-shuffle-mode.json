@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "why": {
+      "type": "why-shuffle-mode"
+    }
+  },
+  "order": ["why"]
+}

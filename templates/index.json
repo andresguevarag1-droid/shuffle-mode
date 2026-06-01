@@ -13,13 +13,13 @@
       "type": "hero",
       "settings": {
         "eyebrow": "Weekly Drops · Est. Boston",
-        "heading": "You don't dress for the occasion.",
-        "heading_accent": "You dress for the mood.",
-        "subheading": "Minimal pieces that elevate your wardrobe instantly. New drop every Sunday.",
-        "cta_label": "Shop the drop",
-        "cta_url": "",
-        "cta2_label": "Find your mood",
-        "cta2_url": "#shuffle",
+        "heading": "Dress for the mood",
+        "heading_accent": "you're in.",
+        "subheading": "Limited fashion drops inspired by every version of you. New drop every Sunday — when it's gone, it's gone.",
+        "cta_label": "Shop New Drop",
+        "cta_url": "/collections/maxi-silhouettes",
+        "cta2_label": "View Best Sellers",
+        "cta2_url": "#best-sellers",
         "image1": "shopify://shop_images/ChatGPT_Image_Feb_27_2026_at_02_08_51_AM_7d897ff2-c344-4d45-b4bf-4108fd8213bf.png",
         "collage_caption": "Drop 01",
         "countdown_enabled": true,
@@ -482,21 +482,177 @@
         "text_align": "center",
         "min_height": 80
       }
+    },
+    "best_sellers": {
+      "type": "product-rail",
+      "settings": {
+        "eyebrow": "What everyone's buying",
+        "heading": "Best Sellers",
+        "subheading": "The pieces our community reaches for, week after week.",
+        "collection": "maxi-silhouettes",
+        "products_to_show": 8,
+        "sort": "best-selling",
+        "layout": "rail",
+        "link_label": "Shop best sellers",
+        "link_url": "/collections/maxi-silhouettes"
+      }
+    },
+    "trending": {
+      "type": "product-rail",
+      "settings": {
+        "eyebrow": "Hot right now",
+        "heading": "Trending This Week",
+        "badge_text": "🔥 Trending",
+        "collection": "maxi-silhouettes",
+        "products_to_show": 8,
+        "sort": "newest",
+        "layout": "rail",
+        "link_label": "Shop trending",
+        "link_url": "/collections/maxi-silhouettes"
+      }
+    },
+    "almost_gone": {
+      "type": "product-rail",
+      "settings": {
+        "eyebrow": "Selling fast",
+        "heading": "Almost Gone",
+        "badge_text": "Almost gone",
+        "collection": "maxi-silhouettes",
+        "products_to_show": 8,
+        "sort": "low-stock",
+        "layout": "rail",
+        "link_label": "Shop the last pieces",
+        "link_url": "/collections/maxi-silhouettes"
+      }
+    },
+    "mood": {
+      "type": "mood-collections",
+      "blocks": {
+        "soft": {
+          "type": "mood",
+          "settings": {
+            "emoji": "🌸",
+            "title": "SOFT MOOD",
+            "tagline": "For brunches, vacations and slow mornings.",
+            "collection": "maxi-silhouettes",
+            "color1": "#e3c9b5",
+            "color2": "#b98c6d",
+            "link_label": "Shop the mood"
+          }
+        },
+        "bold": {
+          "type": "mood",
+          "settings": {
+            "emoji": "🔥",
+            "title": "BOLD MOOD",
+            "tagline": "For girls who want attention.",
+            "collection": "maxi-silhouettes",
+            "color1": "#c2502e",
+            "color2": "#7a2618",
+            "link_label": "Shop the mood"
+          }
+        },
+        "free": {
+          "type": "mood",
+          "settings": {
+            "emoji": "✨",
+            "title": "FREE MOOD",
+            "tagline": "For travel and summer escapes.",
+            "collection": "maxi-silhouettes",
+            "color1": "#9aa67f",
+            "color2": "#5f6b48",
+            "link_label": "Shop the mood"
+          }
+        }
+      },
+      "block_order": [
+        "soft",
+        "bold",
+        "free"
+      ],
+      "settings": {
+        "eyebrow": "Find your vibe",
+        "heading": "Shop by mood"
+      }
+    },
+    "activity": {
+      "type": "purchase-activity",
+      "blocks": {
+        "e1": {
+          "type": "event",
+          "settings": {
+            "name": "Sarah",
+            "city": "Miami",
+            "product": "Desert Muse",
+            "minutes_ago": 15
+          }
+        },
+        "e2": {
+          "type": "event",
+          "settings": {
+            "name": "Jessica",
+            "city": "Austin",
+            "product": "Golden Hour Set",
+            "minutes_ago": 8
+          }
+        },
+        "e3": {
+          "type": "event",
+          "settings": {
+            "name": "Maya",
+            "city": "New York",
+            "product": "Soft Mood Dress",
+            "minutes_ago": 23
+          }
+        },
+        "e4": {
+          "type": "event",
+          "settings": {
+            "name": "Lena",
+            "city": "Los Angeles",
+            "product": "Bold Blazer",
+            "minutes_ago": 3
+          }
+        },
+        "e5": {
+          "type": "event",
+          "settings": {
+            "name": "Priya",
+            "city": "Chicago",
+            "product": "Free Mood Set",
+            "minutes_ago": 31
+          }
+        }
+      },
+      "block_order": [
+        "e1",
+        "e2",
+        "e3",
+        "e4",
+        "e5"
+      ],
+      "settings": {
+        "enabled": true,
+        "position": "bottom-left"
+      }
     }
   },
   "order": [
     "hero",
-    "marquee",
     "trust",
+    "best_sellers",
     "drop",
+    "trending",
+    "mood",
     "icon_features",
-    "manifesto",
     "shuffle",
+    "almost_gone",
     "press",
     "lookbook",
-    "promo",
+    "manifesto",
     "testimonials",
     "faq",
-    "newsletter"
+    "newsletter",
+    "activity"
   ]
 }

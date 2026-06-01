@@ -2,14 +2,24 @@
   "type": "header",
   "name": "Header group",
   "sections": {
+    "top_trust": {
+      "type": "top-trust-bar",
+      "blocks": {
+        "i1": { "type": "item", "settings": { "icon": "✨", "text": "Free Shipping Over $99" } },
+        "i2": { "type": "item", "settings": { "icon": "🔄", "text": "Easy Returns Within 14 Days" } },
+        "i3": { "type": "item", "settings": { "icon": "🔒", "text": "Secure Checkout" } },
+        "i4": { "type": "item", "settings": { "icon": "📦", "text": "Fast U.S. Shipping" } }
+      },
+      "block_order": ["i1", "i2", "i3", "i4"],
+      "settings": { "dark": true }
+    },
     "announcement": {
       "type": "announcement-bar",
       "blocks": {
-        "m1": { "type": "message", "settings": { "text": "Free shipping on orders over $150" } },
-        "m2": { "type": "message", "settings": { "text": "New drop every Sunday, 1PM ET" } },
-        "m3": { "type": "message", "settings": { "text": "Limited weekly drops · once it's gone, it's gone" } }
+        "m1": { "type": "message", "settings": { "text": "New drop every Sunday, 1PM ET" } },
+        "m2": { "type": "message", "settings": { "text": "Limited weekly drops · once it's gone, it's gone" } }
       },
-      "block_order": ["m1", "m2", "m3"]
+      "block_order": ["m1", "m2"]
     },
     "header": {
       "type": "header",
@@ -19,5 +29,5 @@
       }
     }
   },
-  "order": ["announcement", "header"]
+  "order": ["top_trust", "announcement", "header"]
 }

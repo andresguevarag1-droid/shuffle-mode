@@ -1,0 +1,509 @@
+{% stylesheet %}
+/* ── MOOD COLLECTIONS — smmc- namespace ── */
+
+.smmc-root {
+  padding: clamp(4.5rem, 9vw, 8rem) 0;
+  background: var(--color-cream);
+}
+
+/* ── HEADER ── */
+.smmc-header {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.smmc-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: .6875rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: .875rem;
+}
+
+.smmc-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.05;
+  color: var(--color-ink);
+  margin: 0;
+  letter-spacing: -.02em;
+}
+
+/* ── GRID ── */
+.smmc-grid {
+  display: grid;
+  gap: clamp(.75rem, 1.5vw, 1.25rem);
+  grid-template-columns: repeat(var(--smmc-cols, 3), 1fr);
+  padding: 0 clamp(1rem, 3vw, 2.5rem);
+}
+
+.smmc-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ── CARD ── */
+.smmc-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  border-radius: 2px;
+  /* tall editorial proportions */
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(
+    160deg,
+    var(--smmc-c1, var(--color-sand)) 0%,
+    var(--smmc-c2, var(--color-stone)) 100%
+  );
+}
+
+/* ── IMAGE ── */
+.smmc-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 1s cubic-bezier(.25,.46,.45,.94);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smmc-card__img {
+    transition: none;
+  }
+}
+
+.smmc-card:hover .smmc-card__img,
+.smmc-card:focus-visible .smmc-card__img {
+  transform: scale(1.06);
+}
+
+/* ── GRADIENT FALLBACK LAYER (always present, under image) ── */
+.smmc-card__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    var(--smmc-c1, var(--color-sand)) 0%,
+    var(--smmc-c2, var(--color-stone)) 100%
+  );
+}
+
+/* decorative texture lines on gradient-only cards */
+.smmc-card__gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255,255,255,.04) 0px,
+    rgba(255,255,255,.04) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+/* ── INK SCRIM ── */
+.smmc-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(22,19,15,.82) 0%,
+    rgba(22,19,15,.38) 38%,
+    rgba(22,19,15,.08) 65%,
+    rgba(22,19,15,.0) 100%
+  );
+  transition: background .45s ease;
+}
+
+.smmc-card:hover .smmc-card__scrim,
+.smmc-card:focus-visible .smmc-card__scrim {
+  background: linear-gradient(
+    to top,
+    rgba(22,19,15,.92) 0%,
+    rgba(22,19,15,.55) 45%,
+    rgba(22,19,15,.18) 70%,
+    rgba(22,19,15,.0) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smmc-card__scrim {
+    transition: none;
+  }
+}
+
+/* ── CONTENT ── */
+.smmc-card__body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.5rem, 3.5vw, 2.25rem);
+  pointer-events: none;
+}
+
+.smmc-card__emoji {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1;
+  margin-bottom: .6rem;
+  display: block;
+  /* subtle float-in on hover */
+  transform: translateY(0);
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smmc-card__emoji {
+    transition: none;
+  }
+}
+
+.smmc-card:hover .smmc-card__emoji,
+.smmc-card:focus-visible .smmc-card__emoji {
+  transform: translateY(-4px);
+}
+
+.smmc-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-bone);
+  line-height: 1.05;
+  margin: 0 0 .6rem;
+  letter-spacing: -.015em;
+}
+
+.smmc-card__tagline {
+  font-family: var(--font-body);
+  font-size: clamp(.8125rem, 1.2vw, .9375rem);
+  font-weight: 400;
+  color: rgba(246,242,234,.78);
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+  letter-spacing: .01em;
+  /* reveal on hover */
+  opacity: .72;
+  transform: translateY(4px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smmc-card__tagline {
+    opacity: .72;
+    transform: none;
+    transition: none;
+  }
+}
+
+.smmc-card:hover .smmc-card__tagline,
+.smmc-card:focus-visible .smmc-card__tagline {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.smmc-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-family: var(--font-body);
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--color-bone);
+  pointer-events: auto;
+  /* underline pill */
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(246,242,234,.45);
+  transition: border-color .3s ease, gap .3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smmc-card__cta {
+    transition: none;
+  }
+}
+
+.smmc-card:hover .smmc-card__cta,
+.smmc-card:focus-visible .smmc-card__cta {
+  border-color: rgba(246,242,234,.9);
+  gap: .75em;
+}
+
+.smmc-card__cta-arrow {
+  display: inline-block;
+  transition: transform .3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smmc-card__cta-arrow {
+    transition: none;
+  }
+}
+
+.smmc-card:hover .smmc-card__cta-arrow,
+.smmc-card:focus-visible .smmc-card__cta-arrow {
+  transform: translateX(5px);
+}
+
+/* ── FOCUS RING ── */
+.smmc-card:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+  z-index: 2;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .smmc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .smmc-grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .smmc-grid,
+  .smmc-grid--2 {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+
+  .smmc-card {
+    aspect-ratio: 3 / 4;
+  }
+}
+{% endstylesheet %}
+
+{%- liquid
+  assign block_count = section.blocks.size
+  assign grid_mod    = ''
+  if block_count == 2
+    assign grid_mod = ' smmc-grid--2'
+  endif
+-%}
+
+<section
+  class="smmc-root"
+  id="smmc-{{ section.id }}"
+  aria-labelledby="smmc-heading-{{ section.id }}"
+>
+  <div class="container">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <header class="smmc-header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="smmc-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="smmc-heading" id="smmc-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+  </div>
+
+  <div class="smmc-grid{{ grid_mod }}" role="list">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign col        = block.settings.collection
+        assign img_src    = block.settings.image
+        assign card_url   = '#'
+        assign card_label = block.settings.link_label | default: 'Shop the mood'
+
+        if col != blank
+          assign card_url = col.url
+          if img_src == blank and col.image != blank
+            assign img_src = col.image
+          endif
+          if img_src == blank and col.products.first != blank
+            assign img_src = col.products.first.featured_image
+          endif
+        endif
+
+        assign c1_hex = block.settings.color1 | default: '#eadfcd'
+        assign c2_hex = block.settings.color2 | default: '#6f675d'
+      -%}
+
+      <a
+        class="smmc-card"
+        href="{{ card_url }}"
+        role="listitem"
+        aria-label="{{ block.settings.title | default: 'Shop mood' | escape }} — {{ card_label | escape }}"
+        style="--smmc-c1:{{ c1_hex }};--smmc-c2:{{ c2_hex }};"
+        {{ block.shopify_attributes }}
+      >
+        {%- comment %} gradient base — always rendered, shows through when no image {%- endcomment %}
+        <div class="smmc-card__gradient" aria-hidden="true"></div>
+
+        {%- if img_src != blank -%}
+          {{
+            img_src
+            | image_url: width: 1400
+            | image_tag:
+              class: 'smmc-card__img',
+              loading: 'lazy',
+              sizes: '(max-width:540px) 100vw, (max-width:900px) 50vw, 33vw',
+              widths: '400,600,800,1000,1200,1400',
+              alt: block.settings.title | default: '' | escape
+          }}
+        {%- endif -%}
+
+        <div class="smmc-card__scrim" aria-hidden="true"></div>
+
+        <div class="smmc-card__body">
+          {%- if block.settings.emoji != blank -%}
+            <span class="smmc-card__emoji" aria-hidden="true">{{ block.settings.emoji }}</span>
+          {%- endif -%}
+
+          {%- if block.settings.title != blank -%}
+            <p class="smmc-card__title">{{ block.settings.title }}</p>
+          {%- endif -%}
+
+          {%- if block.settings.tagline != blank -%}
+            <p class="smmc-card__tagline">{{ block.settings.tagline }}</p>
+          {%- endif -%}
+
+          <span class="smmc-card__cta" aria-hidden="true">
+            {{ card_label }}
+            <span class="smmc-card__cta-arrow">&#8594;</span>
+          </span>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Mood collections",
+  "tag": "section",
+  "class": "smmc-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Find your vibe"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by mood"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mood",
+      "name": "Mood card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "emoji",
+          "label": "Emoji",
+          "default": "🌸"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Mood title",
+          "default": "SOFT MOOD",
+          "info": "Displayed in large italic Fraunces."
+        },
+        {
+          "type": "text",
+          "id": "tagline",
+          "label": "Tagline",
+          "default": "For brunches, vacations and slow mornings."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Optional. Links the card and auto-pulls an image if none is uploaded."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background image",
+          "info": "Overrides the collection image. If empty, the color gradient is used."
+        },
+        {
+          "type": "color",
+          "id": "color1",
+          "label": "Gradient — start color",
+          "default": "#e3c9b5"
+        },
+        {
+          "type": "color",
+          "id": "color2",
+          "label": "Gradient — end color",
+          "default": "#b98c6d"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "CTA label",
+          "default": "Shop the mood"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mood collections",
+      "settings": {
+        "eyebrow": "Find your vibe",
+        "heading": "Shop by mood"
+      },
+      "blocks": [
+        {
+          "type": "mood",
+          "settings": {
+            "emoji": "🌸",
+            "title": "SOFT MOOD",
+            "tagline": "For brunches, vacations and slow mornings.",
+            "color1": "#e3c9b5",
+            "color2": "#b98c6d",
+            "link_label": "Shop the mood"
+          }
+        },
+        {
+          "type": "mood",
+          "settings": {
+            "emoji": "🔥",
+            "title": "BOLD MOOD",
+            "tagline": "For girls who want attention.",
+            "color1": "#c2502e",
+            "color2": "#7a2618",
+            "link_label": "Shop the mood"
+          }
+        },
+        {
+          "type": "mood",
+          "settings": {
+            "emoji": "✨",
+            "title": "FREE MOOD",
+            "tagline": "For travel and summer escapes.",
+            "color1": "#9aa67f",
+            "color2": "#5f6b48",
+            "link_label": "Shop the mood"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,493 @@
+{%- if section.settings.enabled and section.blocks.size > 0 -%}
+
+{%- comment -%} Build JSON data island from blocks — Liquid IS processed here {%- endcomment -%}
+<script type="application/json" data-smact-data>
+{
+  "position": {{ section.settings.position | json }},
+  "events": [
+    {%- for block in section.blocks -%}
+      {
+        "name":        {{ block.settings.name        | json }},
+        "city":        {{ block.settings.city        | json }},
+        "product":     {{ block.settings.product     | json }},
+        "minutes_ago": {{ block.settings.minutes_ago | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+
+<div
+  class="smact-host smact-host--{{ section.settings.position }}"
+  role="region"
+  aria-label="Recent purchase activity"
+  aria-live="polite"
+  aria-atomic="true"
+  data-smact-host
+>
+  <div class="smact-toast" data-smact-toast aria-hidden="true">
+    <div class="smact-toast__inner">
+
+      <div class="smact-toast__avatar" data-smact-avatar aria-hidden="true"></div>
+
+      <div class="smact-toast__body">
+        <p class="smact-toast__line" data-smact-line></p>
+        <p class="smact-toast__meta">
+          <span class="smact-toast__dot" aria-hidden="true"></span>
+          <span data-smact-time></span>
+          <span class="smact-toast__verified" aria-label="Verified purchase" title="Verified purchase">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" focusable="false">
+              <circle cx="5" cy="5" r="5" fill="var(--color-ember)" opacity=".15"/>
+              <path d="M3 5l1.4 1.4L7 3.5" stroke="var(--color-ember)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </p>
+      </div>
+
+      <button
+        class="smact-toast__close"
+        data-smact-close
+        type="button"
+        aria-label="Dismiss purchase notification"
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false">
+          <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+{%- endif -%}
+
+{% stylesheet %}
+/* ─── Host / positioning ─────────────────────────────── */
+.smact-host {
+  position: fixed;
+  z-index: 9000;
+  bottom: 24px;
+  left: 24px;
+  max-width: 320px;
+  width: calc(100vw - 48px);
+  pointer-events: none;
+}
+
+.smact-host--bottom-right {
+  left: auto;
+  right: 24px;
+}
+
+/* ─── Toast card ─────────────────────────────────────── */
+.smact-toast {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.smact-toast[aria-hidden="false"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.smact-toast__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-cream);
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow:
+    0 2px 8px rgba(22, 19, 15, 0.07),
+    0 8px 28px rgba(22, 19, 15, 0.09);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+}
+
+/* ─── Avatar circle ──────────────────────────────────── */
+.smact-toast__avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-sand);
+  border: 1.5px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  position: relative;
+}
+
+.smact-toast__avatar::after {
+  content: attr(data-initial);
+}
+
+/* Subtle radial gradient to give the circle some warmth */
+.smact-toast__avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--color-bone) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ─── Text body ──────────────────────────────────────── */
+.smact-toast__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.smact-toast__line {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 450;
+  line-height: 1.45;
+  color: var(--color-ink);
+  margin: 0 0 4px;
+  letter-spacing: 0;
+}
+
+.smact-toast__line strong {
+  font-weight: 600;
+}
+
+.smact-toast__meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--color-stone);
+  letter-spacing: 0.01em;
+}
+
+/* Pulsing dot */
+.smact-toast__dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-ember);
+  opacity: 0.8;
+  animation: smact-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes smact-pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.85); }
+}
+
+.smact-toast__verified {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+/* ─── Close button ───────────────────────────────────── */
+.smact-toast__close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-stone);
+  border-radius: 50%;
+  padding: 0;
+  transition: color 0.2s ease, background 0.2s ease;
+  align-self: flex-start;
+}
+
+.smact-toast__close:hover {
+  color: var(--color-ink);
+  background: var(--color-sand);
+}
+
+.smact-toast__close:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+}
+
+/* ─── Reduced motion: suppress all animation ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  .smact-toast {
+    transition: none;
+  }
+  .smact-toast__dot {
+    animation: none;
+  }
+}
+
+/* ─── Mobile: slightly tighter ──────────────────────── */
+@media (max-width: 480px) {
+  .smact-host {
+    bottom: 16px;
+    left: 16px;
+    width: calc(100vw - 32px);
+    max-width: none;
+  }
+  .smact-host--bottom-right {
+    left: 16px;
+    right: auto;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  /* ── Guard: prefers-reduced-motion ───────────────── */
+  var prefersReduced =
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReduced) return;
+
+  /* ── Guard: shopper already dismissed this session ── */
+  var SESSION_KEY = 'smact_dismissed';
+  try {
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+  } catch (e) { /* storage blocked — proceed */ }
+
+  /* ── Read JSON data island ───────────────────────── */
+  var dataEl = document.querySelector('[data-smact-data]');
+  if (!dataEl) return;
+
+  var config;
+  try { config = JSON.parse(dataEl.textContent); } catch (e) { return; }
+
+  var events = config.events;
+  if (!events || !events.length) return;
+
+  /* ── DOM refs ─────────────────────────────────────── */
+  var host   = document.querySelector('[data-smact-host]');
+  var toast  = host && host.querySelector('[data-smact-toast]');
+  var avatar = host && host.querySelector('[data-smact-avatar]');
+  var line   = host && host.querySelector('[data-smact-line]');
+  var timeEl = host && host.querySelector('[data-smact-time]');
+  var closeBtn = host && host.querySelector('[data-smact-close]');
+
+  if (!host || !toast || !avatar || !line || !timeEl || !closeBtn) return;
+
+  /* ── Apply position class from config ───────────── */
+  if (config.position === 'bottom-right') {
+    host.classList.remove('smact-host--bottom-left');
+    host.classList.add('smact-host--bottom-right');
+  }
+
+  /* ── Timing constants (ms) ───────────────────────── */
+  var INITIAL_DELAY  = 5000;
+  var VISIBLE_DURATION = 5000;
+  var GAP_BETWEEN    = 12000;
+
+  var index    = 0;
+  var hideTimer = null;
+  var nextTimer = null;
+  var hidden   = document.hidden;
+
+  /* ── Show one event ───────────────────────────────── */
+  function showEvent(ev) {
+    var initial = (ev.name || '?').charAt(0).toUpperCase();
+    avatar.setAttribute('data-initial', initial);
+
+    line.innerHTML =
+      '<strong>' + escHtml(ev.name) + '</strong>' +
+      ' from ' + escHtml(ev.city) +
+      ' purchased <strong>' + escHtml(ev.product) + '</strong>';
+
+    timeEl.textContent = ev.minutes_ago + ' minutes ago';
+
+    toast.setAttribute('aria-hidden', 'false');
+
+    hideTimer = setTimeout(hideToast, VISIBLE_DURATION);
+  }
+
+  /* ── Hide toast ───────────────────────────────────── */
+  function hideToast() {
+    toast.setAttribute('aria-hidden', 'true');
+  }
+
+  /* ── Cycle to next after gap ──────────────────────── */
+  function scheduleNext() {
+    nextTimer = setTimeout(function () {
+      if (hidden) {
+        /* Tab not visible — reschedule check */
+        scheduleNext();
+        return;
+      }
+      index = (index + 1) % events.length;
+      showEvent(events[index]);
+      hideTimer = setTimeout(function () {
+        hideToast();
+        scheduleNext();
+      }, VISIBLE_DURATION);
+    }, GAP_BETWEEN);
+  }
+
+  /* ── Close button: dismiss permanently for session ── */
+  closeBtn.addEventListener('click', function () {
+    clearTimeout(hideTimer);
+    clearTimeout(nextTimer);
+    hideToast();
+    try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) {}
+  });
+
+  /* ── Pause cycling when tab hidden ───────────────── */
+  document.addEventListener('visibilitychange', function () {
+    hidden = document.hidden;
+  });
+
+  /* ── Kick off ─────────────────────────────────────── */
+  nextTimer = setTimeout(function () {
+    if (hidden) {
+      /* Tab not yet visible — wait a bit */
+      scheduleNext();
+      return;
+    }
+    showEvent(events[index]);
+    hideTimer = setTimeout(function () {
+      hideToast();
+      scheduleNext();
+    }, VISIBLE_DURATION);
+  }, INITIAL_DELAY);
+
+  /* ── Utility: minimal HTML escape ────────────────── */
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Purchase activity",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable purchase activity popup",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        { "value": "bottom-left",  "label": "Bottom left"  },
+        { "value": "bottom-right", "label": "Bottom right" }
+      ],
+      "default": "bottom-left"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "event",
+      "name": "Purchase event",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Buyer first name",
+          "default": "Sarah"
+        },
+        {
+          "type": "text",
+          "id": "city",
+          "label": "City",
+          "default": "Miami"
+        },
+        {
+          "type": "text",
+          "id": "product",
+          "label": "Product name",
+          "default": "Desert Muse"
+        },
+        {
+          "type": "number",
+          "id": "minutes_ago",
+          "label": "Minutes ago",
+          "default": 15
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purchase activity",
+      "settings": {
+        "enabled": true,
+        "position": "bottom-left"
+      },
+      "blocks": [
+        {
+          "type": "event",
+          "settings": {
+            "name": "Sarah",
+            "city": "Miami",
+            "product": "Desert Muse",
+            "minutes_ago": 15
+          }
+        },
+        {
+          "type": "event",
+          "settings": {
+            "name": "Jessica",
+            "city": "Austin",
+            "product": "Golden Hour Set",
+            "minutes_ago": 8
+          }
+        },
+        {
+          "type": "event",
+          "settings": {
+            "name": "Maya",
+            "city": "New York",
+            "product": "Soft Mood Dress",
+            "minutes_ago": 23
+          }
+        },
+        {
+          "type": "event",
+          "settings": {
+            "name": "Lena",
+            "city": "Los Angeles",
+            "product": "Bold Blazer",
+            "minutes_ago": 3
+          }
+        },
+        {
+          "type": "event",
+          "settings": {
+            "name": "Priya",
+            "city": "Chicago",
+            "product": "Free Mood Set",
+            "minutes_ago": 31
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
