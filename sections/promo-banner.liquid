@@ -8,6 +8,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Use max() to respect editor's vh setting but cap at sane phone sizes.
+     The inline style sets --smpb-min-h; the media queries below set
+     --smpb-phone-cap which acts as an upper ceiling on small screens. */
   min-height: var(--smpb-min-h);
   overflow: hidden;
   background-color: var(--smpb-bg);

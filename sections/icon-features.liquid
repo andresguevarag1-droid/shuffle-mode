@@ -184,14 +184,27 @@
     font-size: clamp(1.5rem, 7vw, 2rem);
   }
 
+  /* Section shell: prevent horizontal scroll */
+  .smif-icon-features {
+    overflow-x: hidden;
+  }
+
+  .smif-icon-features__inner {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   /* Single column on phones */
   .smif-icon-features__grid {
     grid-template-columns: 1fr;
+    min-width: 0;
   }
 
   .smif-icon-features__item {
     padding: 1.75rem 1.25rem;
     align-items: flex-start;
+    min-width: 0;
   }
 
   /* Separator lines span full width between items */
@@ -203,6 +216,13 @@
   /* Text must not overflow */
   .smif-icon-features__text {
     max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
+  }
+
+  /* Title overflow guard */
+  .smif-icon-features__title {
     overflow-wrap: break-word;
     word-break: break-word;
     min-width: 0;
@@ -230,6 +250,17 @@
 
   .smif-icon-features__title {
     font-size: 1rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .smif-icon-features__item {
+    padding: 1.5rem 1rem;
+  }
+
+  .smif-icon-features__item::after {
+    left: 1rem;
+    right: 1rem;
   }
 }
 

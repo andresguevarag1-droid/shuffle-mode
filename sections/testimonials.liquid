@@ -242,8 +242,11 @@
 @media (max-width: 767px) {
 
   .smt-track-outer {
+    /* Negative margin lets the track bleed to screen edge;
+       overflow-x: clip prevents it from causing page-level scroll. */
     margin: 0 -20px;
     padding: 0 20px;
+    overflow-x: clip;
   }
 
   .smt-track {
@@ -264,6 +267,10 @@
   .smt-card {
     flex: 0 0 min(82vw, 340px);
     scroll-snap-align: center;
+    /* Prevent cards from shrinking below their declared flex-basis */
+    flex-shrink: 0;
+    min-width: 0;
+    max-width: min(82vw, 340px);
   }
 
   .smt-card:hover {
@@ -275,23 +282,33 @@
     justify-content: center;
     gap: 8px;
     margin-top: 28px;
+    /* Dots row must not clip */
+    overflow: visible;
   }
 
   .smt-dot {
+    /* Visual dot is 6px but tap target is padded to ≥44px */
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--color-stone);
     opacity: .25;
     border: none;
-    padding: 0;
+    /* Use padding + negative margin trick to grow hit area to 44×44 */
+    padding: 19px;
+    margin: -19px;
     cursor: pointer;
     transition: opacity .3s ease, transform .3s ease;
+    /* Reset box-model so the visual dot stays 6×6 */
+    background-clip: content-box;
+    box-sizing: content-box;
+    position: relative;
   }
 
   .smt-dot[aria-current="true"] {
     opacity: 1;
     background: var(--color-ember);
+    background-clip: content-box;
     transform: scale(1.35);
   }
 
@@ -299,14 +316,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    /* Tap target: minimum 44×44 */
+    width: 44px;
+    height: 44px;
     border: 1px solid var(--color-line);
     background: transparent;
     cursor: pointer;
-    margin: 16px auto 0;
+    margin: 8px auto 0;
     color: var(--color-stone);
     transition: color .2s ease, border-color .2s ease;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .smt-pause-btn:hover {
@@ -346,6 +365,8 @@
 @media (max-width: 480px) {
   .smt-section {
     padding: clamp(2.5rem, 8vw, 4rem) 0;
+    /* Prevent any child from causing page-level horizontal scroll */
+    overflow-x: hidden;
   }
 
   .smt-head {
@@ -354,12 +375,15 @@
 
   .smt-heading {
     font-size: clamp(1.625rem, 7vw, 2rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   /* Carousel: cards show one cleanly with tight side gutters */
   .smt-track-outer {
     margin: 0 -16px;
     padding: 0 16px;
+    overflow-x: clip;
   }
 
   .smt-track {
@@ -370,6 +394,7 @@
   /* Card: fill nearly full width so no half-clipped neighbour */
   .smt-card {
     flex: 0 0 min(88vw, 320px);
+    max-width: min(88vw, 320px);
     padding: 28px 22px 24px;
     gap: 20px;
   }
@@ -377,6 +402,8 @@
   .smt-quote {
     font-size: clamp(0.95rem, 3.5vw, 1.05rem);
     line-height: 1.55;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   /* Author row: prevent overflow */
@@ -384,23 +411,27 @@
     gap: 10px;
     flex-wrap: nowrap;
     overflow: hidden;
+    min-width: 0;
   }
 
   .smt-meta {
     min-width: 0;
     overflow: hidden;
+    flex: 1;
   }
 
   .smt-author {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: block;
   }
 
   .smt-detail {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: block;
   }
 
   /* Aggregate rating pill: allow it to flex-wrap on small screen */
@@ -408,6 +439,7 @@
     flex-wrap: wrap;
     gap: 6px;
     padding: 8px 14px;
+    max-width: 100%;
   }
 
   .smt-aggregate__text {
@@ -426,6 +458,7 @@
   .smt-track-outer {
     margin: 0 -12px;
     padding: 0 12px;
+    overflow-x: clip;
   }
 
   .smt-track {
@@ -435,6 +468,7 @@
 
   .smt-card {
     flex: 0 0 min(91vw, 300px);
+    max-width: min(91vw, 300px);
     padding: 22px 18px 20px;
     gap: 16px;
   }
@@ -456,10 +490,16 @@
 
   .smt-heading {
     font-size: clamp(1.5rem, 8vw, 1.875rem);
+    overflow-wrap: break-word;
   }
 
   .smt-mark {
     font-size: 44px;
+  }
+
+  /* Section-level heading margin tighter */
+  .smt-head {
+    margin-bottom: 32px;
   }
 }
 

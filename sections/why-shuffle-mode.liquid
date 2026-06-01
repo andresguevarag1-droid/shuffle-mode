@@ -788,6 +788,22 @@
   .smwhy-pillar {
     padding: 1.5rem 1rem;
   }
+
+  /* Stat strip at 320px: ensure 2x2 doesn't blow out */
+  .smwhy-stat__value {
+    font-size: clamp(1.375rem, 9vw, 1.75rem);
+  }
+
+  /* Promise items: single col with overflow guard */
+  .smwhy-promise {
+    min-width: 0;
+  }
+
+  .smwhy-promise__text {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
+  }
 }
 
 {% endstylesheet %}

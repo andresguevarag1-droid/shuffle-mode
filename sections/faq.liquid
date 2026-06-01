@@ -2,6 +2,7 @@
   .sm-faq {
     background-color: var(--color-cream);
     padding: var(--sm-faq-padding-y, 80px) 0;
+    overflow-x: hidden;
   }
 
   .sm-faq__inner {
@@ -240,20 +241,36 @@
 
   /* ── Small phone (≤480px) ────────────────────────────── */
   @media (max-width: 480px) {
+    /* Cap padding-y on phones — Liquid var can be set very high */
+    .sm-faq {
+      padding-top: min(var(--sm-faq-padding-y, 80px), 60px);
+      padding-bottom: min(var(--sm-faq-padding-y, 80px), 60px);
+    }
+
     /* Stack columns vertically (already 1-col but reduce gap) */
     .sm-faq__inner {
       grid-template-columns: 1fr;
       gap: 2rem;
+      min-width: 0;
+    }
+
+    /* Lead column */
+    .sm-faq__lead {
+      min-width: 0;
     }
 
     /* Heading clamp tighter */
     .sm-faq__heading {
       font-size: clamp(1.75rem, 8vw, 2.5rem);
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .sm-faq__subheading {
       max-width: 100%;
       font-size: 0.875rem;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     /* CTA: full-width tap target */
@@ -263,6 +280,11 @@
       min-height: 44px;
       align-items: center;
       padding-bottom: 4px;
+    }
+
+    /* Accordion list: no overflow */
+    .sm-faq__list {
+      min-width: 0;
     }
 
     /* Summary: min 44px tap target */
@@ -280,7 +302,8 @@
       min-width: 0;
     }
 
-    .sm-faq__body-inner a {
+    .sm-faq__body-inner a,
+    .sm-faq__body-inner p {
       overflow-wrap: break-word;
       word-break: break-word;
     }
@@ -309,6 +332,16 @@
 
     .sm-faq__icon::after {
       height: 10px;
+    }
+
+    /* Tight padding cap at 320px */
+    .sm-faq {
+      padding-top: min(var(--sm-faq-padding-y, 80px), 48px);
+      padding-bottom: min(var(--sm-faq-padding-y, 80px), 48px);
+    }
+
+    .sm-faq__body-inner {
+      font-size: 0.75rem;
     }
   }
 

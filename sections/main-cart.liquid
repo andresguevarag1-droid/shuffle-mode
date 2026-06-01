@@ -566,6 +566,263 @@
   flex-shrink: 0;
   color: var(--color-stone);
 }
+
+/* ═══════════════════════════════════════════════
+   CART — RESPONSIVE ADDITIONS
+   ≤600px: summary stacks below items (already 1-col)
+   ≤480px: line items tighten, summary full-width
+   ≤380px: critical 320px survival rules
+   ═══════════════════════════════════════════════ */
+
+/* Prevent any child from blowing out the cart container */
+.smc-cart {
+  overflow-x: hidden;
+}
+
+/* ── Cart header scales on small phones ──────── */
+@media (max-width: 480px) {
+  .smc-cart__header {
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .smc-cart__title {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+}
+@media (max-width: 380px) {
+  .smc-cart__title {
+    font-size: clamp(1.25rem, 8vw, 1.75rem);
+  }
+}
+
+/* ── Free shipping bar: tighten on phones ────── */
+@media (max-width: 480px) {
+  .smc-freeship {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .smc-freeship__text {
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 380px) {
+  .smc-freeship {
+    padding: 0.625rem 0.875rem;
+    gap: 0.5rem;
+  }
+}
+
+/* ── Line items: don't overflow at 320px ──────── */
+.smc-line {
+  /* allow details column to shrink so price doesn't overflow */
+  min-width: 0;
+}
+
+/* Give the details column min-width:0 so it can shrink */
+.smc-line__info {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.smc-line__name {
+  overflow-wrap: anywhere;
+}
+
+/* Tighten line layout on phones */
+@media (max-width: 600px) {
+  .smc-line {
+    grid-template-columns: 76px 1fr auto;
+    gap: 1rem 1rem;
+    padding: 1.25rem 0;
+  }
+  .smc-line__media {
+    width: 76px;
+    height: 96px;
+  }
+}
+
+@media (max-width: 480px) {
+  .smc-line {
+    grid-template-columns: 64px 1fr auto;
+    gap: 0.875rem 0.75rem;
+    padding: 1rem 0;
+  }
+  .smc-line__media {
+    width: 64px;
+    height: 80px;
+  }
+  .smc-line__name {
+    font-size: 0.9375rem;
+  }
+  .smc-line__variant {
+    font-size: 0.6875rem;
+  }
+  .smc-line__price {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  /* Collapse to 2-col: image + (info + price stacked) */
+  .smc-line {
+    grid-template-columns: 56px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.75rem 0.625rem;
+    padding: 0.875rem 0;
+  }
+  .smc-line__media {
+    width: 56px;
+    height: 72px;
+    grid-row: 1 / 3;
+  }
+  .smc-line__info {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .smc-line__price {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+}
+
+/* ── Qty stepper: ≥44px tap targets ─────────── */
+.smc-line__stepper-btn {
+  /* upgrade to 44px min to meet tap target requirement */
+  min-width: 44px;
+  min-height: 44px;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.smc-line__qty {
+  height: 2.75rem;
+  min-height: 44px;
+}
+
+@media (max-width: 380px) {
+  .smc-line__stepper-btn {
+    min-width: 40px;
+    min-height: 44px;
+    width: 2.5rem;
+    height: 2.75rem;
+  }
+  .smc-line__qty {
+    width: 2.25rem;
+  }
+}
+
+/* ── Remove link: always reachable ──────────── */
+.smc-line__remove {
+  /* Ensure the remove link is a minimum touch target */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Summary panel: full-width on phones ─────── */
+@media (max-width: 899px) {
+  .smc-summary {
+    /* unstick on mobile (sticky top is irrelevant stacked) */
+    position: static;
+    /* reduce side padding on phones */
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .smc-summary {
+    padding: 1.25rem;
+  }
+  .smc-summary__checkout {
+    padding: 0.9rem 1rem;
+    min-height: 44px;
+    font-size: 0.7rem;
+  }
+  .smc-summary__update {
+    padding: 0.8rem 1rem;
+    min-height: 44px;
+    font-size: 0.7rem;
+  }
+  .smc-summary__total-value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .smc-summary {
+    padding: 1rem;
+  }
+  .smc-summary__title {
+    font-size: 0.625rem;
+    margin-bottom: 1rem;
+  }
+  .smc-summary__label {
+    font-size: 0.8125rem;
+  }
+  .smc-summary__value {
+    font-size: 0.9375rem;
+  }
+}
+
+/* ── Payment row: wrap on tiny screens ──────── */
+@media (max-width: 480px) {
+  .smc-payment {
+    gap: 0.3rem 0.5rem;
+    padding: 0.5rem 0 0.625rem;
+  }
+  .smc-payment__mark {
+    font-size: 0.625rem;
+  }
+}
+
+/* ── Reassurance row: wrap gracefully ─────────── */
+@media (max-width: 480px) {
+  .smc-reassurance {
+    gap: 0.3rem 0.625rem;
+    padding: 0 0 1rem;
+  }
+  .smc-reassurance__item {
+    font-size: 0.625rem;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ── Secure strip: prevent overflow ─────────── */
+@media (max-width: 380px) {
+  .smc-secure {
+    font-size: 0.625rem;
+    gap: 0.375rem;
+    padding: 0.625rem 0 0.375rem;
+  }
+}
+
+/* ── Empty state: scale text ─────────────────── */
+@media (max-width: 480px) {
+  .smc-empty {
+    padding: 4rem 0 6rem;
+    gap: 1.25rem;
+  }
+  .smc-empty__title {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+  .smc-empty__sub {
+    font-size: 0.875rem;
+  }
+}
+@media (max-width: 380px) {
+  .smc-empty__title {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+  }
+  .smc-empty__cta {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.7rem;
+    min-height: 44px;
+  }
+}
 {% endstylesheet %}
 
 <section class="smc-cart container" aria-label="{{ 'cart.general.title' | t }}">

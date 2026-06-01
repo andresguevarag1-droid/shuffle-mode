@@ -249,10 +249,12 @@
   /* Cards: 1 column on phones */
   .smg-guarantee__grid {
     grid-template-columns: 1fr;
+    min-width: 0;
   }
 
   .smg-guarantee__card {
     padding: 1.5rem 1.25rem;
+    min-width: 0;
   }
 
   /* Card text must not overflow */
@@ -261,6 +263,17 @@
     overflow-wrap: break-word;
     word-break: break-word;
     min-width: 0;
+  }
+
+  /* Section shell: no horizontal scroll */
+  .smg-guarantee {
+    overflow-x: hidden;
+  }
+
+  .smg-guarantee__inner {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   /* Payment row wraps, centers */
@@ -291,9 +304,13 @@
     padding: 1.25rem 1rem;
   }
 
-  /* 2-column cards on SE if merchant has 4 blocks */
+  /* 1-column at 380px and below — 2-col is too cramped at 320px */
   .smg-guarantee__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+  }
+
+  .smg-guarantee__card {
+    padding: 1.25rem 1rem;
   }
 
   .smg-guarantee__icon-circle {
@@ -307,6 +324,18 @@
 
   .smg-guarantee__card-text {
     font-size: 0.75rem;
+  }
+
+  .smg-guarantee__heading {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .smg-guarantee__subcopy {
+    font-size: 0.8125rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 }
 

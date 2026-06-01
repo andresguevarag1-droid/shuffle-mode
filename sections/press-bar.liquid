@@ -416,6 +416,10 @@
 
 /* ─── TINY PHONE (≤380px — SE / mini) ─── */
 @media (max-width: 380px) {
+  .sm-proof {
+    padding: clamp(2rem, 8vw, 3rem) 0;
+  }
+
   .sm-proof__stat {
     padding: 20px 8px;
   }
@@ -430,11 +434,16 @@
   }
 
   /* Divider lines: keep 2×2, only right column gets divider */
-  .sm-proof__stat + .sm-proof__stat::before {
+  .sm-proof__stat:nth-child(even)::before {
     height: 36px;
   }
 
-  /* Press wordmarks: allow wrapping */
+  /* Left-column items: still no divider */
+  .sm-proof__stat:nth-child(odd)::before {
+    content: none !important;
+  }
+
+  /* Press wordmarks: allow wrapping on very small screens */
   .sm-proof__press-wordmark {
     white-space: normal;
     text-align: center;
@@ -443,15 +452,20 @@
 
   .sm-proof__press-row {
     gap: 20px 24px;
+    /* Always wrap at tiny widths */
+    flex-wrap: wrap !important;
   }
 
   .sm-proof__heading {
     font-size: clamp(1.125rem, 6vw, 1.5rem);
     margin-bottom: 32px;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .sm-proof__trust-line {
     font-size: 0.5625rem;
+    overflow-wrap: break-word;
   }
 }
 
