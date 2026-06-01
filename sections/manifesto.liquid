@@ -421,6 +421,13 @@
 @media (max-width: 767px) {
   .sm-manifesto {
     padding: clamp(2.5rem, 8vw, 4rem) 0;
+    /* Belt-and-suspenders horizontal overflow guard */
+    overflow-x: hidden;
+  }
+
+  .sm-manifesto__inner {
+    /* Single-column; children must not exceed viewport */
+    overflow: hidden;
   }
 
   .sm-manifesto__heading {
@@ -429,6 +436,7 @@
     overflow-wrap: break-word;
     word-break: break-word;
     margin-bottom: 28px;
+    max-width: 100%;
   }
 
   /* Word-reveal spans must wrap like inline text — they already are
@@ -455,10 +463,18 @@
   .sm-manifesto__body {
     font-size: clamp(15px, 4vw, 17px);
     margin-bottom: 32px;
+    max-width: 100%;
   }
 
   .sm-manifesto__media {
     margin-bottom: 32px;
+  }
+
+  /* CTA: ensure min tap target height */
+  .sm-manifesto__cta {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 }
 

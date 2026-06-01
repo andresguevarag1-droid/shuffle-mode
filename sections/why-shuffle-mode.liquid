@@ -723,7 +723,8 @@
   .smwhy-hero__lead,
   .smwhy-pillar__text,
   .smwhy-promise__text,
-  .smwhy-founder__quote {
+  .smwhy-founder__quote,
+  .smwhy-cta-section__sub {
     overflow-wrap: break-word;
     word-break: break-word;
     min-width: 0;
@@ -731,6 +732,32 @@
 
   .smwhy-hero__text {
     max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Stats grid: enforce 2-col with min-width:0 so cells never overflow */
+  .smwhy-stats__grid {
+    overflow: hidden;
+  }
+
+  .smwhy-stat {
+    min-width: 0;
+    padding: 1.5rem 0.75rem;
+  }
+
+  /* CTA button: block on small phones */
+  .smwhy-cta-section__inner {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Founder area: min-width:0 to prevent grid blowout */
+  .smwhy-founder__inner {
+    min-width: 0;
+  }
+
+  .smwhy-founder__quote-area {
+    min-width: 0;
   }
 }
 

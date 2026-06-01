@@ -183,6 +183,9 @@
 }
 
 @media (max-width: 639px) {
+  /* In 2×2 grid: divider only on right-column items (even children).
+     Left-column items (odd) must have NO divider — override the
+     generic "+ .sm-proof__stat::before" rule that fires for 3rd stat. */
   .sm-proof__stat:nth-child(even)::before {
     content: '';
     position: absolute;
@@ -194,7 +197,11 @@
     background-color: var(--color-line);
   }
   .sm-proof__stat:nth-child(odd)::before {
-    content: none;
+    content: none !important;
+  }
+  /* Also suppress the gap caused by grid 2px when 2×2 */
+  .sm-proof__stats {
+    gap: 2px;
   }
 }
 
