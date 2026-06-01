@@ -157,20 +157,28 @@
 {% endstylesheet %}
 
 {% javascript %}
+/* Pure CSS animation; this only pauses it off-screen for perf.
+   Liquid is not processed in bundled JS — query by class per-instance. */
 (function () {
-  // Nothing to initialise — pure CSS animation.
-  // Guard: if IntersectionObserver available, pause when off-screen for perf.
-  var track = document.getElementById('sm-marquee-track-{{ section.id }}');
-  if (!track || !window.IntersectionObserver) return;
-
-  var strip = track.closest('.sm-marquee');
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      track.style.animationPlayState = entry.isIntersecting ? '' : 'paused';
-    });
-  }, { threshold: 0 });
-
-  observer.observe(strip);
+  function boot() {
+    if (!window.IntersectionObserver) return;
+    var tracks = document.querySelectorAll('.sm-marquee__track');
+    for (var i = 0; i < tracks.length; i++) {
+      (function (track) {
+        var strip = track.closest('.sm-marquee');
+        if (!strip) return;
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            track.style.animationPlayState = entry.isIntersecting ? '' : 'paused';
+          });
+        }, { threshold: 0 }).observe(strip);
+      })(tracks[i]);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else { boot(); }
+  document.addEventListener('shopify:section:load', boot);
 })();
 {% endjavascript %}
 

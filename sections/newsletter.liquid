@@ -455,21 +455,24 @@
 {% endstylesheet %}
 
 {% javascript %}
+/* Liquid is not processed in bundled JS — bind per-instance by class. */
 (function () {
-  var section = document.getElementById('sm-news-{{ section.id }}');
-  if (!section) return;
-
-  var input = section.querySelector('.sm-news__input');
-  var row   = section.querySelector('.sm-news__field-row');
-  if (!input || !row) return;
-
-  input.addEventListener('focus', function () {
-    row.setAttribute('data-focus', 'true');
-  });
-
-  input.addEventListener('blur', function () {
-    row.removeAttribute('data-focus');
-  });
+  function boot() {
+    var rows = document.querySelectorAll('.sm-news__field-row');
+    for (var i = 0; i < rows.length; i++) {
+      (function (row) {
+        var input = row.querySelector('.sm-news__input');
+        if (!input || row.dataset.smNewsInit) return;
+        row.dataset.smNewsInit = '1';
+        input.addEventListener('focus', function () { row.setAttribute('data-focus', 'true'); });
+        input.addEventListener('blur', function () { row.removeAttribute('data-focus'); });
+      })(rows[i]);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else { boot(); }
+  document.addEventListener('shopify:section:load', boot);
 })();
 {% endjavascript %}
 

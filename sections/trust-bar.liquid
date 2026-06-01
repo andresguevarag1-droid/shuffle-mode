@@ -132,17 +132,26 @@
 </div>
 
 {% javascript %}
+/* Shopify bundles {% javascript %} globally — Liquid is not processed here,
+   so we query by class per-instance instead of interpolated IDs. */
 (function () {
-  var el = document.getElementById('smtr-tb-track-{{ section.id }}');
-  if (!el) return;
-  function measure() {
+  function measureTrack(el) {
     var half = el.scrollWidth / 2;
     el.parentElement.style.setProperty('--smtr-scroll-offset', '-' + half + 'px');
   }
-  measure();
-  if (window.ResizeObserver) {
-    new ResizeObserver(measure).observe(el);
+  function boot() {
+    var tracks = document.querySelectorAll('.smtr-tb__track');
+    for (var i = 0; i < tracks.length; i++) {
+      (function (el) {
+        measureTrack(el);
+        if (window.ResizeObserver) new ResizeObserver(function () { measureTrack(el); }).observe(el);
+      })(tracks[i]);
+    }
   }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else { boot(); }
+  document.addEventListener('shopify:section:load', boot);
 })();
 {% endjavascript %}
 

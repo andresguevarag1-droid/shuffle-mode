@@ -296,6 +296,12 @@
   transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease;
 }
 
+/* Failsafe: if JS never runs (no-js), cards must still be visible */
+.no-js .smt-card {
+  opacity: 1;
+  transform: none;
+}
+
 .smt-card.smt-visible {
   opacity: 1;
   transform: translateY(0);
@@ -399,13 +405,17 @@
 </section>
 
 {% javascript %}
+/* NOTE: Shopify bundles {% javascript %} into a global file, so Liquid like
+   {{ section.id }} is NOT processed here. We therefore operate per-instance by
+   querying the DOM, never by interpolated IDs. */
 (function () {
-  var sectionId = '{{ section.id }}';
-  var track = document.getElementById('smt-track-' + sectionId);
-  var dotsContainer = document.getElementById('smt-dots-' + sectionId);
-  var pauseBtn = document.getElementById('smt-pause-' + sectionId);
+  function initTestimonials(track) {
+    if (!track || track.dataset.smtInit) return;
+    track.dataset.smtInit = '1';
 
-  if (!track) return;
+    var section = track.closest('.smt-section') || track.parentNode;
+    var dotsContainer = section.querySelector('.smt-dots');
+    var pauseBtn = section.querySelector('.smt-pause-btn');
 
   /* ── reveal on scroll ── */
   var cards = Array.prototype.slice.call(track.querySelectorAll('.smt-card'));
@@ -527,6 +537,20 @@
   });
 
   if (!reducedMotion) start();
+  }
+
+  function boot() {
+    var tracks = document.querySelectorAll('.smt-track');
+    for (var i = 0; i < tracks.length; i++) initTestimonials(tracks[i]);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+  // Re-init when added/edited in the Shopify theme editor
+  document.addEventListener('shopify:section:load', boot);
 })();
 {% endjavascript %}
 
