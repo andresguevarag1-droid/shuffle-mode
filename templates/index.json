@@ -15,7 +15,7 @@
         "eyebrow": "Weekly Drops · Est. Boston",
         "heading": "Dress for the mood",
         "heading_accent": "you're in.",
-        "subheading": "Limited fashion drops inspired by every version of you. New drop every Sunday — when it's gone, it's gone.",
+        "subheading": "Limited fashion drops designed for every version of you.",
         "cta_label": "Shop New Drop",
         "cta_url": "/collections/maxi-silhouettes",
         "cta2_label": "View Best Sellers",
@@ -25,7 +25,35 @@
         "countdown_enabled": true,
         "countdown_label": "Next drop in",
         "drop_date": "2026-06-07 13:00"
-      }
+      },
+      "blocks": {
+        "p1": {
+          "type": "prop",
+          "settings": {
+            "icon": "✨",
+            "text": "Small-batch collections"
+          }
+        },
+        "p2": {
+          "type": "prop",
+          "settings": {
+            "icon": "✨",
+            "text": "New arrivals every week"
+          }
+        },
+        "p3": {
+          "type": "prop",
+          "settings": {
+            "icon": "✨",
+            "text": "Fast U.S. shipping"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ]
     },
     "marquee": {
       "type": "marquee",
@@ -225,41 +253,13 @@
             "suffix": "+",
             "label": "drops & counting"
           }
-        },
-        "press-5": {
-          "type": "press",
-          "settings": {
-            "name": "VOGUE"
-          }
-        },
-        "press-6": {
-          "type": "press",
-          "settings": {
-            "name": "ELLE"
-          }
-        },
-        "press-7": {
-          "type": "press",
-          "settings": {
-            "name": "REFINERY29"
-          }
-        },
-        "press-8": {
-          "type": "press",
-          "settings": {
-            "name": "WHO WHAT WEAR"
-          }
         }
       },
       "block_order": [
         "stat-1",
         "stat-2",
         "stat-3",
-        "stat-4",
-        "press-5",
-        "press-6",
-        "press-7",
-        "press-8"
+        "stat-4"
       ],
       "settings": {}
     },
@@ -427,9 +427,9 @@
         "perk-3"
       ],
       "settings": {
-        "eyebrow": "First in line",
-        "heading": "Get 10% off your first drop",
-        "subheading": "Join the list for early access and 10% off your first order. Drops sell out fast — never spam."
+        "eyebrow": "The Mood Club",
+        "heading": "Unlock 15% off your first order",
+        "subheading": "Plus early access to every drop before it sells out. No spam — just first dibs."
       }
     },
     "icon_features": {
@@ -636,6 +636,60 @@
         "enabled": true,
         "position": "bottom-left"
       }
+    },
+    "why": {
+      "type": "icon-features",
+      "settings": {
+        "eyebrow": "Why Shuffle Mode",
+        "heading": "Not just another fashion store",
+        "dark": false
+      },
+      "blocks": {
+        "w1": {
+          "type": "feature",
+          "settings": {
+            "glyph": "◇",
+            "title": "Curated Drops",
+            "text": "No endless scrolling. Only carefully selected pieces, released weekly."
+          }
+        },
+        "w2": {
+          "type": "feature",
+          "settings": {
+            "glyph": "✦",
+            "title": "Small Quantities",
+            "text": "Most styles never restock. When it’s gone, it’s gone for good."
+          }
+        },
+        "w3": {
+          "type": "feature",
+          "settings": {
+            "glyph": "❤",
+            "title": "Fashion Based On Mood",
+            "text": "Dress for who you are today — not for the occasion."
+          }
+        },
+        "w4": {
+          "type": "feature",
+          "settings": {
+            "glyph": "➜",
+            "title": "Fast U.S. Delivery",
+            "text": "Ships from the USA in 24–48h. No waiting weeks for your order."
+          }
+        }
+      },
+      "block_order": [
+        "w1",
+        "w2",
+        "w3",
+        "w4"
+      ]
+    },
+    "ugc": {
+      "type": "ugc-gallery",
+      "settings": {},
+      "blocks": {},
+      "block_order": []
     }
   },
   "order": [
@@ -643,17 +697,16 @@
     "trust",
     "best_sellers",
     "drop",
-    "trending",
+    "why",
     "mood",
-    "icon_features",
     "shuffle",
     "almost_gone",
+    "testimonials",
     "press",
     "lookbook",
-    "manifesto",
-    "testimonials",
-    "faq",
+    "ugc",
     "newsletter",
+    "faq",
     "activity"
   ]
 }

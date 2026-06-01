@@ -53,13 +53,25 @@
     {%- endif -%}
 
     {{- '<!-- badges — top-left stack -->' }}
+    {%- liquid
+      assign low_stock = false
+      assign inv = product.selected_or_first_available_variant.inventory_quantity
+      if product.available and product.selected_or_first_available_variant.inventory_management == 'shopify' and inv > 0 and inv <= 8
+        assign low_stock = true
+      endif
+    -%}
     <div class="card__badges" aria-hidden="true">
       {%- if product.available == false -%}
         <span class="card__badge card__badge--muted">Sold out</span>
-      {%- elsif product.tags contains 'new' -%}
-        <span class="card__badge">New</span>
-      {%- elsif on_sale -%}
-        <span class="card__badge card__badge--sale">Sale</span>
+      {%- else -%}
+        {%- if product.tags contains 'new' -%}
+          <span class="card__badge">New</span>
+        {%- elsif on_sale -%}
+          <span class="card__badge card__badge--sale">Sale</span>
+        {%- endif -%}
+        {%- if low_stock -%}
+          <span class="card__badge card__badge--low">Only {{ inv }} left</span>
+        {%- endif -%}
       {%- endif -%}
     </div>
 

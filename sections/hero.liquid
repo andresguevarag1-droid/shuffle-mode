@@ -73,6 +73,20 @@
           <p class="sm-hero__sub">{{ section.settings.subheading }}</p>
         {%- endif -%}
 
+        {%- comment %} — Value-prop bullets (what they sell / why different) — {%- endcomment %}
+        {%- if section.blocks.size > 0 -%}
+          <ul class="sm-hero__props" role="list">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'prop' and block.settings.text != blank -%}
+                <li class="sm-hero__prop" {{ block.shopify_attributes }}>
+                  <span class="sm-hero__prop-mark" aria-hidden="true">{{ block.settings.icon | default: '✦' }}</span>
+                  <span>{{ block.settings.text }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
         {%- comment %} — CTAs — fall back to real destinations if no URL is set,
             so the buttons always work even before they're configured. {%- endcomment %}
         {%- liquid
@@ -387,6 +401,31 @@
 @keyframes sm-hero-rise-sub {
   from { opacity: 0;    transform: translateY(16px); }
   to   { opacity: 0.72; transform: translateY(0);    }
+}
+
+/* ━━━ Value-prop bullets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sm-hero__props {
+  list-style: none;
+  margin: 0 0 clamp(1.75rem, 4vh, 2.5rem);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  animation: sm-hero-rise-sub 0.85s 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.sm-hero__prop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.8125rem, 1.3vw, 0.9375rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--color-cream);
+}
+.sm-hero__prop-mark { color: var(--color-ember); flex-shrink: 0; }
+@media (max-width: 480px) {
+  .sm-hero__props { flex-direction: column; gap: 0.45rem; }
 }
 
 /* ━━━ CTAs ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -1124,21 +1163,36 @@
       "default": "2026-06-07 13:00"
     }
   ],
+  "blocks": [
+    {
+      "type": "prop",
+      "name": "Value bullet",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon", "default": "✨" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Small-batch collections" }
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Hero",
       "settings": {
         "eyebrow": "Weekly Drops · Est. Boston",
-        "heading": "You don't dress for the occasion.",
-        "heading_accent": "You dress for the mood.",
-        "subheading": "Minimal pieces that elevate your wardrobe instantly. New drop every Sunday.",
-        "cta_label": "Shop the drop",
+        "heading": "Dress for the mood",
+        "heading_accent": "you're in.",
+        "subheading": "Limited fashion drops designed for every version of you.",
+        "cta_label": "Shop New Drop",
         "cta2_label": "Find your mood",
         "collage_caption": "Drop 01 · Live now",
         "countdown_enabled": true,
         "countdown_label": "Next drop in",
         "drop_date": "2026-06-07 13:00"
-      }
+      },
+      "blocks": [
+        { "type": "prop", "settings": { "icon": "✨", "text": "Small-batch collections" } },
+        { "type": "prop", "settings": { "icon": "✨", "text": "New arrivals every week" } },
+        { "type": "prop", "settings": { "icon": "✨", "text": "Fast U.S. shipping" } }
+      ]
     }
   ]
 }

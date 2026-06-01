@@ -635,6 +635,12 @@ h5, h6 { font-family: var(--font-body); letter-spacing: 0; }
   color: var(--color-cream);
   backdrop-filter: blur(6px);
 }
+.card__badge--low {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  backdrop-filter: none;
+  letter-spacing: .04em;
+}
 
 /* Quick add — slides up on hover */
 .card__quick {
