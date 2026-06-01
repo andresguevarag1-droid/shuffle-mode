@@ -1432,7 +1432,8 @@ h5, h6 { font-family: var(--font-body); letter-spacing: 0; }
 .no-js [data-reveal],
 .no-js .sm-manifesto__word,
 .no-js .sm-manifesto__emphasis,
-.no-js .sm-manifesto__line {
+.no-js .sm-manifesto__line,
+.no-js .sm-proof__stat-value {
   opacity: 1 !important;
   transform: none !important;
   visibility: visible !important;

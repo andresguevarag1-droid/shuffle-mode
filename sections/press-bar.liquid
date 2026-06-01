@@ -320,8 +320,15 @@
   display: block;
 }
 
-/* ── Count-up animation state ── */
-.sm-proof__stat[data-counted="false"] .sm-proof__stat-value {
+/* ── Count-up animation state ──
+   Values are visible by DEFAULT so they never disappear if JS doesn't run.
+   The count-up animation only hides them once JS has explicitly opted in by
+   setting data-counted="false" via the .js-count flag the script adds. */
+.sm-proof__stat-value {
+  opacity: 1;
+}
+
+.js-count .sm-proof__stat[data-counted="false"] .sm-proof__stat-value {
   opacity: 0;
 }
 
@@ -381,10 +388,15 @@
     var statEls = sectionEl.querySelectorAll('.sm-proof__stat-value[data-target]');
     if (!statEls.length) return;
 
-    // Mark all as not yet counted
-    statEls.forEach(function (el) {
-      el.parentElement.parentElement.dataset.counted = 'false';
-    });
+    var canAnimate = !prefersReduced && ('IntersectionObserver' in window);
+
+    // Only opt into the hide-then-count behavior when we can actually animate.
+    if (canAnimate) {
+      sectionEl.classList.add('js-count');
+      statEls.forEach(function (el) {
+        el.parentElement.parentElement.dataset.counted = 'false';
+      });
+    }
 
     if (prefersReduced) {
       statEls.forEach(function (el) {
