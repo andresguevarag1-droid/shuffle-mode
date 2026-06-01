@@ -139,6 +139,84 @@
   text-align: center;
 }
 
+/* ── TRUST STATS STRIP ────────────────────────────────────── */
+.smwhy-stats {
+  padding: clamp(3rem, 5vw, 4.5rem) 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-bone);
+}
+
+.smwhy-stats__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.smwhy-stat {
+  flex: 1 1 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.25rem, 3vw, 2.5rem);
+  position: relative;
+}
+
+.smwhy-stat + .smwhy-stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background: var(--color-line);
+}
+
+@media (max-width: 599px) {
+  .smwhy-stat {
+    flex: 1 1 48%;
+  }
+  .smwhy-stat:nth-child(odd) + .smwhy-stat::before {
+    display: block;
+  }
+  .smwhy-stat:nth-child(even) + .smwhy-stat::before {
+    display: none;
+  }
+  .smwhy-stat:nth-child(3)::before,
+  .smwhy-stat:nth-child(4)::before {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+  }
+}
+
+.smwhy-stat__value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--color-ink);
+  margin: 0 0 0.5rem;
+  display: block;
+}
+
+.smwhy-stat__label {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  display: block;
+  line-height: 1.5;
+}
+
 /* ── PILLARS SECTION ──────────────────────────────────────── */
 .smwhy-pillars {
   padding: clamp(4rem, 7vw, 7rem) 0;
@@ -393,6 +471,61 @@
   margin: 0;
 }
 
+/* ── PROMISE ROW ──────────────────────────────────────────── */
+.smwhy-promises {
+  padding: clamp(3rem, 5vw, 4.5rem) 0;
+  border-top: 1px solid var(--color-line);
+  background: var(--color-cream);
+}
+
+.smwhy-promises__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+@media (min-width: 600px) {
+  .smwhy-promises__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 960px) {
+  .smwhy-promises__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+}
+
+.smwhy-promise {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.smwhy-promise__icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-ember);
+  margin-top: 0.1em;
+}
+
+.smwhy-promise__text {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-stone);
+  margin: 0;
+}
+
+.smwhy-promise__text strong {
+  display: block;
+  font-weight: 500;
+  color: var(--color-ink);
+  margin-bottom: 0.1rem;
+}
+
 /* ── CLOSING CTA ──────────────────────────────────────────── */
 .smwhy-cta-section {
   padding: clamp(4rem, 7vw, 7rem) 0;
@@ -492,6 +625,7 @@
   assign cta_url       = section.settings.cta_url
   assign cta_sub       = section.settings.cta_sub
   assign pillars       = section.blocks | where: "type", "pillar"
+  assign stats         = section.blocks | where: "type", "stat"
 -%}
 
 <article class="smwhy-root" aria-labelledby="smwhy-headline-{{ section.id }}">
@@ -543,6 +677,26 @@
       </div>
     </div>
   </div>
+
+  <!-- ══ TRUST STATS STRIP ═══════════════════════════════════ -->
+  {%- if stats.size > 0 -%}
+  <div class="smwhy-stats" aria-label="Shuffle Mode by the numbers">
+    <div class="container">
+      <div class="smwhy-stats__grid" role="list">
+        {%- for block in stats -%}
+          <div class="smwhy-stat smwhy-reveal" data-delay="{{ forloop.index }}" role="listitem" {{ block.shopify_attributes }}>
+            {%- if block.settings.value != blank -%}
+              <span class="smwhy-stat__value">{{ block.settings.value | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.label != blank -%}
+              <span class="smwhy-stat__label">{{ block.settings.label | escape }}</span>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
 
   <!-- ══ PILLARS ═════════════════════════════════════════════ -->
   {%- if pillars.size > 0 -%}
@@ -614,6 +768,45 @@
           </footer>
         </blockquote>
 
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <!-- ══ PROMISE ROW ═════════════════════════════════════════ -->
+  {%- liquid
+    assign promise_items = ''
+    if section.settings.promise_1 != blank
+      assign promise_items = promise_items | append: section.settings.promise_1 | append: '||'
+    endif
+    if section.settings.promise_2 != blank
+      assign promise_items = promise_items | append: section.settings.promise_2 | append: '||'
+    endif
+    if section.settings.promise_3 != blank
+      assign promise_items = promise_items | append: section.settings.promise_3 | append: '||'
+    endif
+    if section.settings.promise_4 != blank
+      assign promise_items = promise_items | append: section.settings.promise_4 | append: '||'
+    endif
+    assign promise_array = promise_items | split: '||'
+  -%}
+  {%- if promise_array.size > 0 -%}
+  <div class="smwhy-promises" aria-label="Our commitments to you">
+    <div class="container">
+      <div class="smwhy-promises__grid">
+        {%- for item in promise_array -%}
+          {%- if item != blank -%}
+          <div class="smwhy-promise smwhy-reveal" data-delay="{{ forloop.index }}">
+            <span class="smwhy-promise__icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M10 2L12.09 7.26L17.74 7.64L13.65 11.26L14.9 16.74L10 13.8L5.1 16.74L6.35 11.26L2.26 7.64L7.91 7.26L10 2Z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" fill="none"/>
+                <path d="M7.5 10.5L9.25 12.25L12.5 8.75" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <p class="smwhy-promise__text">{{ item | escape }}</p>
+          </div>
+          {%- endif -%}
+        {%- endfor -%}
       </div>
     </div>
   </div>
@@ -728,7 +921,7 @@
       "type": "image_picker",
       "id": "founder_image",
       "label": "Hero image",
-      "info": "Portrait orientation (4:5) works best. A founder photo or editorial shot — real photos will be added later."
+      "info": "Portrait orientation (4:5) works best. Upload a founder photo or editorial shot here — an elegant tonal placeholder renders automatically until a real photo is added."
     },
     {
       "type": "header",
@@ -757,7 +950,35 @@
       "type": "image_picker",
       "id": "founder_portrait",
       "label": "Founder portrait",
-      "info": "Small portrait (3:4). Shows beside the quote. Leave empty for an elegant tonal placeholder."
+      "info": "Small portrait (3:4 ratio) shown beside the quote. Upload a real photo when ready — a tonal monogram placeholder renders automatically until then."
+    },
+    {
+      "type": "header",
+      "content": "Our promises"
+    },
+    {
+      "type": "text",
+      "id": "promise_1",
+      "label": "Promise 1",
+      "default": "Designed & shipped from the USA"
+    },
+    {
+      "type": "text",
+      "id": "promise_2",
+      "label": "Promise 2",
+      "default": "Easy 14-day returns"
+    },
+    {
+      "type": "text",
+      "id": "promise_3",
+      "label": "Promise 3",
+      "default": "Secure, encrypted checkout"
+    },
+    {
+      "type": "text",
+      "id": "promise_4",
+      "label": "Promise 4",
+      "default": "Real small-batch production — no dropshipping"
     },
     {
       "type": "header",
@@ -800,6 +1021,26 @@
           "default": "<p>Because getting dressed should feel like an act of self-expression, not an obligation. We exist for the woman who already knows who she is — she just needs the right piece to prove it.</p>"
         }
       ]
+    },
+    {
+      "type": "stat",
+      "name": "Trust stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Number / value",
+          "default": "10k+",
+          "info": "e.g. \"10k+\", \"4.9★\", \"48h\", \"Est. 2024\""
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "happy customers",
+          "info": "Short descriptor shown beneath the value."
+        }
+      ]
     }
   ],
   "presets": [
@@ -812,10 +1053,42 @@
         "founder_quote": "I never wanted to build a brand. I wanted to build a ritual — the Sunday morning feeling of opening something that was made just for you, in a quantity small enough to mean something. That's what every drop is. A love letter to the woman who dresses for herself.",
         "founder_name": "— The Founder",
         "founder_role": "Founder, Shuffle Mode",
+        "promise_1": "Designed & shipped from the USA",
+        "promise_2": "Easy 14-day returns",
+        "promise_3": "Secure, encrypted checkout",
+        "promise_4": "Real small-batch production — no dropshipping",
         "cta_label": "Shop the current drop",
         "cta_sub": "New pieces every week. No restocks. Designed in Boston — gone when they're gone."
       },
       "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "value": "10k+",
+            "label": "happy customers"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "4.9★",
+            "label": "average rating"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "48h",
+            "label": "sold-out drops"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "Est. 2024",
+            "label": "Boston, MA"
+          }
+        },
         {
           "type": "pillar",
           "settings": {
