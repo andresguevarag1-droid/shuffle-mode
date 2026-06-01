@@ -381,6 +381,102 @@
   color: var(--color-ink);
   border-color: var(--color-ink);
 }
+
+/* ── Blog: small-phone 480px ────────────────────────────── */
+@media (max-width: 480px) {
+  .smb-journal {
+    padding: 3rem 0 4rem;
+  }
+
+  .smb-journal__header {
+    margin-bottom: 2.5rem;
+  }
+
+  .smb-journal__title {
+    font-size: clamp(1.875rem, 9vw, 2.5rem);
+  }
+
+  /* Featured lead: image above text on phones */
+  .smb-lead {
+    grid-template-columns: 1fr;
+    margin-bottom: 3rem;
+  }
+
+  .smb-lead__media {
+    aspect-ratio: 16 / 9;
+  }
+
+  .smb-lead__body {
+    padding: 1.5rem 1.25rem 2rem;
+  }
+
+  .smb-lead__heading {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+
+  .smb-lead__excerpt {
+    max-width: 100%;
+    font-size: 0.875rem;
+  }
+
+  .smb-lead__link {
+    min-height: 44px;
+    align-items: center;
+    padding-bottom: 0;
+  }
+
+  /* Article grid: 1 column on phones */
+  .smb-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem 0;
+  }
+
+  .smb-card__heading {
+    font-size: clamp(1.1rem, 5vw, 1.375rem);
+    overflow-wrap: anywhere;
+  }
+
+  .smb-card__excerpt {
+    overflow-wrap: anywhere;
+  }
+
+  .smb-divider {
+    margin-bottom: 2rem;
+  }
+
+  /* Pagination: wraps and stays usable */
+  .smb-pagination {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+  }
+
+  .smb-pagination .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.375rem;
+  }
+
+  .smb-pagination .pagination a,
+  .smb-pagination .pagination span {
+    min-width: 2.75rem;
+    min-height: 44px;
+  }
+}
+
+/* ── Blog: tiny-phone 380px ─────────────────────────────── */
+@media (max-width: 380px) {
+  .smb-lead__body {
+    padding: 1.25rem 1rem 1.75rem;
+  }
+
+  .smb-lead__heading {
+    font-size: clamp(1.375rem, 6vw, 1.75rem);
+  }
+
+  .smb-journal__title {
+    font-size: clamp(1.625rem, 8vw, 2rem);
+  }
+}
 {% endstylesheet %}
 
 <section class="smb-journal container">

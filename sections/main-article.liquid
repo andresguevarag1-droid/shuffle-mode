@@ -392,6 +392,119 @@
   .sma-card-read,
   .sma-card-read::after { transition: none; }
 }
+
+/* ── Article: small-phone 480px ────────────────────────── */
+@media (max-width: 480px) {
+  .sma-article {
+    padding-block: 3rem 4rem;
+  }
+
+  .sma-back {
+    margin-bottom: 2rem;
+    font-size: 0.6875rem;
+  }
+
+  .sma-header {
+    padding-inline: 1rem;
+  }
+
+  .sma-title {
+    font-size: clamp(1.875rem, 9vw, 2.5rem);
+  }
+
+  .sma-dek {
+    font-size: 0.9375rem;
+    max-width: 100%;
+  }
+
+  .sma-hero {
+    margin-block: 2rem;
+  }
+
+  .sma-hero-inner {
+    aspect-ratio: 4 / 3;
+  }
+
+  .sma-body {
+    padding-inline: 1rem;
+    max-width: 100%;
+  }
+
+  .sma-content {
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Tame the drop-cap at small sizes */
+  .sma-content > p:first-of-type::first-letter {
+    font-size: 3.25em;
+  }
+
+  .sma-content blockquote {
+    padding-left: 1.125rem;
+    margin: 1.75rem 0;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .sma-content figure {
+    margin: 1.75rem 0;
+  }
+
+  .sma-content figure img {
+    max-width: 100%;
+  }
+
+  .sma-content h2 {
+    font-size: clamp(1.2rem, 5vw, 1.5rem);
+  }
+
+  .sma-content h3 {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .sma-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .sma-more {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+  }
+
+  /* 1-column keep-reading grid on phones */
+  .sma-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* ── Article: tiny-phone 380px ─────────────────────────── */
+@media (max-width: 380px) {
+  .sma-body {
+    padding-inline: 0.875rem;
+  }
+
+  .sma-header {
+    padding-inline: 0.875rem;
+  }
+
+  .sma-title {
+    font-size: clamp(1.625rem, 8vw, 2rem);
+  }
+
+  .sma-content > p:first-of-type::first-letter {
+    font-size: 2.75em;
+  }
+
+  .sma-content blockquote {
+    padding-left: 0.875rem;
+  }
+}
 {% endstylesheet %}
 
 <article class="sma-article">

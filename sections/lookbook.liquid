@@ -450,6 +450,113 @@ figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
     transition: none;
   }
 }
+
+/* ── Small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .sm-look {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+    overflow-x: hidden;
+  }
+
+  /* Header: stack vertically, reduce gap */
+  .sm-look__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .sm-look__heading {
+    font-size: clamp(1.875rem, 9vw, 3rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .sm-look__journal-link {
+    min-height: 44px;
+    align-items: center;
+    white-space: normal;
+  }
+
+  /* Grid: single column on small phones; sensible fixed row heights.
+     56vw rows on 2-col were ~112vw tall for --tall tiles — absurd on phones.
+     Use 1 column with a reasonable portrait aspect via auto-rows. */
+  .sm-look__grid {
+    grid-template-columns: 1fr;
+    /* Each row is 70vw tall — portrait-ish, never absurdly tall */
+    grid-auto-rows: 70vw;
+    gap: 0.375rem;
+    /* Prevent any child from overflowing */
+    overflow: hidden;
+  }
+
+  /* Override span variants so they all stack as single-cell tiles */
+  .sm-look__tile--tall {
+    grid-row: span 1;
+  }
+
+  .sm-look__tile--wide {
+    grid-column: span 1;
+  }
+
+  /* Captions: always visible on touch (no hover) */
+  .sm-look__tile-overlay {
+    opacity: 0.55;
+  }
+
+  .sm-look__tile-caption-inner {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .sm-look__tile-caption {
+    padding: 1rem 0.875rem 0.875rem;
+  }
+
+  figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
+    font-size: 0.6875rem;
+  }
+
+  .sm-look__tile-product-title {
+    font-size: 0.9rem;
+  }
+
+  .sm-look__tile-product-price {
+    font-size: 0.625rem;
+  }
+}
+
+/* ── Tiny phone (≤380px) ── */
+@media (max-width: 380px) {
+  .sm-look {
+    padding: clamp(2rem, 7vw, 3rem) 0;
+  }
+
+  .sm-look__heading {
+    font-size: clamp(1.625rem, 10vw, 2.5rem);
+  }
+
+  .sm-look__eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+  }
+
+  .sm-look__grid {
+    /* At 320px, 70vw rows are ~224px — still fine. Keep same. */
+    grid-auto-rows: 70vw;
+    gap: 0.25rem;
+  }
+
+  .sm-look__header {
+    margin-bottom: 1.5rem;
+  }
+
+  .sm-look__journal-link {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+  }
+}
 {% endstylesheet %}
 
 {% javascript %}

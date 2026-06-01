@@ -525,6 +525,97 @@
   outline-offset: 3px;
 }
 
+/* ── Small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .sm-ugc {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+  }
+
+  .sm-ugc__header {
+    margin-bottom: 32px;
+  }
+
+  .sm-ugc__heading {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  .sm-ugc__subtext {
+    font-size: 0.875rem;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  /* @handle link — ensure it wraps and stays tappable */
+  .sm-ugc__ig-link {
+    flex-wrap: wrap;
+    min-height: 44px;
+    align-items: center;
+    padding-bottom: 4px;
+    word-break: break-all;
+  }
+
+  /* Grid: 2 columns on phones (already the default at base styles —
+     guard that it never collapses to 1 or stretches to 3 early) */
+  .sm-ugc__grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* tiles stay square via aspect-ratio on __media */
+    min-width: 0;
+  }
+
+  /* Ensure tiles don't overflow container */
+  .sm-ugc__tile {
+    min-width: 0;
+  }
+
+  /* Keep square aspect-ratio (aspect-ratio: 1/1 already set on __media) */
+  .sm-ugc__media {
+    aspect-ratio: 1 / 1;
+  }
+
+  .sm-ugc__cta-wrap {
+    margin-top: 32px;
+  }
+
+  .sm-ugc__cta {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+    padding: 12px 24px;
+  }
+}
+
+/* ── Tiny phone (≤380px) ── */
+@media (max-width: 380px) {
+  .sm-ugc {
+    padding: clamp(2rem, 7vw, 3rem) 0;
+  }
+
+  .sm-ugc__heading {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+  }
+
+  .sm-ugc__eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+  }
+
+  .sm-ugc__subtext {
+    font-size: 0.8125rem;
+  }
+
+  .sm-ugc__grid {
+    gap: 4px;
+  }
+
+  .sm-ugc__overlay-title {
+    font-size: 0.6875rem;
+  }
+
+  .sm-ugc__overlay-price {
+    font-size: 0.625rem;
+  }
+}
+
 {% endstylesheet %}
 
 {% javascript %}

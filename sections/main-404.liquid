@@ -206,6 +206,78 @@
   background: var(--color-line, rgba(22,19,15,.1));
   margin: 0 auto;
 }
+
+/* ── 404: small-phone 480px ─────────────────────────────── */
+@media (max-width: 480px) {
+  .sm404-wrap {
+    padding-block: 3rem 3.5rem;
+    padding-inline: 1rem;
+    min-height: 70vh;
+  }
+
+  .sm404-content {
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .sm404-headline {
+    font-size: clamp(2rem, 11vw, 2.75rem);
+  }
+
+  .sm404-sub {
+    font-size: 0.9375rem;
+  }
+
+  .sm404-search {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .sm404-search__input {
+    min-height: 44px;
+    padding: 0 0.875rem;
+  }
+
+  .sm404-search__btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.875rem;
+  }
+
+  .sm404-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.625rem;
+  }
+
+  .sm404-btn {
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    width: 100%;
+  }
+}
+
+/* ── 404: tiny-phone 380px ──────────────────────────────── */
+@media (max-width: 380px) {
+  .sm404-wrap {
+    padding-inline: 0.875rem;
+  }
+
+  .sm404-headline {
+    font-size: clamp(1.75rem, 10vw, 2.25rem);
+  }
+
+  .sm404-mark-text {
+    font-size: clamp(14rem, 38vw, 18rem);
+  }
+
+  .sm404-sub {
+    font-size: 0.875rem;
+    max-width: 100%;
+  }
+}
 {% endstylesheet %}
 
 <section class="sm404-wrap" role="main" aria-labelledby="sm404-heading">

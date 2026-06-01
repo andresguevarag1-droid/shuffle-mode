@@ -142,6 +142,113 @@
 @media (max-width: 600px) {
   .smsg-lower { grid-template-columns: 1fr; gap: 32px; }
 }
+
+/* ── Small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .smsg-wrap {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+  }
+
+  .smsg-header {
+    margin-bottom: 32px;
+  }
+
+  .smsg-title {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    overflow-wrap: break-word;
+  }
+
+  .smsg-subtitle {
+    overflow-wrap: break-word;
+  }
+
+  /* Unit toggle: ensure ≥44px tap targets */
+  .smsg-toggle-btn {
+    padding: 10px 14px;
+    min-height: 44px;
+    font-size: 0.6875rem;
+  }
+
+  /* Table: allow horizontal scroll (already has overflow-x:auto on wrap).
+     Shrink cell padding and font so fewer columns need to scroll. */
+  .smsg-table th {
+    padding: 10px 10px 8px;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+
+  .smsg-table td {
+    padding: 14px 10px;
+    font-size: 12px;
+    /* keep nowrap so scroll kicks in properly rather than ugly wrapping */
+    white-space: nowrap;
+  }
+
+  .smsg-table td:first-child {
+    padding-left: 0;
+    font-size: 10px;
+  }
+
+  /* Scroll hint shadow on right edge */
+  .smsg-table-wrap {
+    position: relative;
+  }
+
+  .smsg-lower {
+    margin-top: 32px;
+    padding-top: 28px;
+    gap: 24px;
+  }
+
+  .smsg-fit-notes {
+    font-size: 12px;
+    overflow-wrap: break-word;
+  }
+
+  .smsg-model-note {
+    font-size: 12px;
+    overflow-wrap: break-word;
+  }
+}
+
+/* ── Tiny phone (≤380px) ── */
+@media (max-width: 380px) {
+  .smsg-wrap {
+    padding: clamp(2rem, 7vw, 3rem) 0;
+  }
+
+  .smsg-title {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+  }
+
+  .smsg-eyebrow {
+    font-size: 9px;
+  }
+
+  .smsg-table th {
+    padding: 8px 8px 6px;
+    font-size: 7.5px;
+    letter-spacing: 0.1em;
+  }
+
+  .smsg-table td {
+    padding: 12px 8px;
+    font-size: 11px;
+  }
+
+  .smsg-table td:first-child {
+    font-size: 9px;
+  }
+
+  .smsg-toggle-btn {
+    padding: 10px 12px;
+    font-size: 0.625rem;
+  }
+
+  .smsg-lower {
+    gap: 20px;
+  }
+}
 .smsg-block-label {
   font-size: 9px;
   font-weight: 600;

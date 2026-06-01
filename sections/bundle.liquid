@@ -1,3 +1,69 @@
+{% stylesheet %}
+/* ── Bundle: small-phone 480px ──────────────────────────── */
+@media (max-width: 480px) {
+  /* Items row: allow horizontal scroll to keep tiles usable */
+  .ctl__items {
+    /* Already overflow-x: auto in theme.css — ensure scroll padding */
+    scroll-padding-inline: 1rem;
+    padding-inline: 0.25rem;
+  }
+
+  /* Clamp tile width so 2–3 are partially visible at 480px */
+  .ctl__item {
+    width: clamp(130px, 38vw, 170px);
+  }
+
+  /* Footer: stack total + button full-width */
+  .ctl__foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ctl__total {
+    text-align: center;
+  }
+
+  .ctl__foot .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* Checkbox tap target */
+  .ctl__check {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .ctl__check input {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  /* Variant select usable */
+  .ctl__variant {
+    min-height: 36px;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ── Bundle: tiny-phone 380px ───────────────────────────── */
+@media (max-width: 380px) {
+  .ctl__item {
+    width: clamp(120px, 36vw, 150px);
+  }
+
+  .ctl__plus {
+    font-size: 1.1rem;
+    padding-inline: 0.1rem;
+  }
+
+  .ctl__total-value {
+    font-size: 1.35rem;
+  }
+}
+{% endstylesheet %}
+
 {%- comment -%} Curated bundle / "Shop the set" — pick products, add all in one tap. {%- endcomment -%}
 {%- liquid
   assign valid = 0

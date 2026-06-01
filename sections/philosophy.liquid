@@ -122,6 +122,92 @@
     transition: none;
   }
 }
+
+/* ── Small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .smph-wrap {
+    padding: clamp(2.5rem, 8vw, 4rem) 0;
+  }
+
+  .smph-inner {
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  .smph-heading {
+    /* clamp prevents overflow at 320px: min ~1.875rem ≈ 30px */
+    font-size: clamp(1.875rem, 9vw, 3.5rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .smph-body {
+    font-size: clamp(0.9rem, 3.5vw, 1.0625rem);
+    max-width: 100%;
+  }
+
+  /* Stats: switch from auto-fit (which may go too narrow) to 2 columns */
+  .smph-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Remove dividing left-borders on every-other child; use top border instead */
+  .smph-stat {
+    padding: clamp(1.25rem, 3vw, 2rem) clamp(0.75rem, 2.5vw, 1.5rem);
+    border-top: 1px solid var(--smph-line);
+  }
+
+  .smph-stat + .smph-stat {
+    border-left: none;
+    padding-left: clamp(0.75rem, 2.5vw, 1.5rem);
+    padding-right: clamp(0.75rem, 2.5vw, 1.5rem);
+  }
+
+  /* Restore left border only between items in the same row */
+  .smph-stat:nth-child(even) {
+    border-left: 1px solid var(--smph-line);
+  }
+
+  .smph-stat__value {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+  }
+
+  .smph-stat__label {
+    font-size: 0.75rem;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+}
+
+/* ── Tiny phone (≤380px) ── */
+@media (max-width: 380px) {
+  .smph-wrap {
+    padding: clamp(2rem, 7vw, 3rem) 0;
+  }
+
+  .smph-heading {
+    font-size: clamp(1.625rem, 10vw, 2.5rem);
+  }
+
+  .smph-eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    margin-bottom: 1rem;
+  }
+
+  /* At 320px, keep 2-up but allow single column if values are very wide */
+  .smph-stats {
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  }
+
+  .smph-stat__value {
+    font-size: clamp(1.75rem, 9vw, 2.75rem);
+  }
+
+  .smph-body {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+  }
+}
 {% endstylesheet %}
 
 <section

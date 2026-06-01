@@ -154,6 +154,41 @@
     white-space: normal;
   }
 }
+
+/* ── Small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .sm-marquee {
+    padding-block: 0.6em;
+    /* tighten fade edges so text has more visible runway */
+  }
+  .sm-marquee::before,
+  .sm-marquee::after {
+    width: 2rem;
+  }
+  .sm-marquee__run {
+    padding-inline: 1em;
+  }
+  .sm-marquee__sep {
+    margin-inline: 0.65em;
+  }
+}
+
+/* ── Tiny phone (≤380px) ── */
+@media (max-width: 380px) {
+  .sm-marquee {
+    padding-block: 0.5em;
+  }
+  .sm-marquee::before,
+  .sm-marquee::after {
+    width: 1.25rem;
+  }
+  .sm-marquee__run {
+    padding-inline: 0.75em;
+  }
+  .sm-marquee__sep {
+    margin-inline: 0.5em;
+  }
+}
 {% endstylesheet %}
 
 {% javascript %}

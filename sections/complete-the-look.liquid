@@ -1,3 +1,82 @@
+{% stylesheet %}
+/* ── Complete-the-look: small-phone 480px ───────────────── */
+@media (max-width: 480px) {
+  /* Items row scrolls horizontally — tiles remain tappable */
+  .ctl__items {
+    scroll-padding-inline: 1rem;
+    padding-inline: 0.25rem;
+  }
+
+  .ctl__item {
+    width: clamp(130px, 38vw, 170px);
+  }
+
+  /* Main (hero) piece can be slightly wider */
+  .ctl__item--main {
+    width: clamp(140px, 42vw, 175px);
+  }
+
+  /* Footer: stack total + CTA full-width ≥44px */
+  .ctl__foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ctl__total {
+    text-align: center;
+  }
+
+  .ctl__foot .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* Checkbox tap target */
+  .ctl__check {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .ctl__check input {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  /* Variant select */
+  .ctl__variant {
+    min-height: 36px;
+    font-size: 0.8125rem;
+  }
+
+  /* Product names wrap, don't overflow */
+  .ctl__name {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+/* ── Complete-the-look: tiny-phone 380px ────────────────── */
+@media (max-width: 380px) {
+  .ctl__item {
+    width: clamp(118px, 36vw, 145px);
+  }
+
+  .ctl__item--main {
+    width: clamp(128px, 40vw, 155px);
+  }
+
+  .ctl__plus {
+    font-size: 1.1rem;
+    padding-inline: 0.1rem;
+  }
+
+  .ctl__total-value {
+    font-size: 1.35rem;
+  }
+}
+{% endstylesheet %}
+
 {%- comment -%}
   Complete the look — bundle the current product with complementary pieces and
   add them all to the bag in one click. Source order:

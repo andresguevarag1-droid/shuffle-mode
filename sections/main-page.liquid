@@ -288,6 +288,93 @@
   }
 }
 
+/* ── Page: small-phone 480px ────────────────────────────── */
+@media (max-width: 480px) {
+  .smp-page {
+    padding: 3rem 0 4rem;
+  }
+
+  .smp-page__header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    padding-inline: 1rem;
+    max-width: 100%;
+  }
+
+  .smp-page__title {
+    font-size: clamp(2rem, 10vw, 2.75rem);
+    overflow-wrap: anywhere;
+  }
+
+  .smp-page__intro {
+    font-size: 0.9375rem;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .smp-page__body {
+    max-width: 100%;
+    padding-inline: 1rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .smp-rte {
+    font-size: 0.9375rem;
+  }
+
+  .smp-rte h2 {
+    font-size: clamp(1.25rem, 6vw, 1.75rem);
+    overflow-wrap: anywhere;
+  }
+
+  .smp-rte h3 {
+    font-size: clamp(1.0625rem, 4vw, 1.375rem);
+    overflow-wrap: anywhere;
+  }
+
+  .smp-rte blockquote {
+    padding: 1.25rem 1.25rem;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .smp-rte a {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .smp-rte table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  .smp-rte img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ── Page: tiny-phone 380px ─────────────────────────────── */
+@media (max-width: 380px) {
+  .smp-page__header {
+    padding-inline: 0.875rem;
+  }
+
+  .smp-page__body {
+    padding-inline: 0.875rem;
+  }
+
+  .smp-page__title {
+    font-size: clamp(1.75rem, 9vw, 2.25rem);
+  }
+
+  .smp-rte blockquote {
+    padding: 1rem;
+  }
+}
+
 {% endstylesheet %}
 
 {% schema %}

@@ -455,6 +455,108 @@
     transform: none;
   }
 }
+
+/* ── Small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .sm-news {
+    padding-block: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .sm-news__inner {
+    gap: 1rem;
+  }
+
+  .sm-news__heading {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    max-width: 100%;
+  }
+
+  .sm-news__sub {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
+  /* Perks wrap into a 2-column grid on mid-small phones */
+  .sm-news__perks {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem 1rem;
+  }
+
+  .sm-news__perk {
+    min-width: 0;
+    font-size: 0.8125rem;
+  }
+
+  /* Field row stays stacked (column) and full-width — already the default below 540px.
+     Ensure inputs hit ≥44px tap target. */
+  .sm-news__input {
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .sm-news__btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .sm-news__form-wrap {
+    margin-top: 0.5rem;
+  }
+
+  .sm-news__wordmark-bg {
+    gap: 0;
+  }
+
+  .sm-news__bg-word {
+    font-size: clamp(4rem, 22vw, 8rem);
+  }
+}
+
+/* ── Tiny phone (≤380px) ── */
+@media (max-width: 380px) {
+  .sm-news {
+    padding-block: clamp(2rem, 7vw, 3rem);
+  }
+
+  .sm-news__heading {
+    font-size: clamp(1.5rem, 9vw, 2rem);
+    letter-spacing: -0.01em;
+  }
+
+  .sm-news__eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.15em;
+  }
+
+  .sm-news__perks {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .sm-news__perk {
+    font-size: 0.75rem;
+  }
+
+  .sm-news__input {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .sm-news__btn {
+    font-size: 0.75rem;
+    padding: 0.75rem 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  .sm-news__trust {
+    font-size: 0.6875rem;
+  }
+}
 {% endstylesheet %}
 
 {% javascript %}
