@@ -73,11 +73,22 @@
           <p class="sm-hero__sub">{{ section.settings.subheading }}</p>
         {%- endif -%}
 
-        {%- comment %} — CTAs — {%- endcomment %}
+        {%- comment %} — CTAs — fall back to real destinations if no URL is set,
+            so the buttons always work even before they're configured. {%- endcomment %}
+        {%- liquid
+          assign cta_href = section.settings.cta_url
+          if cta_href == blank
+            assign cta_href = routes.all_products_collection_url
+          endif
+          assign cta2_href = section.settings.cta2_url
+          if cta2_href == blank
+            assign cta2_href = '#shuffle'
+          endif
+        -%}
         <div class="sm-hero__ctas" role="group" aria-label="Shop actions">
           {%- if section.settings.cta_label != blank -%}
             <a
-              href="{{ section.settings.cta_url | default: '#' }}"
+              href="{{ cta_href }}"
               class="sm-hero__btn sm-hero__btn--primary"
             >
               <span class="sm-hero__btn-label">{{ section.settings.cta_label }}</span>
@@ -90,7 +101,7 @@
           {%- endif -%}
           {%- if section.settings.cta2_label != blank -%}
             <a
-              href="{{ section.settings.cta2_url | default: '#' }}"
+              href="{{ cta2_href }}"
               class="sm-hero__btn sm-hero__btn--ghost"
             >
               <span class="sm-hero__btn-label">{{ section.settings.cta2_label }}</span>

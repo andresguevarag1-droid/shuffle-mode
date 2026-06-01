@@ -1,6 +1,7 @@
 {%- assign smsh_collection = collections[section.settings.collection] -%}
 {%- assign smsh_block_count = section.blocks | size -%}
 
+<span id="shuffle" class="smsh-anchor" aria-hidden="true"></span>
 <section
   id="smsh-root-{{ section.id }}"
   class="smsh-root"
@@ -185,6 +186,7 @@
 </section>
 
 {% stylesheet %}
+.smsh-anchor { display: block; height: 0; scroll-margin-top: 6rem; }
 /* ═══════════════════════════════════════════════════
    SHUFFLE MODE — smsh-* namespace
    All CSS custom properties prefixed --smsh-
