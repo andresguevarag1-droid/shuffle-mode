@@ -54,8 +54,8 @@
 }
 .smtr-tb__label {
   font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 400;
+  font-size: 0.6875rem;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--smtr-tb-fg);
@@ -165,6 +165,17 @@
       "label": "Dark variant",
       "default": false,
       "info": "Switches to an ink background with light text"
+    },
+    {
+      "type": "header",
+      "content": "Shipping threshold"
+    },
+    {
+      "type": "text",
+      "id": "shipping_threshold",
+      "label": "Free shipping threshold",
+      "default": "$99",
+      "info": "Used as a reference value — keep this identical to what you set in your Top Trust Bar so messaging is consistent across the page. Update block labels manually if you change this."
     }
   ],
   "blocks": [
@@ -175,14 +186,15 @@
         {
           "type": "text",
           "id": "icon",
-          "label": "Icon (emoji or glyph)",
-          "default": "✦"
+          "label": "Icon (symbol or glyph — avoid emoji for a premium feel)",
+          "default": "✦",
+          "info": "Use typographic glyphs like ✦ ↺ ◈ ⌁ → for a premium, editorial look. Emoji (🔒 📦) read as casual."
         },
         {
           "type": "text",
           "id": "text",
           "label": "Label",
-          "default": "Free shipping over $150"
+          "default": "Free shipping over $99"
         }
       ]
     }
@@ -191,10 +203,11 @@
     {
       "name": "Trust bar",
       "blocks": [
-        { "type": "item", "settings": { "icon": "✦", "text": "Free shipping over $150" } },
-        { "type": "item", "settings": { "icon": "↺", "text": "Easy 30-day returns" } },
+        { "type": "item", "settings": { "icon": "✦", "text": "Free shipping over $99" } },
+        { "type": "item", "settings": { "icon": "↺", "text": "30-day returns" } },
         { "type": "item", "settings": { "icon": "◈", "text": "Limited drops — no restocks" } },
-        { "type": "item", "settings": { "icon": "⌁", "text": "Secure checkout" } }
+        { "type": "item", "settings": { "icon": "⌁", "text": "Secure checkout" } },
+        { "type": "item", "settings": { "icon": "→", "text": "Ships across the US" } }
       ]
     }
   ]

@@ -6,7 +6,7 @@
       "type": "top-trust-bar",
       "blocks": {
         "i1": { "type": "item", "settings": { "icon": "✨", "text": "Free Shipping Over $99" } },
-        "i2": { "type": "item", "settings": { "icon": "🔄", "text": "Easy Returns Within 14 Days" } },
+        "i2": { "type": "item", "settings": { "icon": "🔄", "text": "Easy 30-Day Returns" } },
         "i3": { "type": "item", "settings": { "icon": "🔒", "text": "Secure Checkout" } },
         "i4": { "type": "item", "settings": { "icon": "📦", "text": "Fast U.S. Shipping" } }
       },

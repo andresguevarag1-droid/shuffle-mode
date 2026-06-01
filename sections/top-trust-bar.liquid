@@ -120,12 +120,12 @@
 .smttb__label {
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.09em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--smttb-fg);
   line-height: 1;
-  opacity: 0.88;
+  opacity: 0.92;
 }
 
 /* ─── Mobile marquee ──────────────────────────────────── */
@@ -254,6 +254,17 @@
       "label": "Dark mode",
       "default": true,
       "info": "Dark (ink) background with cream text — recommended when placed above the header"
+    },
+    {
+      "type": "header",
+      "content": "Shipping threshold"
+    },
+    {
+      "type": "text",
+      "id": "shipping_threshold",
+      "label": "Free shipping threshold",
+      "default": "$99",
+      "info": "Keep this identical to your Trust Bar setting so messaging is consistent site-wide. Update block labels manually to match."
     }
   ],
   "blocks": [
@@ -264,14 +275,15 @@
         {
           "type": "text",
           "id": "icon",
-          "label": "Icon (emoji or glyph)",
-          "default": "✨"
+          "label": "Icon (symbol or glyph — avoid emoji for a premium feel)",
+          "default": "✦",
+          "info": "Use typographic glyphs like ✦ ↺ ◈ ⌁ → for a premium, editorial look. Emoji (🔒 📦) read as casual / dropship."
         },
         {
           "type": "text",
           "id": "text",
           "label": "Label text",
-          "default": "Free Shipping Over $99"
+          "default": "Free shipping over $99"
         }
       ]
     }
@@ -280,10 +292,10 @@
     {
       "name": "Top trust bar",
       "blocks": [
-        { "type": "item", "settings": { "icon": "✨", "text": "Free Shipping Over $99" } },
-        { "type": "item", "settings": { "icon": "🔄", "text": "Easy Returns Within 14 Days" } },
-        { "type": "item", "settings": { "icon": "🔒", "text": "Secure Checkout" } },
-        { "type": "item", "settings": { "icon": "📦", "text": "Fast U.S. Shipping" } }
+        { "type": "item", "settings": { "icon": "✦", "text": "Free shipping over $99" } },
+        { "type": "item", "settings": { "icon": "↺", "text": "30-day returns" } },
+        { "type": "item", "settings": { "icon": "⌁", "text": "Secure checkout" } },
+        { "type": "item", "settings": { "icon": "→", "text": "Ships across the US" } }
       ]
     }
   ]

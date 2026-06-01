@@ -57,7 +57,7 @@
         "phrase-5": {
           "type": "phrase",
           "settings": {
-            "text": "FREE SHIPPING OVER $150"
+            "text": "FREE SHIPPING OVER $99"
           }
         }
       },
@@ -79,7 +79,7 @@
           "type": "item",
           "settings": {
             "icon": "✦",
-            "text": "Free shipping over $150"
+            "text": "Free shipping over $99"
           }
         },
         "t2": {
@@ -371,7 +371,7 @@
           "type": "item",
           "settings": {
             "question": "What are your shipping options?",
-            "answer": "<p>Standard shipping is <strong>free on orders over $150</strong>. Orders under that ship at a flat rate of $8. Express options are available at checkout.</p><p>Orders placed before 12 PM EST on weekdays typically ship the same day. You'll receive a tracking link as soon as your order leaves our hands — usually within 24 hours.</p>"
+            "answer": "<p>Standard shipping is <strong>free on orders over $99</strong>. Orders under that ship at a flat rate of $8. Express options are available at checkout.</p><p>Orders placed before 12 PM EST on weekdays typically ship the same day. You'll receive a tracking link as soon as your order leaves our hands — usually within 24 hours.</p>"
           }
         },
         "item-5": {
