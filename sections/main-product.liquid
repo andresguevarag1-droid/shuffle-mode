@@ -328,10 +328,29 @@
               </svg>
             </summary>
             <div class="pdp-accordion__body">
+              {%- comment -%} Structured spec table — per-product metafields, rows
+                only render when filled. Eliminates fit/fabric uncertainty. {%- endcomment -%}
+              {%- liquid
+                assign mf = product.metafields.custom
+                assign has_specs = false
+                if mf.model_height != blank or mf.model_size != blank or mf.fit_type != blank or mf.stretch != blank or mf.fabric != blank or mf.care != blank
+                  assign has_specs = true
+                endif
+              -%}
+              {%- if has_specs -%}
+                <dl class="pdp-spec">
+                  {%- if mf.model_height != blank -%}<div class="pdp-spec__row"><dt>Model height</dt><dd>{{ mf.model_height }}</dd></div>{%- endif -%}
+                  {%- if mf.model_size != blank -%}<div class="pdp-spec__row"><dt>Model wears</dt><dd>{{ mf.model_size }}</dd></div>{%- endif -%}
+                  {%- if mf.fit_type != blank -%}<div class="pdp-spec__row"><dt>Fit</dt><dd>{{ mf.fit_type }}</dd></div>{%- endif -%}
+                  {%- if mf.stretch != blank -%}<div class="pdp-spec__row"><dt>Stretch</dt><dd>{{ mf.stretch }}</dd></div>{%- endif -%}
+                  {%- if mf.fabric != blank -%}<div class="pdp-spec__row"><dt>Fabric</dt><dd>{{ mf.fabric }}</dd></div>{%- endif -%}
+                  {%- if mf.care != blank -%}<div class="pdp-spec__row"><dt>Care</dt><dd>{{ mf.care }}</dd></div>{%- endif -%}
+                </dl>
+              {%- endif -%}
               <div class="rte pdp-accordion__rte">
                 {%- if section.settings.size_fit != blank -%}
                   {{ section.settings.size_fit }}
-                {%- else -%}
+                {%- elsif has_specs == false -%}
                   <p>Our model is 5'9" and wears a size Small. This piece runs true to size with a relaxed, editorial fit. We recommend sizing down if you prefer a more structured silhouette.</p>
                 {%- endif -%}
               </div>
@@ -1499,6 +1518,36 @@
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--color-ember, #c2502e);
   flex-shrink: 0;
+}
+
+/* ── Fit & Fabric spec table ── */
+.pdp-spec {
+  margin: 0 0 1rem;
+  border-top: 1px solid var(--color-line, rgba(22,19,15,.1));
+}
+.pdp-spec__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-line, rgba(22,19,15,.1));
+}
+.pdp-spec__row dt {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-stone, #6f675d);
+  margin: 0;
+  flex-shrink: 0;
+}
+.pdp-spec__row dd {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.875rem;
+  color: var(--color-ink, #16130f);
+  margin: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 {% endstylesheet %}
 
