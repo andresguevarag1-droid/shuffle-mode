@@ -252,6 +252,123 @@
   outline: 2px solid var(--color-ember);
 }
 
+/* ── Small phone (≤480px) ────────────────────────────────── */
+@media (max-width: 480px) {
+  /* Reduce section vertical padding */
+  .smlc-root {
+    padding: 3rem 0 4rem;
+  }
+
+  /* Header: clamp heading tighter, prevent overflow */
+  .smlc-header {
+    margin-bottom: 2rem;
+  }
+
+  .smlc-heading {
+    font-size: clamp(1.875rem, 8.5vw, 2.75rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .smlc-subtext {
+    max-width: 100%;
+    font-size: 0.875rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Grid: 1 column on phones */
+  .smlc-grid {
+    grid-template-columns: 1fr;
+    min-width: 0;
+  }
+
+  /* Tiles: portrait ratio is fine but cap it so it isn't too tall */
+  .smlc-tile__frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* First tile (editorial opener): reduce aspect ratio on mobile */
+  .smlc-tile:first-child .smlc-tile__frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .smlc-tile:first-child .smlc-tile__title {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+  }
+
+  /* Info bar: tighter padding, scale text */
+  .smlc-tile__info {
+    padding: 1rem 1.125rem;
+  }
+
+  .smlc-tile__title {
+    font-size: clamp(1.125rem, 4.5vw, 1.5rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Meta text: legible at 320px */
+  .smlc-tile__meta {
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* Arrow: always visible on touch (no hover) */
+  .smlc-tile__arrow {
+    opacity: 1;
+    transform: none;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Fallback tile info */
+  .smlc-tile--fallback .smlc-tile__info {
+    padding: 1rem 1.125rem 1.25rem;
+  }
+
+  .smlc-tile__fallback-label {
+    font-size: clamp(1rem, 4vw, 1.375rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-align: center;
+    min-width: 0;
+  }
+
+  /* Prevent any horizontal overflow */
+  .smlc-tile {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+/* ── Mini phone (≤380px) ─────────────────────────────────── */
+@media (max-width: 380px) {
+  .smlc-heading {
+    font-size: clamp(1.625rem, 10vw, 2.25rem);
+  }
+
+  .smlc-tile__info {
+    padding: 0.875rem 1rem;
+  }
+
+  .smlc-tile__title {
+    font-size: clamp(1rem, 5vw, 1.375rem);
+  }
+
+  .smlc-tile__meta {
+    font-size: 0.5625rem;
+  }
+
+  .smlc-tile__frame {
+    aspect-ratio: 3 / 2;
+  }
+
+  .smlc-tile:first-child .smlc-tile__frame {
+    aspect-ratio: 3 / 2;
+  }
+}
+
 /* Fallback tile info (no image) — ink on light bg */
 .smlc-tile--fallback .smlc-tile__info {
   position: static;
