@@ -76,9 +76,15 @@
         {%- comment -%} Title ── {%- endcomment -%}
         <h1 class="pdp-title product__title">{{ product.title }}</h1>
 
-        {%- comment -%} Rating ── {%- endcomment -%}
+        {%- comment -%} Rating ──
+          Native metafield stars (works for any reviews app), plus an optional
+          Judge.me preview badge that links down to the full reviews widget. {%- endcomment -%}
         <div class="pdp-rating">
           {% render 'rating', product: product %}
+          {%- if section.settings.enable_judgeme -%}
+            <a href="#judgeme-reviews" class="pdp-jdgm-preview jdgm-widget jdgm-preview-badge"
+              data-id="{{ product.id }}" data-template="index"></a>
+          {%- endif -%}
         </div>
 
         {%- comment -%} Price ── {%- endcomment -%}
@@ -410,6 +416,21 @@
 
       </div>{%- comment -%} /pdp-info {%- endcomment -%}
     </div>{%- comment -%} /pdp-layout {%- endcomment -%}
+
+    {%- comment -%} ── Reviews (Judge.me full widget) ──
+      Judge.me auto-populates this div with photo/video reviews once installed.
+      Toggle in section settings; shows a header so the block never looks empty. {%- endcomment -%}
+    {%- if section.settings.enable_judgeme -%}
+      <section id="judgeme-reviews" class="pdp-reviews" aria-label="Customer reviews">
+        <div class="pdp-reviews__head">
+          <span class="pdp-reviews__eyebrow">Real reviews</span>
+          <h2 class="pdp-reviews__title">What our community says</h2>
+        </div>
+        <div class="jdgm-widget jdgm-review-widget"
+          data-id="{{ product.id }}"
+          data-product-title="{{ product.title | escape }}"></div>
+      </section>
+    {%- endif -%}
 
     {%- comment -%} ── Related products ── {%- endcomment -%}
     {%- assign rel = product.collections.first -%}
@@ -1549,6 +1570,36 @@
   text-align: right;
   overflow-wrap: anywhere;
 }
+
+/* ── Reviews (Judge.me) ── */
+.pdp-jdgm-preview {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.4rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pdp-reviews {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--color-line, rgba(22,19,15,.1));
+}
+.pdp-reviews__head { text-align: center; margin-bottom: 2rem; }
+.pdp-reviews__eyebrow {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-ember, #c2502e);
+}
+.pdp-reviews__title {
+  font-family: var(--font-display, Fraunces, serif);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink, #16130f);
+  margin: 0.5rem 0 0;
+}
 {% endstylesheet %}
 
 {% javascript %}
@@ -1640,6 +1691,17 @@
 {
   "name": "Product",
   "settings": [
+    {
+      "type": "header",
+      "content": "Reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_judgeme",
+      "label": "Enable Judge.me review widgets",
+      "default": false,
+      "info": "Install the Judge.me app first. Adds a rating badge by the title and a full photo/video review widget below the buy box."
+    },
     {
       "type": "header",
       "content": "Trust & checkout"

@@ -50,8 +50,15 @@
       {%- endif -%}
     </header>
 
-    {%- comment -%} ── Grid ───────────────────────────────────────────────── {%- endcomment -%}
-    {%- if section.blocks.size > 0 -%}
+    {%- comment -%} ── Live Instagram feed (app embed) ──
+      If the merchant pastes an app embed (Instafeed, Behold, Reeview, etc.) in
+      the "Instagram feed embed" setting, render the live feed here instead of
+      the manual tiles. Falls back to the manual block grid below. {%- endcomment -%}
+    {%- if section.settings.feed_embed != blank -%}
+      <div class="sm-ugc__feed">
+        {{ section.settings.feed_embed }}
+      </div>
+    {%- elsif section.blocks.size > 0 -%}
       <ul class="sm-ugc__grid" role="list">
         {%- for block in section.blocks -%}
           {%- assign has_image   = false -%}
@@ -259,6 +266,9 @@
 }
 
 /* ─── Grid ──────────────────────────────────────────────────── */
+.sm-ugc__feed { width: 100%; min-width: 0; }
+.sm-ugc__feed img { max-width: 100%; height: auto; }
+
 .sm-ugc__grid {
   list-style: none;
   display: grid;
@@ -735,6 +745,16 @@
       "type": "url",
       "id": "instagram_url",
       "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Live feed (optional)"
+    },
+    {
+      "type": "liquid",
+      "id": "feed_embed",
+      "label": "Instagram feed embed",
+      "info": "Paste the embed/app snippet from an IG feed app (Instafeed, Behold, Reeview…). When filled, the live feed replaces the manual tiles below."
     },
     {
       "type": "header",
