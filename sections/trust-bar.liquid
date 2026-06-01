@@ -97,6 +97,58 @@
     scroll-snap-align: start;
   }
 }
+
+/* ── Small phone (≤480px) ─────────────────────────────── */
+@media (max-width: 480px) {
+  /* Prevent H overflow on the bar itself */
+  .smtr-tb {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Track: keep animation but clip properly */
+  .smtr-tb__track {
+    overflow: hidden;
+  }
+
+  /* Items: tighter padding + no wrap */
+  .smtr-tb__item {
+    padding: 0.75rem 1.125rem;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* Dividers between static (non-scrolling) items */
+  .smtr-tb__item + .smtr-tb__item::before {
+    height: 0.9em;
+  }
+
+  /* Labels: slightly smaller */
+  .smtr-tb__label {
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+  }
+
+  .smtr-tb__icon {
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Mini phone (≤380px) ──────────────────────────────── */
+@media (max-width: 380px) {
+  .smtr-tb__item {
+    padding: 0.7rem 0.875rem;
+  }
+
+  .smtr-tb__label {
+    font-size: 0.5625rem;
+    letter-spacing: 0.06em;
+  }
+
+  .smtr-tb__icon {
+    font-size: 0.75rem;
+  }
+}
 {% endstylesheet %}
 
 {%- liquid

@@ -255,7 +255,8 @@
 
 @media (max-width: 767px) {
   .smpb-root {
-    --smpb-min-h: 80vh;
+    /* Can't override --smpb-min-h (set by inline style) so cap via max-height */
+    max-height: 85vh;
   }
   .smpb-root[data-align="left"] .smpb-inner {
     margin: 0 auto;
@@ -264,6 +265,11 @@
     max-width: 100%;
     overflow-wrap: break-word;
     word-break: break-word;
+  }
+
+  /* Inner: ensure content is scrollable if min-height is huge */
+  .smpb-inner {
+    overflow-y: auto;
   }
 
   /* Countdown row: allow wrapping without clipping */
@@ -290,13 +296,18 @@
 /* ── small phone (≤480px) ── */
 @media (max-width: 480px) {
   .smpb-root {
-    /* Cap height so content never gets buried on short phones */
-    --smpb-min-h: min(75vh, 640px);
+    /* Cap height on small phones. max-height wins over min-height when
+       the editor sets a large --smpb-min-h via inline style. */
+    max-height: min(75vh, 640px);
+    /* Restore sane minimum so the section isn't too short */
+    min-height: 480px;
   }
 
   .smpb-inner {
     padding: clamp(2.5rem, 10vw, 4rem) 1.25rem;
     gap: 0;
+    /* Allow inner scrolling if the capped height is tight */
+    overflow-y: auto;
   }
 
   .smpb-headline {
@@ -319,10 +330,14 @@
     margin-bottom: 1rem;
   }
 
-  /* Countdown: force single row by tightening, fall back to wrap */
+  /* Countdown: keep all four units in one row if possible; wrap gracefully */
   .smpb-countdown {
     gap: 0.5rem 0.75rem;
     margin-bottom: 2rem;
+    /* Don't let countdown wrap its own units onto 2 rows by default;
+       each unit is 3.5ch min so 4 units + 3 seps ≈ 23ch — fits 320px */
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .smpb-countdown-num {
@@ -339,6 +354,10 @@
     letter-spacing: 0.14em;
   }
 
+  .smpb-countdown-unit {
+    min-width: 2.4ch;
+  }
+
   /* CTA: full-width, easily tappable */
   .smpb-cta {
     width: 100%;
@@ -346,13 +365,16 @@
     padding: 1em 1.5em;
     min-height: 52px;
     text-align: center;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
 /* ── tiny phone (≤380px — SE / mini) ── */
 @media (max-width: 380px) {
   .smpb-root {
-    --smpb-min-h: min(70vh, 580px);
+    /* At 320px, tall banners eat the whole screen; constrain tighter */
+    max-height: min(70vh, 580px);
+    min-height: 440px;
   }
 
   .smpb-headline {
@@ -360,15 +382,20 @@
   }
 
   .smpb-countdown {
-    gap: 0.4rem 0.6rem;
+    gap: 0.4rem 0.5rem;
   }
 
   .smpb-countdown-num {
+    /* At 320px: 4 digits × clamp(1.5rem) = about 24px each — still fine */
     font-size: clamp(1.5rem, 10vw, 2rem);
   }
 
   .smpb-countdown-sep {
     font-size: clamp(1.1rem, 5vw, 1.5rem);
+  }
+
+  .smpb-countdown-unit {
+    min-width: 2ch;
   }
 
   .smpb-subtext {
