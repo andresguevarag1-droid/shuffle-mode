@@ -82,8 +82,15 @@
   display: flex;
   gap: 3px;
   color: var(--color-ember);
-  font-size: 14px;
   line-height: 1;
+  flex-shrink: 0;
+}
+
+.smt-star {
+  width: 14px;
+  height: 14px;
+  display: block;
+  fill: currentColor;
   flex-shrink: 0;
 }
 
@@ -170,19 +177,62 @@
 .smt-verified {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  color: var(--color-stone);
 }
 
 .smt-verified::before {
   content: '';
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background: var(--color-ember);
-  border-radius: 50%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%23fbf9f4' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-size: cover;
+  display: inline-flex;
   flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: var(--color-ember);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 13'%3E%3Cpath d='M2.5 6.5l3 3 5-5' stroke='%23fbf9f4' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: cover;
+}
+
+/* ── Aggregate rating row ── */
+.smt-aggregate {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-line);
+  background: var(--color-cream);
+}
+
+.smt-aggregate__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--color-ember);
+}
+
+.smt-aggregate__star {
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+
+.smt-aggregate__star--empty {
+  opacity: 0.3;
+}
+
+.smt-aggregate__text {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--color-stone);
+  white-space: nowrap;
+}
+
+.smt-aggregate__text strong {
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 /* ── mobile carousel ── */
@@ -335,6 +385,23 @@
         {%- if section.settings.heading != blank -%}
           <h2 class="smt-heading">{{ section.settings.heading }}</h2>
         {%- endif -%}
+        {%- if section.settings.rating_value != blank and section.settings.rating_count != blank -%}
+          <div class="smt-aggregate" aria-label="{{ section.settings.rating_value }} stars from {{ section.settings.rating_count }} reviews">
+            <span class="smt-aggregate__stars" aria-hidden="true">
+              {%- assign rating_int = section.settings.rating_value | times: 1 | round -%}
+              {%- for i in (1..5) -%}
+                {%- if i <= rating_int -%}
+                  <svg class="smt-aggregate__star smt-aggregate__star--full" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 7.9l-2.78 1.65.53-3.09L1.5 4.27l3.11-.45L6 1z" fill="currentColor"/></svg>
+                {%- else -%}
+                  <svg class="smt-aggregate__star smt-aggregate__star--empty" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 7.9l-2.78 1.65.53-3.09L1.5 4.27l3.11-.45L6 1z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+                {%- endif -%}
+              {%- endfor -%}
+            </span>
+            <span class="smt-aggregate__text">
+              <strong>{{ section.settings.rating_value }}</strong> from {{ section.settings.rating_count }} verified reviews
+            </span>
+          </div>
+        {%- endif -%}
       </div>
     {%- endif -%}
 
@@ -345,11 +412,11 @@
           <figure class="smt-card" role="listitem" {{ block.shopify_attributes }} style="transition-delay: {{ forloop.index0 | times: 80 }}ms;">
             <div class="smt-card__top">
               <div class="smt-stars" aria-label="5 out of 5 stars" role="img">
-                <span aria-hidden="true">★</span>
-                <span aria-hidden="true">★</span>
-                <span aria-hidden="true">★</span>
-                <span aria-hidden="true">★</span>
-                <span aria-hidden="true">★</span>
+                <svg class="smt-star" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 7.9l-2.78 1.65.53-3.09L1.5 4.27l3.11-.45L6 1z"/></svg>
+                <svg class="smt-star" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 7.9l-2.78 1.65.53-3.09L1.5 4.27l3.11-.45L6 1z"/></svg>
+                <svg class="smt-star" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 7.9l-2.78 1.65.53-3.09L1.5 4.27l3.11-.45L6 1z"/></svg>
+                <svg class="smt-star" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 7.9l-2.78 1.65.53-3.09L1.5 4.27l3.11-.45L6 1z"/></svg>
+                <svg class="smt-star" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 7.9l-2.78 1.65.53-3.09L1.5 4.27l3.11-.45L6 1z"/></svg>
               </div>
               <span class="smt-mark" aria-hidden="true">"</span>
             </div>
@@ -372,8 +439,10 @@
               </div>
               <div class="smt-meta">
                 <span class="smt-author">{{ block.settings.author }}</span>
-                {%- if block.settings.detail != blank -%}
-                  <span class="smt-detail smt-verified">{{ block.settings.detail }}</span>
+                {%- if block.settings.verified -%}
+                  <span class="smt-detail smt-verified" aria-label="Verified buyer">Verified Buyer</span>
+                {%- elsif block.settings.detail != blank -%}
+                  <span class="smt-detail">{{ block.settings.detail }}</span>
                 {%- endif -%}
               </div>
             </figcaption>
@@ -569,6 +638,24 @@
       "id": "heading",
       "label": "Heading",
       "default": "Worn, not just bought"
+    },
+    {
+      "type": "header",
+      "content": "Aggregate rating"
+    },
+    {
+      "type": "text",
+      "id": "rating_value",
+      "label": "Average rating (e.g. 4.9)",
+      "placeholder": "4.9",
+      "info": "Leave blank to hide the aggregate rating bar. Use your real rating from your review platform."
+    },
+    {
+      "type": "text",
+      "id": "rating_count",
+      "label": "Review count label (e.g. 200+)",
+      "placeholder": "200+",
+      "info": "Displayed as '4.9 from 200+ verified reviews'. Use a real, honest count."
     }
   ],
   "blocks": [
@@ -589,11 +676,18 @@
           "default": "Maya R."
         },
         {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Show Verified Buyer badge",
+          "default": true,
+          "info": "Shows a checkmark badge. Only enable for genuine purchases — the 'Detail' field below is used when this is off."
+        },
+        {
           "type": "text",
           "id": "detail",
-          "label": "Detail / label",
-          "default": "Verified Buyer",
-          "info": "Shown below author — e.g. 'Verified Buyer', 'Drop 01', 'Size 2, 5'7\"'"
+          "label": "Detail / label (used when Verified Buyer is off)",
+          "placeholder": "e.g. Drop 03 · Size 4",
+          "info": "Only shown when the Verified Buyer checkbox is unchecked. Useful for fit context."
         },
         {
           "type": "image_picker",
@@ -610,9 +704,9 @@
         {
           "type": "quote",
           "settings": {
-            "quote": "The slip dress is the most worn thing in my closet. I get stopped every single time — 'where is that from?' every time.",
+            "quote": "The slip dress is the most worn thing in my closet. I get stopped every single time — 'where is that from?' every single time.",
             "author": "Maya R.",
-            "detail": "Verified Buyer"
+            "verified": true
           }
         },
         {
@@ -620,7 +714,7 @@
           "settings": {
             "quote": "Finally a brand that gets mood-dressing. I don't want a look, I want a feeling — and these pieces deliver it every drop.",
             "author": "Lena P.",
-            "detail": "Verified Buyer"
+            "verified": true
           }
         },
         {
@@ -628,7 +722,7 @@
           "settings": {
             "quote": "Ordered Sunday. Wore it Friday. Checked the site Monday — sold out. The hype is completely earned.",
             "author": "Priya S.",
-            "detail": "Verified Buyer"
+            "verified": true
           }
         }
       ]

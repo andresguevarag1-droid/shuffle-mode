@@ -55,8 +55,12 @@
       </div>
     {%- endif -%}
 
+    {%- if section.settings.trust_line != blank -%}
+      <p class="sm-proof__trust-line">{{ section.settings.trust_line }}</p>
+    {%- endif -%}
+
     {%- assign press_blocks = section.blocks | where: 'type', 'press' -%}
-    {%- if press_blocks.size > 0 -%}
+    {%- if press_blocks.size > 0 and section.settings.show_press -%}
       <div class="sm-proof__press-wrap">
         {%- if section.settings.press_eyebrow != blank -%}
           <p class="sm-proof__press-label">{{ section.settings.press_eyebrow }}</p>
@@ -93,6 +97,9 @@
             </div>
           {%- endfor -%}
         </div>
+        {%- if section.settings.disclaimer != blank -%}
+          <p class="sm-proof__press-disclaimer">{{ section.settings.disclaimer }}</p>
+        {%- endif -%}
       </div>
     {%- endif -%}
 
@@ -145,7 +152,7 @@
   gap: 2px;
   width: 100%;
   max-width: 800px;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
 }
 
 @media (min-width: 640px) {
@@ -320,6 +327,41 @@
   display: block;
 }
 
+/* ── Trust line ("Trusted by N mood-dressers") ── */
+.sm-proof__trust-line {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  text-align: center;
+  margin: -40px 0 56px;
+  opacity: 0.65;
+}
+
+/* When press row follows, give the trust line breathing room above press divider */
+.sm-proof__trust-line + .sm-proof__press-wrap {
+  margin-top: 0;
+}
+
+/* ── Press disclaimer (small print) ── */
+.sm-proof__press-disclaimer {
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--color-stone);
+  opacity: 0.45;
+  margin: -16px 0 0;
+  text-align: center;
+}
+
+/* ── Stat label refinement — slightly wider max-width for specificity ── */
+.sm-proof__stat-label {
+  max-width: 110px;
+}
+
 /* ── Count-up animation state ──
    Values are visible by DEFAULT so they never disappear if JS doesn't run.
    The count-up animation only hides them once JS has explicitly opted in by
@@ -471,19 +513,48 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow text",
-      "default": "Loved, worn, talked about"
+      "default": "By the numbers"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Join thousands who dress for the mood"
+      "default": "The proof is in the wearing"
+    },
+    {
+      "type": "text",
+      "id": "trust_line",
+      "label": "Community trust line",
+      "default": "Trusted by 2,400+ mood-dressers across the US",
+      "info": "Shown beneath the stats. Keep this number honest — update it as your customer base grows."
+    },
+    {
+      "type": "header",
+      "content": "Press coverage"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_press",
+      "label": "Show press logos / names",
+      "default": false,
+      "info": "Leave OFF until you have real press placements. Displaying placeholder publication names (e.g. VOGUE, ELLE) before earned coverage seriously damages trust with new visitors."
     },
     {
       "type": "text",
       "id": "press_eyebrow",
       "label": "Press row label",
       "default": "As seen in"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Press disclaimer (optional small print)",
+      "placeholder": "e.g. As featured in independent style edits & community coverage",
+      "info": "Rendered in fine print below the press logos. Use to clarify the nature of coverage (e.g. blogger features vs. print editorial) so the claim is fully honest."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
     },
     {
       "type": "select",
@@ -505,8 +576,8 @@
           "type": "text",
           "id": "value",
           "label": "Number value",
-          "default": "10000",
-          "info": "Digits only (e.g. 50000, 4.9, 48). Formatted automatically."
+          "default": "2400",
+          "info": "Digits only (e.g. 2400, 4.9, 72). Formatted automatically with count-up animation on scroll."
         },
         {
           "type": "text",
@@ -523,8 +594,9 @@
         {
           "type": "text",
           "id": "label",
-          "label": "Label",
-          "default": "happy customers"
+          "label": "Stat label",
+          "default": "orders fulfilled",
+          "info": "Keep this specific and honest — 'orders fulfilled' is more credible than 'happy customers'."
         }
       ]
     },
@@ -536,8 +608,8 @@
           "type": "text",
           "id": "name",
           "label": "Publication name",
-          "default": "VOGUE",
-          "info": "Shown as a styled wordmark if no logo is uploaded."
+          "default": "Your Publication",
+          "info": "Shown as a styled wordmark if no logo is uploaded. Only add publications that have genuinely covered you."
         },
         {
           "type": "image_picker",
@@ -551,13 +623,19 @@
   "presets": [
     {
       "name": "Press Bar",
+      "settings": {
+        "eyebrow": "By the numbers",
+        "heading": "The proof is in the wearing",
+        "trust_line": "Trusted by 2,400+ mood-dressers across the US",
+        "show_press": false
+      },
       "blocks": [
         {
           "type": "stat",
           "settings": {
-            "value": "50000",
+            "value": "2400",
             "suffix": "+",
-            "label": "mood-dressers"
+            "label": "orders fulfilled"
           }
         },
         {
@@ -565,47 +643,23 @@
           "settings": {
             "value": "4.9",
             "suffix": "★",
-            "label": "avg rating"
+            "label": "average rating"
           }
         },
         {
           "type": "stat",
           "settings": {
-            "value": "48",
+            "value": "72",
             "suffix": "h",
-            "label": "sold out in"
+            "label": "avg. sell-out time"
           }
         },
         {
           "type": "stat",
           "settings": {
-            "value": "12",
+            "value": "8",
             "suffix": "+",
-            "label": "drops & counting"
-          }
-        },
-        {
-          "type": "press",
-          "settings": {
-            "name": "VOGUE"
-          }
-        },
-        {
-          "type": "press",
-          "settings": {
-            "name": "ELLE"
-          }
-        },
-        {
-          "type": "press",
-          "settings": {
-            "name": "REFINERY29"
-          }
-        },
-        {
-          "type": "press",
-          "settings": {
-            "name": "WHO WHAT WEAR"
+            "label": "drops launched"
           }
         }
       ]

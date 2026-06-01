@@ -86,6 +86,7 @@
                 </svg>
               </button>
             </form>
+            <p class="sm-footer__nl-reassure">No spam. Unsubscribe anytime.</p>
           </div>
         {%- endif -%}
       </div>
@@ -119,22 +120,80 @@
     </div>
   </div>
 
+  {%- comment -%} ── COMPANY LEGITIMACY BAND ── {%- endcomment -%}
+  <div class="sm-footer__company">
+    <div class="container sm-footer__company-inner">
+      <div class="sm-footer__company-identity">
+        <p class="sm-footer__company-name">{{ section.settings.brand | default: shop.name }}</p>
+        <p class="sm-footer__company-location">
+          {%- if section.settings.business_address != blank -%}
+            {{ section.settings.business_address }}&ensp;&middot;&ensp;
+          {%- endif -%}
+          Based in Boston, MA&ensp;&middot;&ensp;United States
+        </p>
+      </div>
+      <div class="sm-footer__company-contact">
+        {%- assign contact_email = section.settings.contact_email | default: 'hello@shufflemode.us' -%}
+        <a href="mailto:{{ contact_email }}" class="sm-footer__contact-link">
+          <svg class="sm-footer__contact-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" width="14" height="14">
+            <rect x="2" y="5" width="16" height="11" rx="2"/>
+            <polyline points="2,5 10,12 18,5"/>
+          </svg>
+          {{ contact_email }}
+        </a>
+        <a href="/pages/contact" class="sm-footer__contact-page-link">Contact us</a>
+      </div>
+    </div>
+  </div>
+
   {%- comment -%} ── TRUST / PAYMENTS BAND ── {%- endcomment -%}
   <div class="sm-footer__trust">
     <div class="container sm-footer__trust-inner">
       <div class="sm-footer__secure">
-        <svg class="sm-footer__secure-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" width="16" height="16">
-          <path d="M10 2 L17 5 L17 10 C17 14 10 18 10 18 C10 18 3 14 3 10 L3 5 Z"/>
-          <polyline points="7 10 9 12 13 8"/>
+        <svg class="sm-footer__secure-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" width="15" height="15">
+          <rect x="4" y="9" width="12" height="9" rx="2"/>
+          <path d="M7 9V6a3 3 0 0 1 6 0v3"/>
+          <circle cx="10" cy="14" r="1" fill="currentColor" stroke="none"/>
         </svg>
         <span class="sm-footer__secure-text">Secure checkout</span>
       </div>
 
+      <div class="sm-footer__trust-divider" aria-hidden="true"></div>
+
       <div class="sm-footer__payments" aria-label="Accepted payment methods" role="list">
-        {%- assign payment_names = 'Visa,Mastercard,Amex,Apple Pay,Shop Pay' | split: ',' -%}
-        {%- for name in payment_names -%}
-          <span class="sm-footer__payment-badge" role="listitem">{{ name }}</span>
-        {%- endfor -%}
+        {%- comment -%} Visa {%- endcomment -%}
+        <span class="sm-footer__payment-chip sm-footer__payment-chip--visa" role="listitem" aria-label="Visa">
+          <span class="sm-footer__pm-wordmark sm-footer__pm-visa" aria-hidden="true">VISA</span>
+        </span>
+        {%- comment -%} Mastercard — overlapping circles icon + label {%- endcomment -%}
+        <span class="sm-footer__payment-chip" role="listitem" aria-label="Mastercard">
+          <svg class="sm-footer__mc-circles" viewBox="0 0 32 20" aria-hidden="true" focusable="false" width="32" height="20">
+            <circle cx="11" cy="10" r="9" fill="#c2502e" opacity="0.85"/>
+            <circle cx="21" cy="10" r="9" fill="#e98e6f" opacity="0.75"/>
+          </svg>
+          <span class="sm-footer__sr-only">Mastercard</span>
+        </span>
+        {%- comment -%} American Express {%- endcomment -%}
+        <span class="sm-footer__payment-chip" role="listitem" aria-label="American Express">
+          <span class="sm-footer__pm-wordmark sm-footer__pm-amex" aria-hidden="true">AMEX</span>
+        </span>
+        {%- comment -%} Apple Pay {%- endcomment -%}
+        <span class="sm-footer__payment-chip" role="listitem" aria-label="Apple Pay">
+          <span class="sm-footer__pm-wordmark" aria-hidden="true">Apple Pay</span>
+        </span>
+        {%- comment -%} Shop Pay {%- endcomment -%}
+        <span class="sm-footer__payment-chip" role="listitem" aria-label="Shop Pay">
+          <span class="sm-footer__pm-wordmark sm-footer__pm-shoppay" aria-hidden="true">
+            <svg class="sm-footer__pm-shoppay-bag" viewBox="0 0 12 14" fill="none" aria-hidden="true" focusable="false" width="9" height="11">
+              <path d="M2 4.5C2 2.567 3.567 1 5.5 1h1C8.433 1 10 2.567 10 4.5V5h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1v-.5Z" stroke="currentColor" stroke-width="1.1"/>
+            </svg>
+            Shop Pay
+          </span>
+        </span>
+        {%- comment -%} PayPal {%- endcomment -%}
+        <span class="sm-footer__payment-chip" role="listitem" aria-label="PayPal">
+          <span class="sm-footer__pm-wordmark sm-footer__pm-paypal" aria-hidden="true">PayPal</span>
+        </span>
       </div>
     </div>
   </div>
@@ -148,15 +207,19 @@
 
       <nav class="sm-footer__legal" aria-label="Legal links">
         {%- if shop.policies.size > 0 -%}
-          {%- for policy in shop.policies -%}
-            {%- if policy.body != blank -%}
-              <a href="{{ policy.url }}" class="sm-footer__legal-link">{{ policy.title }}</a>
-            {%- endif -%}
+          {%- assign visible_policies = shop.policies | where: 'body' -%}
+          {%- for policy in visible_policies -%}
+            <a href="{{ policy.url }}" class="sm-footer__legal-link">{{ policy.title }}</a>
+            {%- unless forloop.last -%}<span class="sm-footer__legal-dot" aria-hidden="true">&middot;</span>{%- endunless -%}
           {%- endfor -%}
         {%- else -%}
           <a href="/policies/privacy-policy" class="sm-footer__legal-link">Privacy</a>
-          <a href="/policies/terms-of-service" class="sm-footer__legal-link">Terms</a>
+          <span class="sm-footer__legal-dot" aria-hidden="true">&middot;</span>
           <a href="/policies/refund-policy" class="sm-footer__legal-link">Returns</a>
+          <span class="sm-footer__legal-dot" aria-hidden="true">&middot;</span>
+          <a href="/policies/shipping-policy" class="sm-footer__legal-link">Shipping</a>
+          <span class="sm-footer__legal-dot" aria-hidden="true">&middot;</span>
+          <a href="/policies/terms-of-service" class="sm-footer__legal-link">Terms</a>
         {%- endif -%}
       </nav>
 
@@ -395,25 +458,130 @@
   opacity: 1;
 }
 
+/* ── NEWSLETTER REASSURANCE ── */
+
+.sm-footer__nl-reassure {
+  font-size: 0.6875rem;
+  color: rgba(251,249,244,0.38);
+  margin: 0.625rem 0 0;
+  letter-spacing: 0.03em;
+}
+
+/* ── COMPANY LEGITIMACY BAND ── */
+
+.sm-footer__company {
+  border-top: 1px solid var(--sm-footer-line);
+  padding-block: 1.5rem;
+}
+
+.sm-footer__company-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.sm-footer__company-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sm-footer__company-name {
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--sm-footer-fg);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.sm-footer__company-location {
+  font-size: 0.75rem;
+  color: var(--sm-footer-muted);
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.sm-footer__company-contact {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.sm-footer__contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--sm-footer-muted);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease;
+}
+
+.sm-footer__contact-link:hover,
+.sm-footer__contact-link:focus-visible {
+  color: var(--sm-footer-ember);
+  outline: none;
+}
+
+.sm-footer__contact-link:focus-visible {
+  outline: 2px solid var(--sm-footer-ember);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+.sm-footer__contact-icon {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.sm-footer__contact-page-link {
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sm-footer-ember);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(233,142,111,0.35);
+  padding-bottom: 1px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.sm-footer__contact-page-link:hover,
+.sm-footer__contact-page-link:focus-visible {
+  color: var(--sm-footer-fg);
+  border-color: var(--sm-footer-fg);
+  outline: none;
+}
+
+.sm-footer__contact-page-link:focus-visible {
+  outline: 2px solid var(--sm-footer-ember);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
 /* ── TRUST BAND ── */
 
 .sm-footer__trust {
   border-bottom: 1px solid var(--sm-footer-line);
-  padding-block: 1.25rem;
+  padding-block: 1.125rem;
 }
 
 .sm-footer__trust-inner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem 1.5rem;
 }
 
 .sm-footer__secure {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
 .sm-footer__secure-icon {
@@ -422,28 +590,84 @@
 }
 
 .sm-footer__secure-text {
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--sm-footer-muted);
+  white-space: nowrap;
+}
+
+.sm-footer__trust-divider {
+  width: 1px;
+  height: 1.25rem;
+  background: var(--sm-footer-line);
+  flex-shrink: 0;
+}
+
+@media (max-width: 479px) {
+  .sm-footer__trust-divider { display: none; }
 }
 
 .sm-footer__payments {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.375rem;
+  gap: 0.3rem;
   align-items: center;
 }
 
-.sm-footer__payment-badge {
-  font-size: 0.6875rem;
-  letter-spacing: 0.05em;
+.sm-footer__payment-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--sm-footer-muted);
   border: 1px solid var(--sm-footer-line);
-  border-radius: 3px;
-  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  background: rgba(251,249,244,0.04);
+  line-height: 1;
+  min-height: 1.875rem;
+}
+
+/* Payment wordmarks — plain text, reliably rendered */
+.sm-footer__pm-wordmark {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+  color: var(--sm-footer-muted);
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.sm-footer__pm-visa {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-style: italic;
+}
+
+.sm-footer__pm-amex {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.sm-footer__pm-shoppay {
   font-weight: 500;
+}
+
+.sm-footer__pm-paypal {
+  font-weight: 600;
+}
+
+.sm-footer__pm-shoppay-bag {
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+/* Mastercard — overlapping circles only (no text needed, aria-label covers it) */
+.sm-footer__mc-circles {
+  display: block;
+  flex-shrink: 0;
 }
 
 /* ── BOTTOM BAR ── */
@@ -470,7 +694,8 @@
 .sm-footer__legal {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1.25rem;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
 }
 
 .sm-footer__legal-link {
@@ -491,6 +716,13 @@
   outline: 2px solid var(--sm-footer-ember);
   outline-offset: 2px;
   border-radius: 1px;
+}
+
+.sm-footer__legal-dot {
+  font-size: 0.625rem;
+  color: rgba(251,249,244,0.2);
+  line-height: 1;
+  user-select: none;
 }
 
 .sm-footer__powered {
@@ -530,7 +762,9 @@
   .sm-footer__col-link,
   .sm-footer__nl-btn,
   .sm-footer__nl-form,
-  .sm-footer__legal-link {
+  .sm-footer__legal-link,
+  .sm-footer__contact-link,
+  .sm-footer__contact-page-link {
     transition: none;
   }
 }
@@ -593,6 +827,23 @@
       "id": "newsletter_placeholder",
       "label": "Input placeholder",
       "default": "Your email address"
+    },
+    {
+      "type": "header",
+      "content": "Company info"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "hello@shufflemode.us",
+      "info": "Displayed in the footer and linked as a mailto."
+    },
+    {
+      "type": "text",
+      "id": "business_address",
+      "label": "Business address (optional)",
+      "info": "One-line street address shown before 'Based in Boston, MA'. Leave blank to omit."
     }
   ],
   "blocks": [
