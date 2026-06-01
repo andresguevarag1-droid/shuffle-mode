@@ -5,10 +5,14 @@
   .ctl__items {
     scroll-padding-inline: 1rem;
     padding-inline: 0.25rem;
+    /* Prevent row from exceeding viewport */
+    max-width: 100%;
   }
 
   .ctl__item {
     width: clamp(130px, 38vw, 170px);
+    /* flex children must not collapse below min-content */
+    min-width: 0;
   }
 
   /* Main (hero) piece can be slightly wider */
@@ -60,6 +64,7 @@
 @media (max-width: 380px) {
   .ctl__item {
     width: clamp(118px, 36vw, 145px);
+    min-width: 0;
   }
 
   .ctl__item--main {
@@ -73,6 +78,11 @@
 
   .ctl__total-value {
     font-size: 1.35rem;
+  }
+
+  .ctl__name {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 {% endstylesheet %}

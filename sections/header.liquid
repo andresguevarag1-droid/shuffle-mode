@@ -1185,16 +1185,12 @@
     menuEl.classList.remove('is-open');
     if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
-    /* hide after slide-out */
-    var dur = parseFloat(
-      getComputedStyle(menuEl.querySelector('.smh-drawer__inner')).transitionDuration
-    ) * 1000 || 380;
+    /* hide after slide-out (fixed fallback; element may be transitioning) */
     setTimeout(function () {
       if (!menuEl.classList.contains('is-open')) {
         menuEl.setAttribute('hidden', '');
       }
-    }, dur);
-    if (menuToggle) menuToggle.focus();
+    }, 400);
   }
 
   if (menuToggle) {
@@ -1204,6 +1200,15 @@
   }
 
   menuCloseEls.forEach(function (el) { el.addEventListener('click', closeDrawer); });
+
+  /* Close the drawer when a real navigation link is tapped, so the body scroll
+     lock is always released (otherwise the page can get stuck unscrollable). */
+  if (menuEl) {
+    menuEl.addEventListener('click', function (e) {
+      var link = e.target.closest('a[href]');
+      if (link) closeDrawer();
+    });
+  }
 
   /* focus trap */
   if (menuEl) {

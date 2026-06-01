@@ -127,14 +127,17 @@
 @media (max-width: 480px) {
   .smph-wrap {
     padding: clamp(2.5rem, 8vw, 4rem) 0;
+    /* prevent horizontal overflow */
+    overflow-x: hidden;
   }
 
   .smph-inner {
     gap: clamp(2rem, 5vw, 3rem);
+    min-width: 0;
   }
 
   .smph-heading {
-    /* clamp prevents overflow at 320px: min ~1.875rem ≈ 30px */
+    /* clamp prevents overflow at 320px: floor ~1.875rem ≈ 30px */
     font-size: clamp(1.875rem, 9vw, 3.5rem);
     overflow-wrap: break-word;
     word-break: break-word;
@@ -143,32 +146,40 @@
   .smph-body {
     font-size: clamp(0.9rem, 3.5vw, 1.0625rem);
     max-width: 100%;
+    overflow-wrap: break-word;
   }
 
-  /* Stats: switch from auto-fit (which may go too narrow) to 2 columns */
+  /* Stats: 2-column layout; prevent auto-fit from going sub-10rem */
   .smph-stats {
     grid-template-columns: repeat(2, 1fr);
+    /* ensure children don't overflow grid */
+    overflow: hidden;
   }
 
-  /* Remove dividing left-borders on every-other child; use top border instead */
+  /* Each stat cell: use top border row dividers instead of left-border column dividers */
   .smph-stat {
+    min-width: 0; /* critical: prevents grid blowout */
     padding: clamp(1.25rem, 3vw, 2rem) clamp(0.75rem, 2.5vw, 1.5rem);
     border-top: 1px solid var(--smph-line);
+    /* reset right-side padding so it's symmetric */
+    padding-right: clamp(0.75rem, 2.5vw, 1.5rem);
   }
 
+  /* Reset the + sibling left-border rule (it inherits from base) */
   .smph-stat + .smph-stat {
     border-left: none;
     padding-left: clamp(0.75rem, 2.5vw, 1.5rem);
     padding-right: clamp(0.75rem, 2.5vw, 1.5rem);
   }
 
-  /* Restore left border only between items in the same row */
+  /* Restore left border for even items (right column of each row) */
   .smph-stat:nth-child(even) {
     border-left: 1px solid var(--smph-line);
   }
 
   .smph-stat__value {
     font-size: clamp(2rem, 8vw, 3.5rem);
+    overflow-wrap: break-word;
   }
 
   .smph-stat__label {
@@ -194,13 +205,19 @@
     margin-bottom: 1rem;
   }
 
-  /* At 320px, keep 2-up but allow single column if values are very wide */
+  /* At 320px two columns are ~140px each — keep 2-up, but allow
+     fall back to 1 column if a value string is very wide */
   .smph-stats {
     grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
   }
 
+  .smph-stat {
+    min-width: 0;
+  }
+
   .smph-stat__value {
     font-size: clamp(1.75rem, 9vw, 2.75rem);
+    overflow-wrap: break-word;
   }
 
   .smph-body {

@@ -460,40 +460,61 @@
 @media (max-width: 480px) {
   .sm-news {
     padding-block: clamp(2.5rem, 8vw, 4rem);
+    /* prevent any child from triggering horizontal scroll */
+    overflow-x: hidden;
   }
 
   .sm-news__inner {
     gap: 1rem;
+    /* guard flex children from overflowing */
+    min-width: 0;
+    max-width: 100%;
   }
 
   .sm-news__heading {
     font-size: clamp(1.75rem, 8vw, 2.5rem);
     max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .sm-news__sub {
     font-size: 0.9rem;
     max-width: 100%;
+    overflow-wrap: break-word;
   }
 
-  /* Perks wrap into a 2-column grid on mid-small phones */
+  /* Perks: row-wrap on phones so they share horizontal space */
   .sm-news__perks {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.4rem 1rem;
+    width: 100%;
   }
 
   .sm-news__perk {
     min-width: 0;
     font-size: 0.8125rem;
+    overflow-wrap: break-word;
   }
 
-  /* Field row stays stacked (column) and full-width — already the default below 540px.
-     Ensure inputs hit ≥44px tap target. */
+  /* Form wrap: full width, no overflow */
+  .sm-news__form-wrap {
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Field row already stacks (column) below 540px.
+     Enforce ≥44px tap targets on input and button. */
   .sm-news__input {
     min-height: 44px;
     padding: 0.75rem 1.25rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .sm-news__btn {
@@ -501,14 +522,13 @@
     justify-content: center;
     min-height: 44px;
     padding: 0.75rem 1.5rem;
+    box-sizing: border-box;
   }
 
-  .sm-news__form-wrap {
-    margin-top: 0.5rem;
-  }
-
+  /* Tonal wordmark background: scale down so it doesn't cause overflow */
   .sm-news__wordmark-bg {
     gap: 0;
+    overflow: hidden;
   }
 
   .sm-news__bg-word {

@@ -529,14 +529,25 @@
 @media (max-width: 480px) {
   .sm-ugc {
     padding: clamp(2.5rem, 8vw, 4rem) 0;
+    /* prevent horizontal overflow at section level */
+    overflow-x: hidden;
+  }
+
+  .sm-ugc__inner {
+    /* guard the .container from triggering overflow */
+    min-width: 0;
+    max-width: 100%;
   }
 
   .sm-ugc__header {
-    margin-bottom: 32px;
+    margin-bottom: 28px;
+    overflow-wrap: break-word;
   }
 
   .sm-ugc__heading {
     font-size: clamp(1.75rem, 8vw, 2.5rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .sm-ugc__subtext {
@@ -545,42 +556,63 @@
     overflow-wrap: break-word;
   }
 
-  /* @handle link — ensure it wraps and stays tappable */
+  /* @handle Instagram link — wraps gracefully, stays tappable ≥44px */
   .sm-ugc__ig-link {
     flex-wrap: wrap;
     min-height: 44px;
     align-items: center;
     padding-bottom: 4px;
     word-break: break-all;
+    /* inline-flex already set; just ensure it doesn't overflow */
+    max-width: 100%;
   }
 
-  /* Grid: 2 columns on phones (already the default at base styles —
-     guard that it never collapses to 1 or stretches to 3 early) */
+  /* Grid: locked to 2 columns on phones.
+     min-width: 0 prevents flex/grid blowout on children. */
   .sm-ugc__grid {
     grid-template-columns: repeat(2, 1fr);
-    /* tiles stay square via aspect-ratio on __media */
     min-width: 0;
+    /* ensure gap uses the custom property but doesn't blow layout */
+    gap: var(--ugc-gap, 6px);
   }
 
-  /* Ensure tiles don't overflow container */
+  /* Tile: min-width:0 is critical for grid children */
   .sm-ugc__tile {
     min-width: 0;
+    max-width: 100%;
   }
 
-  /* Keep square aspect-ratio (aspect-ratio: 1/1 already set on __media) */
+  /* Media: enforce square aspect-ratio (matches base style; explicit here for safety) */
   .sm-ugc__media {
     aspect-ratio: 1 / 1;
+    /* images fill the square */
+    width: 100%;
+  }
+
+  /* Overlay: scale down text slightly for small tiles */
+  .sm-ugc__overlay {
+    padding: 10px;
+  }
+
+  .sm-ugc__overlay-title {
+    font-size: 0.6875rem;
+  }
+
+  .sm-ugc__overlay-price {
+    font-size: 0.625rem;
   }
 
   .sm-ugc__cta-wrap {
-    margin-top: 32px;
+    margin-top: 28px;
   }
 
+  /* CTA button: full-width on phones, ≥44px tap target */
   .sm-ugc__cta {
     width: 100%;
     justify-content: center;
     min-height: 44px;
     padding: 12px 24px;
+    box-sizing: border-box;
   }
 }
 
@@ -603,6 +635,7 @@
     font-size: 0.8125rem;
   }
 
+  /* Tighten gap on tiny screens (4px ensures tiles don't bleed together) */
   .sm-ugc__grid {
     gap: 4px;
   }
@@ -613,6 +646,11 @@
 
   .sm-ugc__overlay-price {
     font-size: 0.625rem;
+  }
+
+  .sm-ugc__cta {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
   }
 }
 

@@ -390,10 +390,12 @@
 
   .smb-journal__header {
     margin-bottom: 2.5rem;
+    max-width: 100%;
   }
 
   .smb-journal__title {
     font-size: clamp(1.875rem, 9vw, 2.5rem);
+    overflow-wrap: anywhere;
   }
 
   /* Featured lead: image above text on phones */
@@ -429,6 +431,12 @@
   .smb-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem 0;
+  }
+
+  /* Grid children must not overflow their column */
+  .smb-card {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .smb-card__heading {
@@ -471,10 +479,26 @@
 
   .smb-lead__heading {
     font-size: clamp(1.375rem, 6vw, 1.75rem);
+    overflow-wrap: anywhere;
   }
 
   .smb-journal__title {
     font-size: clamp(1.625rem, 8vw, 2rem);
+  }
+
+  .smb-card {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .smb-card__heading {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .smb-lead__excerpt {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 {% endstylesheet %}

@@ -360,18 +360,30 @@
 @media (max-width: 380px) {
   .smp-page__header {
     padding-inline: 0.875rem;
+    max-width: 100%;
   }
 
   .smp-page__body {
     padding-inline: 0.875rem;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .smp-page__title {
     font-size: clamp(1.75rem, 9vw, 2.25rem);
+    overflow-wrap: anywhere;
   }
 
   .smp-rte blockquote {
     padding: 1rem;
+  }
+
+  /* Long links / words must not overflow at 320px */
+  .smp-rte a,
+  .smp-rte p,
+  .smp-rte li {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 

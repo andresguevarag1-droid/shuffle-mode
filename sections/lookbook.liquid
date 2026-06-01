@@ -451,6 +451,17 @@ figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
   }
 }
 
+/* ── Tablet-narrow range (481–639px): 2-col grid still active.
+   Prevent --tall tiles from becoming 112vw tall by capping row height. */
+@media (min-width: 481px) and (max-width: 639px) {
+  .sm-look__grid {
+    grid-auto-rows: 44vw;
+  }
+
+  /* --tall spans 2 rows = 88vw — acceptable portrait proportion */
+  /* --wide spans 2 cols but grid is only 2 cols wide, so it fills the row */
+}
+
 /* ── Small phone (≤480px) ── */
 @media (max-width: 480px) {
   .sm-look {
@@ -465,6 +476,9 @@ figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
     gap: 1rem;
     margin-bottom: 2rem;
     padding-bottom: 1.25rem;
+    /* prevent long heading/link from causing overflow */
+    min-width: 0;
+    max-width: 100%;
   }
 
   .sm-look__heading {
@@ -473,25 +487,34 @@ figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
     word-break: break-word;
   }
 
+  /* Journal link: ≥44px tap target, allow text to wrap at narrow widths */
   .sm-look__journal-link {
     min-height: 44px;
     align-items: center;
     white-space: normal;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
 
-  /* Grid: single column on small phones; sensible fixed row heights.
-     56vw rows on 2-col were ~112vw tall for --tall tiles — absurd on phones.
-     Use 1 column with a reasonable portrait aspect via auto-rows. */
+  /* Grid: single column, portrait-friendly row height.
+     56vw 2-col rows made --tall tiles 112vw tall — absurd on phones.
+     1-col + 70vw rows gives a natural portrait proportion (~224px at 320px). */
   .sm-look__grid {
     grid-template-columns: 1fr;
-    /* Each row is 70vw tall — portrait-ish, never absurdly tall */
     grid-auto-rows: 70vw;
     gap: 0.375rem;
-    /* Prevent any child from overflowing */
+    min-width: 0;
     overflow: hidden;
+    /* max-width guard */
+    max-width: 100%;
   }
 
-  /* Override span variants so they all stack as single-cell tiles */
+  /* Reset span variants: all tiles are single-cell in 1-col layout */
+  .sm-look__tile {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .sm-look__tile--tall {
     grid-row: span 1;
   }
@@ -500,7 +523,7 @@ figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
     grid-column: span 1;
   }
 
-  /* Captions: always visible on touch (no hover) */
+  /* Captions + overlay: always visible on touch (no :hover) */
   .sm-look__tile-overlay {
     opacity: 0.55;
   }
@@ -533,6 +556,10 @@ figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
     padding: clamp(2rem, 7vw, 3rem) 0;
   }
 
+  .sm-look__header {
+    margin-bottom: 1.5rem;
+  }
+
   .sm-look__heading {
     font-size: clamp(1.625rem, 10vw, 2.5rem);
   }
@@ -542,19 +569,15 @@ figcaption.sm-look__tile-caption .sm-look__tile-caption-inner {
     letter-spacing: 0.16em;
   }
 
-  .sm-look__grid {
-    /* At 320px, 70vw rows are ~224px — still fine. Keep same. */
-    grid-auto-rows: 70vw;
-    gap: 0.25rem;
-  }
-
-  .sm-look__header {
-    margin-bottom: 1.5rem;
-  }
-
   .sm-look__journal-link {
     font-size: 0.6875rem;
     letter-spacing: 0.1em;
+  }
+
+  /* At 320px, 70vw rows = ~224px — portrait, not absurdly tall. Keep. */
+  .sm-look__grid {
+    grid-auto-rows: 70vw;
+    gap: 0.25rem;
   }
 }
 {% endstylesheet %}

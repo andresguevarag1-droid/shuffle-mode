@@ -478,6 +478,22 @@
   .sms-search__initial {
     padding: 2rem 0;
   }
+
+  /* Results grid children must not overflow their column */
+  .sms-search__grid > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Editorial cards: long titles/excerpts wrap */
+  .sms-editorial-card__title {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .sms-editorial-card__excerpt {
+    overflow-wrap: anywhere;
+  }
 }
 
 /* ── Search: tiny-phone 380px ───────────────────────────── */
@@ -491,12 +507,28 @@
     --sms-cols: 1;
   }
 
+  /* Grid children: full-width, no overflow */
+  .sms-search__grid > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .sms-search__predictive-item {
     padding: 0.65rem 0.875rem;
   }
 
   .sms-search__empty-headline {
     font-size: clamp(1.25rem, 5.5vw, 1.75rem);
+  }
+
+  /* Editorial cards: ensure text wraps on 320px */
+  .sms-editorial-card__title {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .sms-editorial-card__excerpt {
+    overflow-wrap: anywhere;
   }
 }
 {% endstylesheet %}
