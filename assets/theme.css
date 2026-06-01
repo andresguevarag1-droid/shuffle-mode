@@ -1414,3 +1414,27 @@ h5, h6 { font-family: var(--font-body); letter-spacing: 0; }
   .cart-drawer__overlay,
   .btn { transition-duration: 0ms !important; }
 }
+
+/* ============================================================
+   REVEAL FAILSAFE — guarantee scroll-reveal content is NEVER
+   stuck invisible. Sections start their reveal elements at
+   opacity:0 and a per-section IntersectionObserver adds the
+   "visible" class. If JS doesn't run (no-js) the content must
+   still show. The layout sets html.no-js and removes it once
+   theme.js executes; we force every known reveal element
+   visible under no-js.
+   ============================================================ */
+.no-js .smt-card,
+.no-js .sm-drop__header--reveal,
+.no-js .sm-look__reveal,
+.no-js .smph-reveal,
+.no-js .smes-reveal,
+.no-js [data-reveal],
+.no-js .sm-manifesto__word,
+.no-js .sm-manifesto__emphasis,
+.no-js .sm-manifesto__line {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+  clip-path: none !important;
+}
