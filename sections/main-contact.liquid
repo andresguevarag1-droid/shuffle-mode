@@ -1,0 +1,1321 @@
+{%- liquid
+  assign eyebrow       = section.settings.eyebrow
+  assign heading       = section.settings.heading
+  assign intro         = section.settings.intro
+  assign response_time = section.settings.response_time
+  assign email         = section.settings.email
+  assign phone         = section.settings.phone
+  assign address       = section.settings.address
+  assign hours         = section.settings.hours
+  assign instagram_url = section.settings.instagram_url
+  assign tiktok_url    = section.settings.tiktok_url
+  assign faq_blocks    = section.blocks | where: 'type', 'faq'
+-%}
+
+<section
+  class="smc-contact"
+  aria-label="Contact us"
+>
+  <div class="container smc-contact__wrap">
+
+    {%- comment -%}─── LEFT COLUMN — reassurance & info ───{%- endcomment -%}
+    <div class="smc-contact__info">
+
+      {%- if eyebrow != blank -%}
+        <p class="smc-contact__eyebrow">{{ eyebrow | escape }}</p>
+      {%- endif -%}
+
+      <h1 class="smc-contact__heading">{{ heading | escape }}</h1>
+
+      {%- if intro != blank -%}
+        <div class="smc-contact__intro smc-rte">{{ intro }}</div>
+      {%- endif -%}
+
+      {%- if response_time != blank -%}
+        <div class="smc-contact__promise" aria-label="Response time promise">
+          <span class="smc-contact__promise-dot" aria-hidden="true"></span>
+          <span class="smc-contact__promise-text">{{ response_time | escape }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Contact detail rows {%- endcomment -%}
+      {%- if email != blank or phone != blank or address != blank or hours != blank -%}
+        <ul class="smc-contact__details" aria-label="Contact details">
+
+          {%- if email != blank -%}
+            <li class="smc-contact__detail">
+              <span class="smc-contact__detail-icon" aria-hidden="true">✉</span>
+              <span class="smc-contact__detail-body">
+                <span class="smc-contact__detail-label">Email</span>
+                <a
+                  class="smc-contact__detail-value smc-contact__detail-link"
+                  href="mailto:{{ email | escape }}"
+                >{{ email | escape }}</a>
+              </span>
+            </li>
+          {%- endif -%}
+
+          {%- if phone != blank -%}
+            <li class="smc-contact__detail">
+              <span class="smc-contact__detail-icon" aria-hidden="true">◎</span>
+              <span class="smc-contact__detail-body">
+                <span class="smc-contact__detail-label">Phone</span>
+                <a
+                  class="smc-contact__detail-value smc-contact__detail-link"
+                  href="tel:{{ phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}"
+                >{{ phone | escape }}</a>
+              </span>
+            </li>
+          {%- endif -%}
+
+          {%- if address != blank -%}
+            <li class="smc-contact__detail">
+              <span class="smc-contact__detail-icon" aria-hidden="true">◈</span>
+              <span class="smc-contact__detail-body">
+                <span class="smc-contact__detail-label">Based in</span>
+                <span class="smc-contact__detail-value">{{ address | escape }}</span>
+              </span>
+            </li>
+          {%- endif -%}
+
+          {%- if hours != blank -%}
+            <li class="smc-contact__detail">
+              <span class="smc-contact__detail-icon" aria-hidden="true">◷</span>
+              <span class="smc-contact__detail-body">
+                <span class="smc-contact__detail-label">Hours</span>
+                <span class="smc-contact__detail-value">{{ hours | escape }}</span>
+              </span>
+            </li>
+          {%- endif -%}
+
+        </ul>
+      {%- endif -%}
+
+      {%- comment -%} Trust badge row {%- endcomment -%}
+      <div class="smc-contact__trust" aria-label="Trust signals">
+        <span class="smc-contact__trust-item">
+          <span class="smc-contact__trust-icon" aria-hidden="true">✦</span>
+          Real humans
+        </span>
+        <span class="smc-contact__trust-sep" aria-hidden="true">·</span>
+        <span class="smc-contact__trust-item">
+          <span class="smc-contact__trust-icon" aria-hidden="true">✦</span>
+          Based in the USA
+        </span>
+        <span class="smc-contact__trust-sep" aria-hidden="true">·</span>
+        <span class="smc-contact__trust-item">
+          <span class="smc-contact__trust-icon" aria-hidden="true">✦</span>
+          Secure &amp; private
+        </span>
+      </div>
+
+      {%- comment -%} Social links {%- endcomment -%}
+      {%- if instagram_url != blank or tiktok_url != blank -%}
+        <div class="smc-contact__social" aria-label="Social media">
+          {%- if instagram_url != blank -%}
+            <a
+              class="smc-contact__social-link"
+              href="{{ instagram_url | escape }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow Shuffle Mode on Instagram"
+            >
+              <span class="smc-contact__social-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
+              </span>
+              <span>Instagram</span>
+            </a>
+          {%- endif -%}
+          {%- if tiktok_url != blank -%}
+            <a
+              class="smc-contact__social-link"
+              href="{{ tiktok_url | escape }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow Shuffle Mode on TikTok"
+            >
+              <span class="smc-contact__social-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.36 6.36 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.95a8.28 8.28 0 0 0 4.84 1.55V7.05a4.85 4.85 0 0 1-1.07-.36z"/></svg>
+              </span>
+              <span>TikTok</span>
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Mini-FAQ accordion (left col, desktop; below form on mobile) {%- endcomment -%}
+      {%- if faq_blocks.size > 0 -%}
+        <div class="smc-contact__faq" aria-label="Frequently asked questions">
+          <p class="smc-contact__faq-heading">Before you write&hellip;</p>
+          {%- for block in faq_blocks -%}
+            <details class="smc-contact__faq-item" {{ block.shopify_attributes }}>
+              <summary class="smc-contact__faq-summary">
+                <span>{{ block.settings.question | escape }}</span>
+                <span class="smc-contact__faq-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="smc-contact__faq-body" hidden>
+                <div class="smc-contact__faq-body-inner">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+            </details>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+
+    {%- comment -%}─── RIGHT COLUMN — contact form ───{%- endcomment -%}
+    <div class="smc-contact__form-col">
+
+      {% form 'contact', class: 'smc-contact__form' %}
+
+        {%- if form.posted_successfully? -%}
+
+          <div class="smc-contact__success" role="status" aria-live="polite">
+            <span class="smc-contact__success-mark" aria-hidden="true">✦</span>
+            <p class="smc-contact__success-title">Message received.</p>
+            <p class="smc-contact__success-sub">We'll be in touch within 24 hours. ✦</p>
+          </div>
+
+        {%- else -%}
+
+          {%- if form.errors -%}
+            <div class="smc-contact__errors" role="alert" aria-live="assertive">
+              <p class="smc-contact__errors-title">Please check the following:</p>
+              <ul class="smc-contact__errors-list">
+                {%- for field in form.errors -%}
+                  <li>
+                    {%- if field == 'form' -%}
+                      {{ form.errors.messages[field] }}
+                    {%- else -%}
+                      {{ form.errors.translated_fields[field] | capitalize }}
+                      {{ form.errors.messages[field] }}
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          <div class="smc-contact__fields">
+
+            {%- comment -%} Name {%- endcomment -%}
+            <div class="smc-contact__field">
+              <label class="smc-contact__label" for="smc-contact-name">
+                Your name
+              </label>
+              <input
+                id="smc-contact-name"
+                class="smc-contact__input"
+                type="text"
+                name="contact[name]"
+                autocomplete="name"
+                placeholder="Jane Doe"
+              >
+            </div>
+
+            {%- comment -%} Email — required {%- endcomment -%}
+            <div class="smc-contact__field">
+              <label class="smc-contact__label" for="smc-contact-email">
+                Email address
+                <span class="smc-contact__required" aria-label="required">*</span>
+              </label>
+              <input
+                id="smc-contact-email"
+                class="smc-contact__input"
+                type="email"
+                name="contact[email]"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+                aria-required="true"
+              >
+            </div>
+
+            {%- comment -%} Phone — optional {%- endcomment -%}
+            <div class="smc-contact__field">
+              <label class="smc-contact__label" for="smc-contact-phone">
+                Phone
+                <span class="smc-contact__optional">(optional)</span>
+              </label>
+              <input
+                id="smc-contact-phone"
+                class="smc-contact__input"
+                type="tel"
+                name="contact[phone]"
+                autocomplete="tel"
+                placeholder="+1 (617) 000-0000"
+              >
+            </div>
+
+            {%- comment -%} Order number — optional {%- endcomment -%}
+            <div class="smc-contact__field">
+              <label class="smc-contact__label" for="smc-contact-order">
+                Order number
+                <span class="smc-contact__optional">(optional)</span>
+              </label>
+              <input
+                id="smc-contact-order"
+                class="smc-contact__input"
+                type="text"
+                name="contact[Order number]"
+                placeholder="#SM-00000"
+                autocomplete="off"
+                inputmode="numeric"
+              >
+            </div>
+
+            {%- comment -%} Topic select {%- endcomment -%}
+            <div class="smc-contact__field smc-contact__field--full">
+              <label class="smc-contact__label" for="smc-contact-topic">
+                How can we help?
+              </label>
+              <div class="smc-contact__select-wrap">
+                <select
+                  id="smc-contact-topic"
+                  class="smc-contact__select"
+                  name="contact[Topic]"
+                  aria-label="Select a topic"
+                >
+                  <option value="">Select a topic…</option>
+                  <option value="Order help">Order help</option>
+                  <option value="Sizing &amp; fit">Sizing &amp; fit</option>
+                  <option value="Returns &amp; exchanges">Returns &amp; exchanges</option>
+                  <option value="Wholesale / Press">Wholesale / Press</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="smc-contact__select-arrow" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </div>
+            </div>
+
+            {%- comment -%} Message — required {%- endcomment -%}
+            <div class="smc-contact__field smc-contact__field--full">
+              <label class="smc-contact__label" for="smc-contact-body">
+                Message
+                <span class="smc-contact__required" aria-label="required">*</span>
+              </label>
+              <textarea
+                id="smc-contact-body"
+                class="smc-contact__textarea"
+                name="contact[body]"
+                rows="6"
+                placeholder="Tell us what's on your mind — we read every message."
+                required
+                aria-required="true"
+              ></textarea>
+            </div>
+
+          </div>
+
+          <div class="smc-contact__submit-row">
+            <button type="submit" class="smc-contact__submit">
+              <span>Send message</span>
+              <span class="smc-contact__submit-arrow" aria-hidden="true">&rarr;</span>
+            </button>
+            <p class="smc-contact__privacy">
+              We'll only use your details to reply. No spam, ever.
+            </p>
+          </div>
+
+        {%- endif -%}
+
+      {% endform %}
+
+    </div>
+
+  </div>
+</section>
+
+{% stylesheet %}
+
+/* ──────────────────────────────────────────────────────
+   SMC-CONTACT  ·  Shuffle Mode Contact Page
+   Prefix: smc-contact__  (smc- per project convention)
+────────────────────────────────────────────────────── */
+
+/* ── Section shell ───────────────────────────────── */
+.smc-contact {
+  background: var(--color-cream);
+  padding: clamp(4rem, 9vw, 7rem) 0 clamp(5rem, 11vw, 9rem);
+}
+
+/* ── Two-column grid ─────────────────────────────── */
+.smc-contact__wrap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem, 7vw, 6rem);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .smc-contact__wrap {
+    grid-template-columns: 1fr 1.15fr;
+    gap: clamp(4rem, 6vw, 7rem);
+  }
+}
+
+/* ── LEFT INFO COLUMN ────────────────────────────── */
+.smc-contact__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 900px) {
+  .smc-contact__info {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+/* Eyebrow */
+.smc-contact__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+  margin: 0;
+}
+
+/* Heading */
+.smc-contact__heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* Intro richtext */
+.smc-contact__intro {
+  font-family: var(--font-body);
+  font-size: clamp(0.9375rem, 1.4vw, 1.0625rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--color-stone);
+  max-width: 46ch;
+}
+
+.smc-contact__intro p {
+  margin: 0 0 0.75em;
+}
+
+.smc-contact__intro p:last-child {
+  margin-bottom: 0;
+}
+
+/* Response promise badge */
+.smc-contact__promise {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--color-sand);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.5625rem 1.125rem;
+  width: fit-content;
+}
+
+.smc-contact__promise-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4caf82;
+  flex-shrink: 0;
+  animation: smc-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes smc-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(0.8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smc-contact__promise-dot {
+    animation: none;
+  }
+}
+
+.smc-contact__promise-text {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  letter-spacing: 0.01em;
+}
+
+/* Contact detail rows */
+.smc-contact__details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.smc-contact__detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.smc-contact__detail-icon {
+  font-size: 0.875rem;
+  color: var(--color-stone);
+  flex-shrink: 0;
+  margin-top: 0.1em;
+  width: 1.25rem;
+  text-align: center;
+}
+
+.smc-contact__detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.smc-contact__detail-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.smc-contact__detail-value {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  line-height: 1.45;
+}
+
+.smc-contact__detail-link {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.smc-contact__detail-link:hover {
+  color: var(--color-ember);
+}
+
+.smc-contact__detail-link:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Trust badge row */
+.smc-contact__trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-bone);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+}
+
+.smc-contact__trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-stone);
+}
+
+.smc-contact__trust-icon {
+  font-size: 0.5rem;
+  color: var(--color-ember);
+  position: relative;
+  top: -0.5px;
+}
+
+.smc-contact__trust-sep {
+  font-size: 0.625rem;
+  color: var(--color-line);
+  font-weight: 400;
+}
+
+/* Social links */
+.smc-contact__social {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.smc-contact__social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-stone);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.smc-contact__social-link:hover {
+  color: var(--color-ink);
+}
+
+.smc-contact__social-link:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.smc-contact__social-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ── MINI-FAQ (left column) ──────────────────────── */
+.smc-contact__faq {
+  border-top: 1px solid var(--color-line);
+  padding-top: 1.5rem;
+}
+
+.smc-contact__faq-heading {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin: 0 0 1rem;
+}
+
+.smc-contact__faq-item {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.smc-contact__faq-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.smc-contact__faq-summary::-webkit-details-marker,
+.smc-contact__faq-summary::marker {
+  display: none;
+  content: '';
+}
+
+.smc-contact__faq-summary:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.smc-contact__faq-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  color: var(--color-stone);
+  transition: color 0.2s ease;
+}
+
+.smc-contact__faq-icon::before,
+.smc-contact__faq-icon::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  border-radius: 1px;
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+
+.smc-contact__faq-icon::before {
+  width: 12px;
+  height: 1.5px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.smc-contact__faq-icon::after {
+  width: 1.5px;
+  height: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.smc-contact__faq-item[open] .smc-contact__faq-icon {
+  color: var(--color-ember);
+}
+
+.smc-contact__faq-item[open] .smc-contact__faq-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+  opacity: 0;
+}
+
+.smc-contact__faq-body {
+  overflow: hidden;
+}
+
+.smc-contact__faq-body[data-animating] {
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smc-contact__faq-body-inner {
+  padding: 0 0 1rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--color-stone);
+}
+
+.smc-contact__faq-body-inner p {
+  margin: 0 0 0.6em;
+}
+
+.smc-contact__faq-body-inner p:last-child {
+  margin-bottom: 0;
+}
+
+.smc-contact__faq-body-inner a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.smc-contact__faq-body-inner a:hover {
+  color: var(--color-ember);
+}
+
+/* ── RIGHT FORM COLUMN ───────────────────────────── */
+.smc-contact__form-col {
+  background: var(--color-bone);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.75rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+}
+
+/* Success state */
+.smc-contact__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 3rem 1rem;
+}
+
+.smc-contact__success-mark {
+  font-size: 2.5rem;
+  color: var(--color-ember);
+  display: block;
+  animation: smc-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes smc-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smc-contact__success-mark { animation: none; }
+}
+
+.smc-contact__success-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.smc-contact__success-sub {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 300;
+  color: var(--color-stone);
+  margin: 0;
+}
+
+/* Error block */
+.smc-contact__errors {
+  background: rgba(194, 80, 46, 0.07);
+  border: 1px solid rgba(194, 80, 46, 0.28);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.smc-contact__errors-title {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-ember);
+  margin: 0 0 0.5rem;
+}
+
+.smc-contact__errors-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.smc-contact__errors-list li {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--color-ember);
+}
+
+/* Fields grid */
+.smc-contact__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 600px) {
+  .smc-contact__fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual field */
+.smc-contact__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.smc-contact__field--full {
+  grid-column: 1 / -1;
+}
+
+/* Label */
+.smc-contact__label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.smc-contact__required {
+  color: var(--color-ember);
+  font-size: 0.8125rem;
+  line-height: 1;
+}
+
+.smc-contact__optional {
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-size: 0.6875rem;
+  color: var(--color-stone);
+  opacity: 0.65;
+}
+
+/* Text inputs */
+.smc-contact__input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+}
+
+.smc-contact__input::placeholder {
+  color: var(--color-stone);
+  opacity: 0.5;
+}
+
+.smc-contact__input:focus-visible {
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(22, 19, 15, 0.08);
+}
+
+/* Textarea */
+.smc-contact__textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  outline: none;
+  resize: vertical;
+  min-height: 9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+
+.smc-contact__textarea::placeholder {
+  color: var(--color-stone);
+  opacity: 0.5;
+}
+
+.smc-contact__textarea:focus-visible {
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(22, 19, 15, 0.08);
+}
+
+/* Select */
+.smc-contact__select-wrap {
+  position: relative;
+}
+
+.smc-contact__select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.smc-contact__select:focus-visible {
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(22, 19, 15, 0.08);
+}
+
+.smc-contact__select-arrow {
+  pointer-events: none;
+  position: absolute;
+  right: 1.125rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-stone);
+  display: flex;
+  align-items: center;
+}
+
+/* Submit row */
+.smc-contact__submit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+/* Submit button */
+.smc-contact__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-bone);
+  background: var(--color-ink);
+  border: none;
+  border-radius: 999px;
+  padding: 1.0625rem 2.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.smc-contact__submit:hover {
+  background: var(--color-ember);
+}
+
+.smc-contact__submit:active {
+  transform: scale(0.98);
+}
+
+.smc-contact__submit:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+}
+
+.smc-contact__submit-arrow {
+  display: inline-block;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.smc-contact__submit:hover .smc-contact__submit-arrow {
+  transform: translateX(4px);
+}
+
+/* Privacy microcopy */
+.smc-contact__privacy {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-stone);
+  text-align: center;
+  letter-spacing: 0.02em;
+  margin: 0;
+  opacity: 0.75;
+}
+
+/* ── RTE helper (intro richtext) ─────────────────── */
+.smc-rte p {
+  margin: 0 0 0.75em;
+}
+
+.smc-rte p:last-child {
+  margin-bottom: 0;
+}
+
+.smc-rte strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.smc-rte em {
+  font-style: italic;
+}
+
+.smc-rte a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-ember);
+  transition: color 0.2s ease;
+}
+
+.smc-rte a:hover {
+  color: var(--color-ember);
+}
+
+/* ── Reduced motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .smc-contact__input,
+  .smc-contact__textarea,
+  .smc-contact__select,
+  .smc-contact__submit,
+  .smc-contact__submit-arrow,
+  .smc-contact__detail-link,
+  .smc-contact__social-link,
+  .smc-contact__faq-icon::before,
+  .smc-contact__faq-icon::after,
+  .smc-contact__faq-body[data-animating],
+  .smc-rte a {
+    transition: none;
+  }
+
+  .smc-contact__submit:active {
+    transform: none;
+  }
+
+  .smc-contact__submit:hover .smc-contact__submit-arrow {
+    transform: none;
+  }
+}
+
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── FAQ accordion ── */
+  function initFAQ(root) {
+    var items = Array.prototype.slice.call(
+      root.querySelectorAll('.smc-contact__faq-item')
+    );
+
+    items.forEach(function (details) {
+      var summary = details.querySelector('.smc-contact__faq-summary');
+      var body    = details.querySelector('.smc-contact__faq-body');
+      if (!summary || !body) return;
+
+      if (details.open) { body.removeAttribute('hidden'); }
+
+      summary.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (details.open) {
+          collapseItem(details, body);
+        } else {
+          items.forEach(function (sib) {
+            if (sib !== details && sib.open) {
+              collapseItem(sib, sib.querySelector('.smc-contact__faq-body'));
+            }
+          });
+          expandItem(details, body);
+        }
+      });
+    });
+  }
+
+  function expandItem(details, body) {
+    body.removeAttribute('hidden');
+    var h = body.scrollHeight;
+    if (prefersReduced) {
+      details.setAttribute('open', '');
+      body.style.height = '';
+      return;
+    }
+    body.style.height = '0px';
+    body.setAttribute('data-animating', '');
+    details.setAttribute('open', '');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        body.style.height = h + 'px';
+      });
+    });
+    body.addEventListener('transitionend', function done() {
+      body.removeAttribute('data-animating');
+      body.style.height = '';
+      body.removeEventListener('transitionend', done);
+    });
+  }
+
+  function collapseItem(details, body) {
+    if (prefersReduced) {
+      details.removeAttribute('open');
+      body.setAttribute('hidden', '');
+      body.style.height = '';
+      return;
+    }
+    body.style.height = body.scrollHeight + 'px';
+    body.setAttribute('data-animating', '');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        body.style.height = '0px';
+      });
+    });
+    body.addEventListener('transitionend', function done() {
+      details.removeAttribute('open');
+      body.setAttribute('hidden', '');
+      body.removeAttribute('data-animating');
+      body.style.height = '';
+      body.removeEventListener('transitionend', done);
+    });
+  }
+
+  /* ── Boot ── */
+  function boot() {
+    var sections = document.querySelectorAll('.smc-contact');
+    for (var i = 0; i < sections.length; i++) {
+      initFAQ(sections[i]);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+  document.addEventListener('shopify:section:load', function (e) {
+    var el = e.target.querySelector('.smc-contact');
+    if (el) initFAQ(el);
+  });
+
+  document.addEventListener('shopify:block:select', function (e) {
+    var block = e.target;
+    if (!block.classList.contains('smc-contact__faq-item')) return;
+    var body = block.querySelector('.smc-contact__faq-body');
+    if (body && !block.open) expandItem(block, body);
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Contact",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "We're here to help"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get in touch"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro paragraph",
+      "default": "<p>Every message lands with a real person. Whether it's a sizing question, an order update, or just a thought — we'd love to hear from you. Shuffle Mode is a small team in Boston, and we take every note seriously.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Contact details"
+    },
+    {
+      "type": "text",
+      "id": "response_time",
+      "label": "Response promise",
+      "default": "We reply within 24 hours, Mon–Fri",
+      "info": "Displayed as a badge beneath the intro"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address",
+      "default": "hello@shufflemode.com",
+      "placeholder": "hello@yourstore.com"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number",
+      "placeholder": "+1 (617) 000-0000",
+      "info": "Leave blank to hide"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Location / city",
+      "default": "Boston, MA · United States",
+      "info": "Displayed as a simple text line"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Support hours",
+      "default": "Mon – Fri, 9 AM – 6 PM EST",
+      "info": "Leave blank to hide"
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Your question here"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Your answer here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact",
+      "settings": {
+        "eyebrow": "We're here to help",
+        "heading": "Get in touch",
+        "intro": "<p>Every message lands with a real person. Whether it's a sizing question, an order update, or just a thought — we'd love to hear from you. Shuffle Mode is a small team in Boston, and we take every note seriously.</p>",
+        "response_time": "We reply within 24 hours, Mon–Fri",
+        "email": "hello@shufflemode.com",
+        "address": "Boston, MA · United States",
+        "hours": "Mon – Fri, 9 AM – 6 PM EST"
+      },
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Standard orders ship within 1–2 business days and arrive in 3–5 days via USPS or UPS. Expedited options are available at checkout. You'll receive a tracking link the moment your package leaves us.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What's your return policy?",
+            "answer": "<p>We accept returns and exchanges within 30 days of delivery. Items must be unworn, unwashed, and in original condition with tags attached. Start a return through our returns portal or email us directly — we make it painless.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Where do you ship?",
+            "answer": "<p>We ship throughout the United States, with free standard shipping on all orders over $150. International shipping is coming soon — join our mailing list to be the first to know.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
