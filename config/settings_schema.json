@@ -112,5 +112,36 @@
         "info": "Used for link previews and as the Organization logo. 1200×630 recommended."
       }
     ]
+  },
+  {
+    "name": "Analytics & CRO",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Microsoft Clarity"
+      },
+      {
+        "type": "paragraph",
+        "content": "Free heatmaps + session recordings. Create a project at clarity.microsoft.com and paste the Project ID. Essential for CRO — see where users click, scroll, and rage-click."
+      },
+      {
+        "type": "text",
+        "id": "clarity_id",
+        "label": "Clarity Project ID"
+      },
+      {
+        "type": "header",
+        "content": "Google Analytics 4"
+      },
+      {
+        "type": "paragraph",
+        "content": "Paste your GA4 Measurement ID (G-XXXXXXX). Shopify also has native GA — only add here if you want a second tag."
+      },
+      {
+        "type": "text",
+        "id": "ga4_id",
+        "label": "GA4 Measurement ID"
+      }
+    ]
   }
 ]
