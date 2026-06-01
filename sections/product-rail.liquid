@@ -1,4 +1,6 @@
 {% stylesheet %}
+/* In-page anchor target that clears the sticky header */
+.smrail-anchor { display: block; height: 0; scroll-margin-top: 6rem; }
 /* ═══════════════════════════════════════════════════════════
    PRODUCT RAIL — Shuffle Mode
    Horizontal-scroll + grid product section.
@@ -391,6 +393,9 @@
   assign layout_mode = s.layout | default: 'rail'
 -%}
 
+{%- if s.anchor_id != blank -%}
+  <span id="{{ s.anchor_id | handle }}" class="smrail-anchor" aria-hidden="true"></span>
+{%- endif -%}
 <section
   class="smrail-root"
   id="smrail-{{ section.id }}"
@@ -809,6 +814,12 @@
       "type": "url",
       "id": "link_url",
       "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID (for in-page links)",
+      "info": "e.g. best-sellers — lets buttons link to #best-sellers and scroll here."
     }
   ],
   "presets": [

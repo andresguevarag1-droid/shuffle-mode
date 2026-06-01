@@ -6,6 +6,7 @@
   assign dark_mode = section.settings.dark
 -%}
 
+<span id="newsletter" class="sm-news-anchor" aria-hidden="true"></span>
 <section
   class="sm-news"
   id="sm-news-{{ section.id }}"
@@ -116,6 +117,8 @@
 </section>
 
 {% stylesheet %}
+/* In-page anchor target that clears the sticky header */
+.sm-news-anchor { display: block; height: 0; scroll-margin-top: 6rem; }
 /* ─── SM-NEWS: Drop List Newsletter ─── */
 
 .sm-news {

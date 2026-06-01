@@ -494,7 +494,8 @@
         "sort": "best-selling",
         "layout": "rail",
         "link_label": "Shop best sellers",
-        "link_url": "/collections/maxi-silhouettes"
+        "link_url": "/collections/maxi-silhouettes",
+        "anchor_id": "best-sellers"
       }
     },
     "trending": {
