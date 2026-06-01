@@ -3,6 +3,8 @@
    PRODUCT RAIL — Shuffle Mode
    Horizontal-scroll + grid product section.
    Classes: smrail-*   Colors: global CSS vars only.
+   Card internals (.card) are untouched — only the shell,
+   header, scroll container, and arrows are styled here.
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Root ─────────────────────────────────────────────────── */
@@ -157,6 +159,13 @@
   transition: opacity .3s ease;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .smrail-scroll-outer::before,
+  .smrail-scroll-outer::after {
+    transition: none;
+  }
+}
+
 .smrail-scroll-outer::before {
   left: 0;
   background: linear-gradient(to right, var(--smrail-bg, var(--color-bone)), transparent);
@@ -178,7 +187,11 @@
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding-bottom: .25rem; /* breathe room for focus rings */
+  padding-bottom: .25rem; /* breathing room for focus rings */
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .smrail-track::-webkit-scrollbar {
@@ -214,6 +227,7 @@
 .smrail-arrow {
   position: absolute;
   top: 50%;
+  /* base transform baked in; hover only changes the scale component */
   transform: translateY(-50%);
   z-index: 3;
   display: flex;
@@ -259,7 +273,7 @@
   transform: translateY(-50%) scale(.97);
 }
 
-/* Show arrows on devices with hover (desktop) */
+/* Show arrows on hover-capable devices (desktop) */
 @media (hover: hover) {
   .smrail-scroll-outer:hover .smrail-arrow,
   .smrail-scroll-outer:focus-within .smrail-arrow {
@@ -283,25 +297,35 @@
 .smrail-grid {
   display: grid;
   gap: var(--smrail-gap, 1.25rem);
-  grid-template-columns: repeat(var(--smrail-grid-cols, 2), 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 @media (min-width: 540px) {
   .smrail-grid {
-    grid-template-columns: repeat(var(--smrail-grid-cols-sm, 2), 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 900px) {
   .smrail-grid {
-    grid-template-columns: repeat(var(--smrail-grid-cols-md, 3), 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (min-width: 1280px) {
   .smrail-grid {
-    grid-template-columns: repeat(var(--smrail-grid-cols-lg, 4), 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
+}
+
+/* grid items are normal flow */
+.smrail-grid .smrail-item {
+  flex: none;
+  width: auto;
+  scroll-snap-align: none;
 }
 
 /* ── Divider line under header ────────────────────────────── */
@@ -332,6 +356,7 @@
   color: var(--color-stone);
   letter-spacing: -.02em;
   opacity: .5;
+  margin: 0;
 }
 
 .smrail-empty__body {
@@ -359,81 +384,18 @@
 {% endstylesheet %}
 
 {%- liquid
-  assign s              = section.settings
-  assign coll           = s.collection
-  assign limit          = s.products_to_show | default: 8
-  assign sort_by        = s.sort | default: 'default'
-  assign layout_mode    = s.layout | default: 'rail'
-
-  comment
-    Build product list — Shopify collection.products honours the
-    collection's storefront sort by default.  For "best-selling" we
-    rely on the collection already being sorted that way in the admin
-    (or the merchant toggling it).  For "newest" we prefer
-    collection.products filtered by published_at desc.
-    For "low-stock" we collect available variants to front-load items
-    with limited inventory.  All falls through to the same render call.
-  endcomment
-
-  assign products = nil
-
-  if coll != blank
-    if sort_by == 'low-stock'
-      comment
-        Gather up to limit products that are still available.
-        Shopify does not expose inventory count in Liquid directly;
-        we use variant.inventory_quantity if inventory_policy is
-        tracked, otherwise treat as available.
-        We iterate collection.products and prioritise those where
-        at least one variant has inventory_quantity <= 5 (scarce).
-      endcomment
-      assign low_pool   = coll.products | where: 'available', true
-      assign products   = low_pool | slice: 0, limit
-    elsif sort_by == 'newest'
-      assign products = coll.products | sort: 'published_at' | reverse | slice: 0, limit
-    else
-      comment
-        'default' and 'best-selling': rely on collection sort order.
-        Merchants should set the collection sort to "Best selling" in
-        the admin for the best-selling preset.
-      endcomment
-      assign products = coll.products | slice: 0, limit
-    endif
-  endif
-
-  comment
-    Grid columns: derive from products_to_show.
-    4-5 → 4 cols  |  6-8 → 4 cols  |  9-12 → 4 cols  |  13-16 → 4 cols
-    Always 4 on desktop; 3 mid; 2 small. Rail shows ~2.2 mobile / ~4 desktop.
-  endcomment
-
-  assign grid_cols_lg = 4
-  assign grid_cols_md = 3
-  assign grid_cols_sm = 2
-  assign grid_cols    = 2
-
-  comment
-    Rail item widths: show 2.2 on mobile (shows peek of 3rd),
-    ~3.1 on tablet, ~4.15 on desktop.
-  endcomment
+  assign s           = section.settings
+  assign coll        = collections[section.settings.collection]
+  assign limit       = s.products_to_show | default: 8
+  assign sort_by     = s.sort | default: 'default'
+  assign layout_mode = s.layout | default: 'rail'
 -%}
 
 <section
-  class="smrail-root{% if s.background == 'cream' %} smrail-root--cream{% endif %}"
+  class="smrail-root"
   id="smrail-{{ section.id }}"
   aria-labelledby="smrail-heading-{{ section.id }}"
-  style="
-    --smrail-gap: 1.25rem;
-    --smrail-bg: var(--color-bone);
-    --smrail-item-w: 42vw;
-    --smrail-item-w-sm: 30vw;
-    --smrail-item-w-md: 22vw;
-    --smrail-item-w-lg: 19vw;
-    --smrail-grid-cols: {{ grid_cols }};
-    --smrail-grid-cols-sm: {{ grid_cols_sm }};
-    --smrail-grid-cols-md: {{ grid_cols_md }};
-    --smrail-grid-cols-lg: {{ grid_cols_lg }};
-  "
+  style="--smrail-gap:1.25rem;--smrail-bg:var(--color-bone);--smrail-item-w:42vw;--smrail-item-w-sm:30vw;--smrail-item-w-md:22vw;--smrail-item-w-lg:19vw;"
 >
   <div class="container">
 
@@ -472,16 +434,16 @@
 
     {%- comment %} ── PRODUCT OUTPUT ─────────────────────────── {%- endcomment %}
 
-    {%- if products != blank and products.size > 0 -%}
+    {%- if coll != blank and coll.products.size > 0 -%}
 
       {%- if layout_mode == 'rail' -%}
 
-        {%- comment %} RAIL ─ horizontal scroll with snap + arrows {%- endcomment %}
+        {%- comment %} RAIL — horizontal scroll with snap + JS arrows {%- endcomment %}
         <div
           class="smrail-scroll-outer"
           data-smrail-outer
         >
-          {%- comment %} Prev arrow {%- endcomment %}
+          {%- comment %} Prev arrow — shown/hidden by JS on hover-capable devices {%- endcomment %}
           <button
             type="button"
             class="smrail-arrow smrail-arrow--prev"
@@ -500,11 +462,61 @@
             aria-label="{{ s.heading | default: 'Products' | escape }}"
             data-smrail-track
           >
-            {%- for product in products -%}
-              <li class="smrail-item" role="listitem">
-                {%- render 'product-card', product: product -%}
-              </li>
-            {%- endfor -%}
+            {%- if sort_by == 'low-stock' -%}
+              {%- comment -%}
+                Low-stock sort: two-pass iteration.
+                Pass 1 — products where at least one tracked variant has inventory ≤ 5.
+                Pass 2 — remaining available products to pad the rail to `limit`.
+                Requires inventory tracking enabled on products for best results.
+              {%- endcomment -%}
+              {%- assign rendered_count = 0 -%}
+              {%- for product in coll.products -%}
+                {%- if rendered_count >= limit -%}{%- break -%}{%- endif -%}
+                {%- if product.available -%}
+                  {%- assign is_low = false -%}
+                  {%- for v in product.variants -%}
+                    {%- if v.available and v.inventory_management != blank and v.inventory_quantity > 0 and v.inventory_quantity <= 5 -%}
+                      {%- assign is_low = true -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if is_low -%}
+                    <li class="smrail-item" role="listitem">
+                      {%- render 'product-card', product: product -%}
+                    </li>
+                    {%- assign rendered_count = rendered_count | plus: 1 -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- for product in coll.products -%}
+                {%- if rendered_count >= limit -%}{%- break -%}{%- endif -%}
+                {%- if product.available -%}
+                  {%- assign is_low_pad = false -%}
+                  {%- for v in product.variants -%}
+                    {%- if v.available and v.inventory_management != blank and v.inventory_quantity > 0 and v.inventory_quantity <= 5 -%}
+                      {%- assign is_low_pad = true -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- unless is_low_pad -%}
+                    <li class="smrail-item" role="listitem">
+                      {%- render 'product-card', product: product -%}
+                    </li>
+                    {%- assign rendered_count = rendered_count | plus: 1 -%}
+                  {%- endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- comment -%}
+                default / best-selling / newest:
+                Relies on the collection's storefront sort order set in Shopify admin.
+                For best-selling: set the collection sort to "Best selling" in admin.
+                For newest: set the collection sort to "Date, new to old" in admin.
+              {%- endcomment -%}
+              {%- for product in coll.products limit: limit -%}
+                <li class="smrail-item" role="listitem">
+                  {%- render 'product-card', product: product -%}
+                </li>
+              {%- endfor -%}
+            {%- endif -%}
           </ul>
 
           {%- comment %} Next arrow {%- endcomment %}
@@ -523,20 +535,58 @@
 
       {%- else -%}
 
-        {%- comment %} GRID ─ responsive CSS grid {%- endcomment %}
+        {%- comment %} GRID — responsive CSS grid {%- endcomment %}
         <ul class="smrail-grid" role="list" aria-label="{{ s.heading | default: 'Products' | escape }}">
-          {%- for product in products -%}
-            <li class="smrail-item" role="listitem">
-              {%- render 'product-card', product: product -%}
-            </li>
-          {%- endfor -%}
+          {%- if sort_by == 'low-stock' -%}
+            {%- assign rendered_count = 0 -%}
+            {%- for product in coll.products -%}
+              {%- if rendered_count >= limit -%}{%- break -%}{%- endif -%}
+              {%- if product.available -%}
+                {%- assign is_low = false -%}
+                {%- for v in product.variants -%}
+                  {%- if v.available and v.inventory_management != blank and v.inventory_quantity > 0 and v.inventory_quantity <= 5 -%}
+                    {%- assign is_low = true -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- if is_low -%}
+                  <li class="smrail-item" role="listitem">
+                    {%- render 'product-card', product: product -%}
+                  </li>
+                  {%- assign rendered_count = rendered_count | plus: 1 -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- for product in coll.products -%}
+              {%- if rendered_count >= limit -%}{%- break -%}{%- endif -%}
+              {%- if product.available -%}
+                {%- assign is_low_pad = false -%}
+                {%- for v in product.variants -%}
+                  {%- if v.available and v.inventory_management != blank and v.inventory_quantity > 0 and v.inventory_quantity <= 5 -%}
+                    {%- assign is_low_pad = true -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- unless is_low_pad -%}
+                  <li class="smrail-item" role="listitem">
+                    {%- render 'product-card', product: product -%}
+                  </li>
+                  {%- assign rendered_count = rendered_count | plus: 1 -%}
+                {%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for product in coll.products limit: limit -%}
+              <li class="smrail-item" role="listitem">
+                {%- render 'product-card', product: product -%}
+              </li>
+            {%- endfor -%}
+          {%- endif -%}
         </ul>
 
       {%- endif -%}
 
     {%- else -%}
 
-      {%- comment %} ── EMPTY STATE ──────────────────────────── {%- endcomment %}
+      {%- comment %} ── EMPTY / EDITORIAL PLACEHOLDER ──────────── {%- endcomment %}
       <div class="smrail-empty" role="status" aria-live="polite">
         <p class="smrail-empty__wordmark" aria-hidden="true">{{ shop.name }}</p>
         <p class="smrail-empty__body">
@@ -565,8 +615,8 @@
 
     if (!track) return;
 
-    /* Only show arrow buttons when the device supports hover
-       (pointer: fine) — touch users rely on native swipe.      */
+    /* Only reveal arrow buttons on pointer-fine (hover-capable) devices.
+       Touch users rely on native swipe — arrows stay hidden for them. */
     var prefersHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     if (prefersHover && btnPrev && btnNext) {
@@ -575,13 +625,12 @@
     }
 
     function getScrollAmount() {
-      /* Scroll by roughly the visible width of the track */
-      return track.clientWidth * 0.78;
+      return Math.round(track.clientWidth * 0.78);
     }
 
     function updateArrows() {
-      var scrollLeft  = track.scrollLeft;
-      var maxScroll   = track.scrollWidth - track.clientWidth;
+      var scrollLeft = track.scrollLeft;
+      var maxScroll  = track.scrollWidth - track.clientWidth;
 
       var canLeft  = scrollLeft > 4;
       var canRight = scrollLeft < maxScroll - 4;
@@ -595,12 +644,11 @@
         btnNext.setAttribute('aria-disabled', canRight ? 'false' : 'true');
       }
 
-      /* fade-edge classes on outer */
       outerEl.classList.toggle('smrail--can-scroll-left',  canLeft);
       outerEl.classList.toggle('smrail--can-scroll-right', canRight);
     }
 
-    function scrollBy(delta) {
+    function doScroll(delta) {
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       track.scrollBy({
         left: delta,
@@ -609,19 +657,28 @@
     }
 
     if (btnPrev) {
-      btnPrev.addEventListener('click', function () {
-        scrollBy(-getScrollAmount());
-      });
+      btnPrev.addEventListener('click', function () { doScroll(-getScrollAmount()); });
     }
     if (btnNext) {
-      btnNext.addEventListener('click', function () {
-        scrollBy(getScrollAmount());
-      });
+      btnNext.addEventListener('click', function () { doScroll(getScrollAmount()); });
     }
 
-    track.addEventListener('scroll', updateArrows, { passive: true });
+    var scrollRaf;
+    track.addEventListener('scroll', function () {
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(function () {
+        updateArrows();
+        scrollRaf = null;
+      });
+    }, { passive: true });
 
-    /* Initial state */
+    /* Re-evaluate on resize */
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateArrows, 120);
+    }, { passive: true });
+
     updateArrows();
   }
 
@@ -704,22 +761,19 @@
         },
         {
           "value": "best-selling",
-          "label": "Best selling",
-          "group": "Performance"
+          "label": "Best selling"
         },
         {
           "value": "newest",
-          "label": "Newest first",
-          "group": "Performance"
+          "label": "Newest first"
         },
         {
           "value": "low-stock",
-          "label": "Low stock first",
-          "group": "Urgency"
+          "label": "Low stock first"
         }
       ],
       "default": "default",
-      "info": "\"Best selling\" relies on the collection's storefront sort order being set to Best Selling in Shopify admin. \"Low stock first\" surfaces available products — pair with a badge for urgency."
+      "info": "\"Best selling\" and \"Newest first\" use the collection's storefront sort order — set it to match in Shopify admin (Products › Collections › [collection] › Sort). \"Low stock first\" surfaces products with ≤5 units tracked inventory, then pads with other available products."
     },
     {
       "type": "header",
