@@ -1,174 +1,39 @@
-<!doctype html> 
-<html lang="{{ request.locale.iso_code }}" class="no-js">
-  <head>
+<!doctype html>
+    <html lang="{{ request.locale.iso_code }}" class="no-js">
+    <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="{{ settings.color_ink }}">
-    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-    <meta name="color-scheme" content="light">
-    <link rel="canonical" href="{{ canonical_url }}">
-
-    {%- if settings.heading_font_family contains 'Fraunces' or settings.body_font_family contains 'Inter' -%}
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      {%- comment -%}
-        font-display=swap injected via &display=swap; trimmed to essential axes/weights only.
-        Variable-font range (opsz,wght) keeps file count at 2 requests.
-      {%- endcomment -%}
-      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap" media="print" onload="this.media='all'">
-      <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap"></noscript>
-    {%- endif -%}
-
     <title>
-      {{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &middot; {{ shop.name }}{% endunless %}
+    {{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &middot; {{ shop.name }}{% endunless %}
     </title>
-
-    {%- liquid
-      assign meta_desc = page_description | default: shop.description | default: shop.name
-      if template contains 'product'
-        assign share_image = product.featured_image
-      elsif template contains 'collection' and collection.featured_image
-        assign share_image = collection.featured_image
-      elsif template contains 'article' and article.image
-        assign share_image = article.image
-      endif
-      assign share_image = share_image | default: settings.share_image
-    -%}
-    <meta name="description" content="{{ meta_desc | escape }}">
-
-    {%- comment -%} Open Graph / Twitter (social share cards) {%- endcomment -%}
-    <meta property="og:site_name" content="{{ shop.name }}">
-    <meta property="og:url" content="{{ canonical_url }}">
-    <meta property="og:title" content="{{ page_title | escape }}">
-    <meta property="og:type" content="{% if template contains 'product' %}product{% elsif template contains 'article' %}article{% else %}website{% endif %}">
-    <meta property="og:description" content="{{ meta_desc | escape }}">
-    {%- if share_image -%}
-      <meta property="og:image" content="https:{{ share_image | image_url: width: 1200 }}">
-      <meta property="og:image:width" content="1200">
-    {%- endif -%}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ page_title | escape }}">
-    <meta name="twitter:description" content="{{ meta_desc | escape }}">
-    {%- if share_image -%}<meta name="twitter:image" content="https:{{ share_image | image_url: width: 1200 }}">{%- endif -%}
-
-    {%- comment -%} Sitewide structured data {%- endcomment -%}
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": {{ shop.name | json }},
-        "url": {{ shop.url | append: '/' | json }},
-        "description": {{ shop.description | default: shop.name | json }}
-        {%- if settings.share_image %}, "logo": "https:{{ settings.share_image | image_url: width: 400 }}"{% endif -%}
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": {{ shop.name | json }},
-        "url": {{ shop.url | append: '/' | json }},
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {{ shop.url | append: '/search?q={search_term_string}' | json }},
-          "query-input": "required name=search_term_string"
-        }
-      }
-    </script>
+    <meta name="description" content="{{ page_description | default: shop.description | default: shop.name | escape }}">
+    <link rel="canonical" href="{{ canonical_url }}">
 
     {{ content_for_header }}
 
-    {%- comment -%} CRO instrumentation — only output when an ID is configured {%- endcomment -%}
-    {%- if settings.clarity_id != blank -%}
-      <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "{{ settings.clarity_id }}");
-      </script>
-    {%- endif -%}
-    {%- if settings.ga4_id != blank -%}
-      <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.ga4_id }}"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '{{ settings.ga4_id }}');
-      </script>
-    {%- endif -%}
-
     {%- style -%}
-      :root {
-        --color-bone: {{ settings.color_bone }};
-        --color-ink: {{ settings.color_ink }};
-        --color-cream: {{ settings.color_cream }};
-        --color-sand: {{ settings.color_sand }};
-        --color-ember: {{ settings.color_ember }};
-        --color-stone: #6f675d;
-        --color-line: rgba(22, 19, 15, 0.1);
-        --font-display: {{ settings.heading_font_family }};
-        --font-body: {{ settings.body_font_family }};
-        --page-width: {{ settings.page_width }}px;
-      }
+    :root {
+    --color-bone: {{ settings.color_bone }};
+    --color-ink: {{ settings.color_ink }};
+    --color-cream: {{ settings.color_cream }};
+    --color-sand: {{ settings.color_sand }};
+    --color-ember: {{ settings.color_ember }};
+    --font-display: {{ settings.heading_font_family }};
+    --font-body: {{ settings.body_font_family }};
+    --page-width: {{ settings.page_width }}px;
+    }
     {%- endstyle -%}
 
     {{ 'theme.css' | asset_url | stylesheet_tag }}
+    </head>
 
-    {%- comment -%} View Transitions + page-load fade — CSS-only, fully guarded {%- endcomment -%}
-    <style>
-      /* Activate JS-available class for progressive enhancement */
-      html.no-js .js-only { display: none !important; }
-
-      /* Cross-page View Transitions (Chrome 111+, guarded) */
-      @supports (view-transition-name: none) {
-        @view-transition { navigation: auto; }
-
-        ::view-transition-old(root) {
-          animation: sm-vt-out 220ms cubic-bezier(0.4, 0, 1, 1) both;
-        }
-        ::view-transition-new(root) {
-          animation: sm-vt-in 280ms cubic-bezier(0, 0, 0.2, 1) both;
-        }
-
-        @keyframes sm-vt-out {
-          from { opacity: 1; transform: translateY(0); }
-          to   { opacity: 0; transform: translateY(-6px); }
-        }
-        @keyframes sm-vt-in {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          ::view-transition-old(root),
-          ::view-transition-new(root) {
-            animation: none;
-          }
-        }
-      }
-
-      /* Initial page-load fade-in (fires once on first paint) */
-      @media (prefers-reduced-motion: no-preference) {
-        body {
-          animation: sm-page-in 400ms cubic-bezier(0, 0, 0.2, 1) both;
-        }
-        @keyframes sm-page-in {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-      }
-    </style>
-  </head>
-
-  <body class="template-{{ request.page_type | handle }} template-{{ template.name | handle }}{% if template.suffix != blank %} template--{{ template.suffix | handle }}{% endif %}">
+    <body class="template-{{ request.page_type | handle }} template-{{ template.name | handle }}">
     <a href="#main" class="skip-link">Skip to content</a>
 
     {% sections 'header-group' %}
 
     <main id="main">
-      {{ content_for_layout }}
+    {{ content_for_layout }}
     </main>
 
     {% sections 'footer-group' %}
@@ -177,5 +42,5 @@
 
     <script>document.documentElement.classList.remove('no-js');</script>
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
-  </body>
-</html>
+    </body>
+    </html>
