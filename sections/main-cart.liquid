@@ -858,7 +858,7 @@
     {%- comment -%} Cart header {%- endcomment -%}
     <div class="smc-cart__header">
       <h1 class="smc-cart__title">Your cart</h1>
-      <span class="smc-cart__count" aria-live="polite">{{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }}</span>
+      <span class="smc-cart__count" aria-live="polite">{{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}</span>
     </div>
 
     {%- comment -%} Cart form {%- endcomment -%}

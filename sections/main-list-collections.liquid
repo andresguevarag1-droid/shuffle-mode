@@ -438,7 +438,7 @@
           href="{{ collection.url }}"
           class="smlc-tile{% unless has_image %} smlc-tile--fallback{% endunless %}"
           role="listitem"
-          aria-label="{{ collection.title | escape }}{% if collection.products_count > 0 %}, {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}{% endif %}"
+          aria-label="{{ collection.title | escape }}{% if collection.products_count > 0 %}, {{ collection.products_count }} {% if collection.products_count == 1 %}piece{% else %}pieces{% endif %}{% endif %}"
         >
           <div class="smlc-tile__frame">
 
@@ -461,7 +461,7 @@
               <div class="smlc-tile__info">
                 <h2 class="smlc-tile__title">{{ collection.title }}</h2>
                 {%- if collection.products_count > 0 -%}
-                  <span class="smlc-tile__meta">{{ collection.products_count }}&thinsp;{{ collection.products_count | pluralize: 'Piece', 'Pieces' }}</span>
+                  <span class="smlc-tile__meta">{{ collection.products_count }}&thinsp;{% if collection.products_count == 1 %}Piece{% else %}Pieces{% endif %}</span>
                 {%- endif -%}
                 <span class="smlc-tile__arrow" aria-hidden="true">
                   Explore
@@ -482,7 +482,7 @@
               <div class="smlc-tile__info">
                 <h2 class="smlc-tile__title">{{ collection.title }}</h2>
                 {%- if collection.products_count > 0 -%}
-                  <span class="smlc-tile__meta">{{ collection.products_count }}&thinsp;{{ collection.products_count | pluralize: 'Piece', 'Pieces' }}</span>
+                  <span class="smlc-tile__meta">{{ collection.products_count }}&thinsp;{% if collection.products_count == 1 %}Piece{% else %}Pieces{% endif %}</span>
                 {%- endif -%}
                 <span class="smlc-tile__arrow" aria-hidden="true">
                   Explore

@@ -604,8 +604,8 @@
     </div>
 
     {%- comment -%} Keep reading grid — up to 3 other articles {%- endcomment -%}
-    {%- assign other_articles = blog.articles | where_exp: 'a', 'a.id != article.id' -%}
-    {%- if other_articles.size > 0 -%}
+    {%- assign other_articles = blog.articles -%}
+    {%- if blog.articles.size > 1 -%}
       <section class="sma-more" aria-labelledby="sma-more-heading">
         <p class="sma-more-label" aria-hidden="true">Continue exploring</p>
         <h2 class="sma-more-heading" id="sma-more-heading">Keep reading</h2>
@@ -613,6 +613,7 @@
         <div class="sma-grid">
           {%- assign shown = 0 -%}
           {%- for a in other_articles -%}
+            {%- if a.id == article.id -%}{%- continue -%}{%- endif -%}
             {%- if shown >= 3 -%}{%- break -%}{%- endif -%}
             <a href="{{ a.url }}" class="sma-card" aria-label="Read {{ a.title | escape }}">
               <div class="sma-card-img">

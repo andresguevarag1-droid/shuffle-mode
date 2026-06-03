@@ -1237,7 +1237,7 @@
       {%- endif -%}
       <div class="col-hero__meta">
         <span class="col-hero__meta-dot" aria-hidden="true"></span>
-        {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}
+        {{ collection.products_count }} {% if collection.products_count == 1 %}piece{% else %}pieces{% endif %}
       </div>
     </div>
   </div>
@@ -1251,7 +1251,7 @@
       {%- endif -%}
       <div class="col-hero__meta">
         <span class="col-hero__meta-dot" aria-hidden="true"></span>
-        {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}
+        {{ collection.products_count }} {% if collection.products_count == 1 %}piece{% else %}pieces{% endif %}
       </div>
     </div>
   </div>
@@ -1397,7 +1397,7 @@
     {%- comment -%} Right: results count + sort {%- endcomment -%}
     <div class="col-toolbar__right">
       <span class="col-results-count" aria-live="polite">
-        {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}
+        {{ collection.products_count }} {% if collection.products_count == 1 %}piece{% else %}pieces{% endif %}
       </span>
 
       <div class="col-sort-wrap">
